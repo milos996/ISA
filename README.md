@@ -1,2 +1,3 @@
 # ISA
-Projekat iz Internet softverske arhitekture
+Project from ISA.
+Ticket reservations for flights
