@@ -1,10 +1,16 @@
 package model;
 
+import java.util.HashSet;
+import java.util.Set;
+
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.OneToMany;
 
 @Entity
 public class User {
@@ -19,13 +25,34 @@ public class User {
 	@Column(name = "lastName", nullable = false)
 	private String lastName;
 	
+	@Column(name = "email", nullable = false)
+	private String email;
+	
+	@Column(name = "pass", nullable = false)
+	private String password;
+	
+	@Column(name = "city", nullable = false)
+	private String city;
+	
+	@Column(name = "telephone", nullable = false)
+	private String telephoneNum;
+	
+	@OneToMany(mappedBy = "user", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+	private Set<User> friends = new HashSet<User>();
+
 	
 	public User() {}
-	
-	public User(String fName, String lName)
-	{
-		this.firstName = fName;
-		this.lastName = lName;
+
+	public User(Long id, String firstName, String lastName, String email, String password, String city,
+			String telephoneNum) {
+		super();
+		this.id = id;
+		this.firstName = firstName;
+		this.lastName = lastName;
+		this.email = email;
+		this.password = password;
+		this.city = city;
+		this.telephoneNum = telephoneNum;
 	}
 
 	public Long getId() {
@@ -50,6 +77,38 @@ public class User {
 
 	public void setLastName(String lastName) {
 		this.lastName = lastName;
+	}
+
+	public String getEmail() {
+		return email;
+	}
+
+	public void setEmail(String email) {
+		this.email = email;
+	}
+
+	public String getPassword() {
+		return password;
+	}
+
+	public void setPassword(String password) {
+		this.password = password;
+	}
+
+	public String getCity() {
+		return city;
+	}
+
+	public void setCity(String city) {
+		this.city = city;
+	}
+
+	public String getTelephoneNum() {
+		return telephoneNum;
+	}
+
+	public void setTelephoneNum(String telephoneNum) {
+		this.telephoneNum = telephoneNum;
 	}
 	
 }
