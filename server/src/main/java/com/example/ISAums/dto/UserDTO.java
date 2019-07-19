@@ -1,6 +1,6 @@
-package dto;
+package com.example.ISAums.dto;
 
-import model.User;
+import com.example.ISAums.model.User;
 
 public class UserDTO {
 

@@ -1,4 +1,4 @@
-package model;
+package com.example.ISAums.model;
 
 import java.util.Date;
 import javax.persistence.Column;

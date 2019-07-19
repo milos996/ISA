@@ -1,10 +1,10 @@
-package controller;
+package com.example.ISAums.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import service.UserService;
+import com.example.ISAums.service.UserService;
 
 @RestController
 @RequestMapping(value="api/users")

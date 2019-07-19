@@ -1,4 +1,4 @@
-package model;
+package com.example.ISAums.model;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
