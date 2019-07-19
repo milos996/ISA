@@ -11,8 +11,6 @@ import org.springframework.context.annotation.Configuration;
 @ConfigurationProperties(prefix = "properties", ignoreUnknownFields = false)
 public class CustomProperties {
 
-    private String webServiceApiBaseUrl;
-
     private String jwtSecret;
 
     private int jwtExpirationInMs;

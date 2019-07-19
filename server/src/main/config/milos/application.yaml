@@ -19,7 +19,6 @@ logging.level.org.hibernate.SQL: DEBUG
 logging.level.org.hibernate.type.descriptor.sql.BasicBinder: TRACE
 
 properties:
-  webServiceApiBaseUrl: 'http://192.168.0.14:8765/main-backend/ws/'
   jwtSecret: Jwt331secret1
   jwtExpirationInMs: 604800000
   maxAgeSecs: 3600
