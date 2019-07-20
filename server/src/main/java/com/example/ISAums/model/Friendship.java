@@ -1,15 +1,35 @@
 package com.example.ISAums.model;
 
-public class Friendship {
+import com.example.ISAums.model.enumeration.InvitationStatus;
+import lombok.*;
+import org.hibernate.annotations.Where;
 
-	private User fromUser;
-	private User toUser;
+import javax.persistence.*;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 
-	public Friendship(){}
-	
-	public Friendship(User from, User to) {
-		
-		this.fromUser = from;
-		this.toUser = to;
-	}
+@Data
+@Builder
+@Entity
+@NoArgsConstructor
+@AllArgsConstructor
+@Table(name = "friendship")
+@Where(clause = "is_deleted='false'")
+public class Friendship extends BaseEntity {
+
+	@OneToMany(fetch = FetchType.LAZY)
+	@JoinColumn(name = "user_sender_id")
+	@NotNull
+	private User sender;
+
+	@OneToMany(fetch = FetchType.LAZY)
+	@JoinColumn(name = "user_invited_id")
+	@NotNull
+	private User invitedUser;
+
+	@Column(name = "invitation_status")
+	@Enumerated(EnumType.STRING)
+	@NotBlank
+	private InvitationStatus invitationStatus;
+
 }

@@ -11,7 +11,7 @@ create table address
 	state varchar(128) null,
 	latitude double null,
 	longitude double null,
-	street varchar(512) null,
+	street varchar(255) null,
 	constraint UK_ADDRESS_CITY_STATE_STREET
         unique (state, city, street)
 };
@@ -24,12 +24,13 @@ create table user
     time_created datetime not null,
     time_updated datetime null,
     first_name varchar(128) not null,
-    last_name varchar(255) not null,
-    role varchar(255) not null,
+    last_name varchar(128) not null,
+    role varchar(64) not null,
     email varchar(128) not null,
     password varchar(64) not null,
     phone_number varchar(64) not null,
     city varchar(128) not null,
+    state varchar(128) not null,
     constraint UK_USER_EMAIL
         unique (email),
 };
@@ -130,6 +131,9 @@ create table room
     price_autumn double not null,
     price_spring double not null,
     number_of_people int not null,
+    hotel_id varchar(255) not null,
+    constraint ROOM_HOTEL
+        foreign key (hotel_id) references hotel (id),
     constraint UK_ROOM_NUMBER_FLOOR
         unique (number, floor)
 };
@@ -145,7 +149,7 @@ create table airline
     address_id varchar(255) not null,
     description varchar (1024) null,
     checking_in_suitcase_price double not null,
-    hand_luggage double  not null,
+    hand_luggage_price double  not null,
     constraint UK_NAME
         unique (name),
     constraint FK_AIRLINE_ADDRESS
@@ -287,6 +291,21 @@ create table rent_a_car
         unique (name)
 };
 
+create table rent_a_car_admin
+{
+    id varchar(255) not null
+        primary key,
+    is_deleted bit not null,
+    time_created datetime not null,
+    time_updated datetime null,
+    user_id varchar (255) not null,
+    rent_a_car_id varchar (255) not null,
+    constraint FK_RENT_A_CAR_ADMIN_USER
+        foreign key (user_id) references user (id),
+    constraint FK_RENT_A_CAR_ADMIN_RENT_CAR
+        foreign key (rent_a_car_id) references rent_a_car (id)
+};
+
 create table vehicle
 {
     id varchar(255) not null
@@ -295,7 +314,7 @@ create table vehicle
     time_created datetime not null,
     time_updated datetime null,
     brand varchar(128) not null,
-    model varchar(255) not null,
+    model varchar(128) not null,
     number_of_people int not null,
     price_per_day double not null,
     type varchar(128) not null,

@@ -1,103 +1,53 @@
 package com.example.ISAums.model;
 
-import java.util.HashSet;
-import java.util.Set;
+import lombok.*;
+import org.hibernate.annotations.Where;
+import org.hibernate.validator.constraints.Range;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
+import javax.persistence.*;
+import javax.validation.constraints.NotNull;
+import java.sql.Time;
+import java.time.LocalDateTime;
 
+@Data
+@Builder
 @Entity
-public class Flight {
+@NoArgsConstructor
+@AllArgsConstructor
+@Table(name = "flight")
+@Where(clause = "is_deleted='false'")
+public class Flight extends BaseEntity {
 
-	@Column(name = "dateTakeOff", unique = true, nullable = false)
-	private String dateTakeOff;
-	
-	@Column(name = "dateLanding", unique = true, nullable = false)
-	private String dateLanding;
-	
-	@Column(name = "timeOfTravel", unique = true, nullable = false)
-	private Double timeOfTravel;
+  @Column(name = "departure_time")
+  @NotNull
+  private LocalDateTime departureTime;
 
-	@Column(name = "lengthOfTravel", unique = true, nullable = false)
-	private Double lengthOfTravel;
-	
-	@Column(name = "transfers", unique = true, nullable = false)
-	private Integer numOfTransfer;
-	
-	@Column(name = "locations", unique = true, nullable = false)
-	private Set<String> locationsOfTransfer = new HashSet<String>();
-	
-	@Column(name = "price", unique = true, nullable = false)
-	private Double price;
+  @Column(name = "arrival_time")
+  @NotNull
+  private LocalDateTime arrivalTime;
 
-	
-	public Flight() {}
-	
+  @Column(name = "duration")
+  @NotNull
+  private Time duration;
 
+  @Column(name = "length")
+  @NotNull
+  private Double length;
 
-	public Flight(String dateTakeOff, String dateLanding, Double timeOfTravel, Double lengthOfTravel,
-			Integer numOfTransfer, Set<String> locationsOfTransfer, Double price) {
-		super();
-		this.dateTakeOff = dateTakeOff;
-		this.dateLanding = dateLanding;
-		this.timeOfTravel = timeOfTravel;
-		this.lengthOfTravel = lengthOfTravel;
-		this.numOfTransfer = numOfTransfer;
-		this.locationsOfTransfer = locationsOfTransfer;
-		this.price = price;
-	}
+  @Column(name = "price")
+  @NotNull
+  @Range(min = 0)
+  private Double price;
 
+  @OneToMany(fetch = FetchType.EAGER)
+  @JoinColumn(name = "airline_destination_id")
+  @NotNull
+  private AirlineDestination airlineDestination;
 
+  @OneToMany(fetch = FetchType.EAGER)
+  @JoinColumn(name = "airplane_id")
+  @NotNull
+  private Airplane airplane;
 
-	public String getDateTakeOff() {
-		return dateTakeOff;
-	}
-
-	public void setDateTakeOff(String dateTakeOff) {
-		this.dateTakeOff = dateTakeOff;
-	}
-
-	public String getDateLanding() {
-		return dateLanding;
-	}
-
-	public void setDateLanding(String dateLanding) {
-		this.dateLanding = dateLanding;
-	}
-
-	public Double getTimeOfTravel() {
-		return timeOfTravel;
-	}
-
-	public void setTimeOfTravel(Double timeOfTravel) {
-		this.timeOfTravel = timeOfTravel;
-	}
-
-	public Double getLengthOfTravel() {
-		return lengthOfTravel;
-	}
-
-	public void setLengthOfTravel(Double lengthOfTravel) {
-		this.lengthOfTravel = lengthOfTravel;
-	}
-
-	public Integer getNumOfTransfer() {
-		return numOfTransfer;
-	}
-
-	public void setNumOfTransfer(Integer numOfTransfer) {
-		this.numOfTransfer = numOfTransfer;
-	}
-
-	public Double getPrice() {
-		return price;
-	}
-
-	public void setPrice(Double price) {
-		this.price = price;
-	}
-	
-	
-	
-	
 }
+
