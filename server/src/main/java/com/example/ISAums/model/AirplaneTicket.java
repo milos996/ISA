@@ -18,7 +18,7 @@ import javax.validation.constraints.NotNull;
 public class AirplaneTicket extends BaseEntity {
 
     @JoinColumn(name = "user_id")
-    @OneToMany(fetch = FetchType.EAGER)
+    @ManyToOne(fetch = FetchType.EAGER)
     @NotNull
     private User user;
 
@@ -38,11 +38,11 @@ public class AirplaneTicket extends BaseEntity {
     private Integer numberOfSegment;
 
     @NotNull
-    @OneToMany(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "flight_id")
     private Flight flight;
 
-    @OneToMany(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "group_trip_id")
     private GroupTrip groupTrip;
 

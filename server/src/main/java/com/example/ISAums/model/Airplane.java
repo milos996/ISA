@@ -42,9 +42,6 @@ public class Airplane extends BaseEntity {
 
     @JoinColumn(name = "airline_id")
     @NotNull
-    @OneToMany(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.LAZY)
     private Airline airline;
-
-
-
 }

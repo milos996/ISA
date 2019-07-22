@@ -16,13 +16,13 @@ import javax.validation.constraints.NotNull;
 public class AirlineDestination extends BaseEntity {
 
 
-    @OneToMany(fetch = FetchType.EAGER)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "destination_id")
     @NotNull
     private Destination destination;
 
 
-    @OneToMany(fetch = FetchType.EAGER)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "airline_id")
     @NotNull
     private Airline airline;

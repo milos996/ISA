@@ -17,12 +17,12 @@ import javax.validation.constraints.NotNull;
 @Where(clause = "is_deleted='false'")
 public class Friendship extends BaseEntity {
 
-	@OneToMany(fetch = FetchType.LAZY)
+	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "user_sender_id")
 	@NotNull
 	private User sender;
 
-	@OneToMany(fetch = FetchType.LAZY)
+	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "user_invited_id")
 	@NotNull
 	private User invitedUser;

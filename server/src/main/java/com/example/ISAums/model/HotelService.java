@@ -17,11 +17,11 @@ public class HotelService extends BaseEntity {
 
     @JoinColumn(name = "hotel_id")
     @NotNull
-    @OneToMany(fetch = FetchType.EAGER)
+    @ManyToOne(fetch = FetchType.EAGER)
     private Hotel hotel;
 
     @JoinColumn(name = "service_id")
     @NotNull
-    @OneToMany(fetch = FetchType.EAGER)
+    @ManyToOne(fetch = FetchType.EAGER)
     private Service service;
 }

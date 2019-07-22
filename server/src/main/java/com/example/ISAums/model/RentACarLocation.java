@@ -17,11 +17,11 @@ public class RentACarLocation extends BaseEntity {
 
     @NotNull
     @JoinColumn(name = "rent_a_car_id")
-    @OneToMany(fetch = FetchType.EAGER)
+    @ManyToOne(fetch = FetchType.EAGER)
     private RentACar rentACar;
 
     @NotNull
     @JoinColumn(name = "agency_location_id")
-    @OneToMany(fetch = FetchType.EAGER)
+    @ManyToOne(fetch = FetchType.EAGER)
     private AgencyLocation agencyLocation;
 }

@@ -9,15 +9,15 @@ import com.example.ISAums.repository.UserRepository;
 @Service
 public class UserService {
 
-	@Autowired
-	private UserRepository userRepository;
-	
-	
-	public User save(User user) {
-		return userRepository.save(user);
-	}
-
-	public void remove(Long id) {
-		userRepository.deleteById(id);
-	}
+//	@Autowired
+//	private UserRepository userRepository;
+//
+//
+//	public User save(User user) {
+//		return userRepository.save(user);
+//	}
+//
+//	public void remove(Long id) {
+//		userRepository.deleteById(id);
+//	}
 }

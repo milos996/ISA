@@ -23,7 +23,7 @@ public class HotelReservation extends BaseEntity {
     private Double price;
 
     @NotNull
-    @OneToMany(fetch = FetchType.EAGER)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "room_id")
     private Room room;
 

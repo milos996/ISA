@@ -55,7 +55,7 @@ public class Vehicle extends BaseEntity {
     private Double rating;
 
     @JoinColumn(name = "rent_a_car_id")
-    @OneToMany(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.LAZY)
     @NotNull
     private RentACar rentACar;
 }

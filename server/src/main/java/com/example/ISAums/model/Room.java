@@ -53,7 +53,7 @@ public class Room extends BaseEntity {
     private Integer numberOfPeople;
 
     @JoinColumn(name = "hotel_id")
-    @OneToMany(fetch = FetchType.EAGER)
+    @ManyToOne(fetch = FetchType.EAGER)
     @NotNull
     private Hotel hotel;
 

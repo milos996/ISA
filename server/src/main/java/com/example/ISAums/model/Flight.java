@@ -39,12 +39,12 @@ public class Flight extends BaseEntity {
   @Range(min = 0)
   private Double price;
 
-  @OneToMany(fetch = FetchType.EAGER)
+  @ManyToOne(fetch = FetchType.EAGER)
   @JoinColumn(name = "airline_destination_id")
   @NotNull
   private AirlineDestination airlineDestination;
 
-  @OneToMany(fetch = FetchType.EAGER)
+  @ManyToOne(fetch = FetchType.EAGER)
   @JoinColumn(name = "airplane_id")
   @NotNull
   private Airplane airplane;
