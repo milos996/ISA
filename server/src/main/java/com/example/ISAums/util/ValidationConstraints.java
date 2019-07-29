@@ -25,6 +25,11 @@ public class ValidationConstraints {
     public final static int VEHICLE_MODEL_SIZE = 128;
     public final static int VEHICLE_TYPE_SIZE = 128;
 
+    public final static int LONGITUDE_MAX = 180;
+    public final static int LATITUDE_MAX= 90;
+
+
+
 
 
 

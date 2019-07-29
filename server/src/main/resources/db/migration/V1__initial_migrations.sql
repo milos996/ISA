@@ -278,6 +278,21 @@ create table hotel_reservation
         foreign key (airplane_ticket_id) references airplane_ticket (id)
 );
 
+create table hotel_reservation_additional_services
+(
+    id                   varchar(255) not null
+        primary key,
+    is_deleted           bit          not null,
+    time_created         datetime     not null,
+    time_updated         datetime     null,
+    hotel_reservation_id varchar(255) not null,
+    hotel_service_id     varchar(255) not null,
+    constraint FK_HOTEL_ADDITIONAL_SERVICES_RESERVATION
+        foreign key (hotel_reservation_id) references hotel_reservation (id),
+    constraint FK_HOTEL_ADDITIONAL_SERVICES_SERVICE
+        foreign key (hotel_service_id) references hotel_service (id)
+);
+
 create table rent_a_car
 (
     id varchar(255) not null

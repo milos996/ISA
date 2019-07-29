@@ -7,6 +7,7 @@ import org.hibernate.validator.constraints.Range;
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import java.util.Date;
+import java.util.List;
 
 @Data
 @Builder
@@ -39,4 +40,8 @@ public class HotelReservation extends BaseEntity {
     @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "airplane_ticket_id")
     private AirplaneTicket airplaneTicket;
+
+    @OneToMany(fetch = FetchType.LAZY)
+    @JoinColumn(name = "additional_service")
+    private List<HotelService> additionalServices;
 }
