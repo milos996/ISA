@@ -3,6 +3,7 @@ package com.example.ISAums.service;
 import com.example.ISAums.dto.request.CreateRoomRequest;
 import com.example.ISAums.dto.request.UpdateRoomRequest;
 import com.example.ISAums.exception.CustomException;
+import com.example.ISAums.exception.EntityWithIdDoesNotExist;
 import com.example.ISAums.model.HotelAdmin;
 import com.example.ISAums.model.Room;
 import com.example.ISAums.repository.HotelReservationRepository;
@@ -53,7 +54,7 @@ public class RoomService {
     public Room updateRoom(UpdateRoomRequest request) {
         Optional<Room> room = roomRepository.findById(request.getId());
         if (room.get() == null) {
-            throw new CustomException("Room with this ID " + request.getId() +" does not exist");
+            throw new EntityWithIdDoesNotExist("Room", request.getId());
         }
 
         Integer floor = request.getFloor() != null ? request.getFloor() : room.get().getFloor();
@@ -74,7 +75,7 @@ public class RoomService {
     public Boolean deleteRoom(UUID roomId) {
         Optional<Room> room = roomRepository.findById(roomId);
         if (room.get() == null) {
-            throw new CustomException("Room with this id " + roomId + " does not exist!");
+            throw new EntityWithIdDoesNotExist("Room", roomId);
         }
 
         if (hotelReservationRepository.existsByRoomWhereEndDateIsAfterToday(roomId.toString())) {

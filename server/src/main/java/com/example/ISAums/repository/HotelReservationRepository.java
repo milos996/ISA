@@ -7,7 +7,6 @@ import org.springframework.stereotype.Repository;
 
 import java.util.Date;
 import java.util.List;
-import java.util.Optional;
 import java.util.UUID;
 
 @Repository
@@ -18,12 +17,9 @@ public interface HotelReservationRepository extends  JpaRepository<HotelReservat
     List<HotelReservation> findAllWhereDateBetweenStartAndEndDate(Date startDate, Date endDate, String id);
 
 
-    // TODO
-//    @Query("SELECT " +
-//            "FROM " +
-//            "WHERE ")
-//    List<Object> groupByDate(Date start,Date end);
+    // TODO: Query for report of hotel attendance
+    /*    List<Object> groupByDate(Date start,Date end); */
 
-    @Query(value = "SELECT CASE WHEN COUNT(hr) > 0 THEN true ELSE false END  from hotel_reservation hr where hr.room_id = ?1 and hr.end_date > CURDATE()")
+    @Query(value = "SELECT CASE WHEN COUNT(hr.id) > 0 THEN true ELSE false END  from hotel_reservation hr where hr.room_id = ?1 and hr.end_date > CURDATE()", nativeQuery = true)
     boolean existsByRoomWhereEndDateIsAfterToday(String roomId);
 }

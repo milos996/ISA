@@ -2,7 +2,7 @@ package com.example.ISAums.service;
 
 import com.example.ISAums.dto.request.CreateHotelServiceRequest;
 import com.example.ISAums.dto.request.ServiceRequest;
-import com.example.ISAums.exception.CustomException;
+import com.example.ISAums.exception.EntityWithIdDoesNotExist;
 import com.example.ISAums.model.Hotel;
 import com.example.ISAums.model.HotelService;
 import com.example.ISAums.repository.HotelRepository;
@@ -39,7 +39,7 @@ public class HotelServiceService {
         Optional<Hotel> hotel = hotelRepository.findById(request.getHotelID());
 
         if (hotel.get() == null) {
-            throw new CustomException("The hotel with this ID: " + request.getHotelID() + " does not exist!");
+            throw new EntityWithIdDoesNotExist("Hotel", request.getHotelID());
         }
 
         List<HotelService> hotelServices = hotelServiceRepository.findAllByHotelId(request.getHotelID());
@@ -63,7 +63,7 @@ public class HotelServiceService {
                     Optional<com.example.ISAums.model.Service> service = serviceRepository.findById(filteredService.getId());
 
                     if (service.get() == null) {
-                        throw new CustomException("Service with this ID: " + filteredService.getId() + "does not exist!");
+                        throw new EntityWithIdDoesNotExist("Service", filteredService.getId());
                     }
 
                     HotelService hotelService = HotelService.builder()

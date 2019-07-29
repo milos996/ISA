@@ -2,8 +2,8 @@ package com.example.ISAums.service;
 
 import com.example.ISAums.dto.request.CreateHotelRequest;
 import com.example.ISAums.dto.request.UpdateHotelRequest;
-import com.example.ISAums.exception.CustomException;
 import com.example.ISAums.exception.EntityAlreadyExistsException;
+import com.example.ISAums.exception.EntityWithIdDoesNotExist;
 import com.example.ISAums.model.Address;
 import com.example.ISAums.model.Hotel;
 import com.example.ISAums.model.HotelAdmin;
@@ -62,7 +62,7 @@ public class HotelService {
     @Transactional(rollbackFor = Exception.class)
     public Hotel updateHotel(UpdateHotelRequest request) {
         if (!hotelRepository.existsById(request.getId())) {
-            throw new CustomException("Hotel with this id " + request.getId() + " does not exist");
+            throw new EntityWithIdDoesNotExist("Hotel", request.getId());
         }
 
         if (hotelRepository.existsByName(request.getName())) {
@@ -72,7 +72,7 @@ public class HotelService {
         Optional<Address> address = addressRepository.findById(request.getAddress().getId());
 
         if (address.get() == null) {
-            throw new CustomException("Address with this id " + request.getAddress().getId() + " does not exits!");
+            throw new EntityWithIdDoesNotExist("Address", request.getAddress().getId());
         }
 
         // TODO: Check this, may be problem because you have two different classes
@@ -112,7 +112,7 @@ public class HotelService {
         Optional<Hotel> hotel = hotelRepository.findById(hotelId);
 
         if (hotel.get() == null) {
-            throw new CustomException("Hotel with that id " + hotelId + " does not exist!");
+            throw new EntityWithIdDoesNotExist("Hotel", hotelId);
         }
 
         hotelRepository.delete(hotel.get());
