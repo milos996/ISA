@@ -28,8 +28,11 @@ public class HotelController {
     }
 
     @GetMapping
-    public ResponseEntity<List<GetHotelResponse>> get() {
-        List<Hotel> hotels = hotelService.getHotels();
+    public ResponseEntity<List<GetHotelResponse>> get(@RequestParam(name = "name", required = false) String name,
+                                                      @RequestParam(name = "city", required = false) String city,
+                                                      @RequestParam(name = "startDate", required = false) Date startDate,
+                                                      @RequestParam(name = "endDate", required = false) Date endDate) {
+        List<Hotel> hotels = hotelService.getHotels(name, city, startDate, endDate);
         return ResponseEntity.ok(toGetHotelResponseFromHotels(hotels));
     }
 

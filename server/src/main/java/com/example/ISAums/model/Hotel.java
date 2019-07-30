@@ -9,6 +9,8 @@ import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
+import java.util.List;
+
 import static com.example.ISAums.util.ValidationConstraints.*;
 
 @Data
@@ -39,5 +41,7 @@ public class Hotel extends BaseEntity {
     @OneToOne(fetch = FetchType.LAZY)
     private Address address;
 
+    @OneToMany(mappedBy = "hotel", fetch = FetchType.LAZY)
+    private List<Room> rooms;
 }
 

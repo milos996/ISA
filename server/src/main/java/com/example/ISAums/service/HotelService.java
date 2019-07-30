@@ -4,10 +4,7 @@ import com.example.ISAums.dto.request.CreateHotelRequest;
 import com.example.ISAums.dto.request.UpdateHotelRequest;
 import com.example.ISAums.exception.EntityAlreadyExistsException;
 import com.example.ISAums.exception.EntityWithIdDoesNotExist;
-import com.example.ISAums.model.Address;
-import com.example.ISAums.model.Hotel;
-import com.example.ISAums.model.HotelAdmin;
-import com.example.ISAums.model.HotelReservation;
+import com.example.ISAums.model.*;
 import com.example.ISAums.model.enumeration.ReportType;
 import com.example.ISAums.repository.AddressRepository;
 import com.example.ISAums.repository.HotelRepository;
@@ -17,6 +14,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.*;
+import java.util.function.Predicate;
+import java.util.stream.Collectors;
 
 import static com.example.ISAums.converter.HotelConverter.toAddressFromRequest;
 import static com.example.ISAums.util.UtilService.copyNonNullProperties;
@@ -34,8 +33,18 @@ public class HotelService {
     }
 
     @Transactional(readOnly = true)
-    public List<Hotel> getHotels() {
-        return hotelRepository.findAll();
+    public List<Hotel> getHotels(String name, String city, Date startDate, Date endDate) {
+        List<Hotel> hotels = hotelRepository.findAllByNameOrLocation(name, city);
+        return hotels.stream()
+                .filter(hotel -> {
+                    Predicate<Room> predictRoom = e -> {
+                        Predicate<HotelReservation> predictReservation = res -> getHotelReservationPredictCondition(res, startDate, endDate);
+                        return !e.getReservations().stream().anyMatch(predictReservation);
+                    };
+
+                    return hotel.getRooms().stream().anyMatch(predictRoom) ;
+                })
+                .collect(Collectors.toList());
     }
 
     @Transactional(rollbackFor = Exception.class)
@@ -116,5 +125,10 @@ public class HotelService {
         }
 
         hotelRepository.delete(hotel.get());
+    }
+
+    private boolean getHotelReservationPredictCondition(HotelReservation res, Date start, Date end) {
+        return start != null ? res.getStartDate().after(start) : true &&
+                end != null ? res.getEndDate().before(end) : true;
     }
 }

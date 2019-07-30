@@ -6,6 +6,7 @@ import org.hibernate.validator.constraints.Range;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
+import java.util.List;
 
 @Data
 @Builder
@@ -57,4 +58,6 @@ public class Room extends BaseEntity {
     @NotNull
     private Hotel hotel;
 
+    @OneToMany(mappedBy = "room", fetch = FetchType.LAZY)
+    private List<HotelReservation> reservations;
 }
