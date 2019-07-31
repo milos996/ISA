@@ -6,31 +6,57 @@ import com.example.ISAums.exception.CustomException;
 import com.example.ISAums.exception.EntityWithIdDoesNotExist;
 import com.example.ISAums.model.HotelAdmin;
 import com.example.ISAums.model.Room;
+import com.example.ISAums.repository.HotelRepository;
 import com.example.ISAums.repository.HotelReservationRepository;
 import com.example.ISAums.repository.RoomRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.List;
-import java.util.Optional;
-import java.util.UUID;
+import java.util.*;
 
 import static com.example.ISAums.converter.RoomConverter.toRoomFromRequest;
+import static com.example.ISAums.util.Constants.DAY_IN_MILLISECONDS;
 import static com.example.ISAums.util.UtilService.copyNonNullProperties;
 
 @Service
 public class RoomService {
     private final RoomRepository roomRepository;
     private final HotelReservationRepository hotelReservationRepository;
+    private final HotelRepository hotelRepository;
 
-    public RoomService(RoomRepository roomRepository, HotelReservationRepository hotelReservationRepository) {
+    public RoomService(RoomRepository roomRepository, HotelReservationRepository hotelReservationRepository, HotelRepository hotelRepository) {
         this.roomRepository = roomRepository;
         this.hotelReservationRepository = hotelReservationRepository;
+        this.hotelRepository = hotelRepository;
     }
 
     @Transactional(readOnly = true)
-    public List<Room> getRooms() {
-        return roomRepository.findAll();
+    public List<Room> getRooms(Date startDate, Integer numberOfNights, Integer numberOfPeople, Double startPrice, Double endPrice, UUID hotelId) {
+        if (!hotelRepository.existsById(hotelId)) {
+            throw new EntityWithIdDoesNotExist("Hotel", hotelId);
+        }
+
+        Calendar calendar = Calendar.getInstance();
+        int month = calendar.get(Calendar.MONTH) + 1;
+        Date endDate = new Date(startDate.getTime() + (DAY_IN_MILLISECONDS * numberOfNights));
+
+        if (month >= 11 || month <= 2 ) {
+            return roomRepository.findAllInWinter(startPrice, endPrice, endDate, startDate, hotelId, numberOfPeople);
+        }
+
+        if (month >= 3 && month <= 5 ) {
+            return roomRepository.findAllInSpring(startPrice, endPrice, endDate, startDate, hotelId, numberOfPeople);
+        }
+
+        if (month >= 6 && month <= 8 ) {
+            return roomRepository.findAllInSummer(startPrice, endPrice, endDate, startDate, hotelId, numberOfPeople);
+        }
+
+        if (month >= 9 && month <= 10 ) {
+            return roomRepository.findAllInAutumn(startPrice, endPrice, endDate, startDate, hotelId, numberOfPeople);
+        }
+
+        return null;
     }
 
     // TODO: Use token to get user and his hotel id

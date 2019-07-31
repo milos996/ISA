@@ -9,6 +9,7 @@ import org.springframework.data.domain.Persistable;
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import java.time.LocalDateTime;
+import java.util.Date;
 import java.util.UUID;
 
 
@@ -31,16 +32,16 @@ public abstract class BaseEntity implements Persistable<UUID> {
     @NotNull
     @CreationTimestamp
     @Column(name = "time_created")
-    private LocalDateTime timeCreated;
+    private Date timeCreated;
 
     @Column(name = "time_updated")
     @UpdateTimestamp
-    private LocalDateTime timeUpdated;
+    private Date timeUpdated;
 
     @PrePersist
     private void prePersist() {
-        this.timeCreated = LocalDateTime.now();
-        this.timeUpdated = LocalDateTime.now();
+        this.timeCreated = new Date();
+        this.timeUpdated = new Date();
         this.isDeleted = false;
     }
 

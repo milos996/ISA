@@ -8,6 +8,8 @@ import com.example.ISAums.service.RoomService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.xml.crypto.Data;
+import java.util.Date;
 import java.util.List;
 import java.util.UUID;
 
@@ -23,8 +25,15 @@ public class RoomController {
     }
 
     @GetMapping
-    public ResponseEntity<List<GetRoomResponse>> get() {
-        List<Room> rooms = roomService.getRooms();
+    public ResponseEntity<List<GetRoomResponse>> get(
+            @RequestParam(name = "hotelId", required = false) UUID hotelId,
+            @RequestParam(name = "startDate", required = false) Date startDate,
+            @RequestParam(name = "numberOfNights", required = false) Integer numberOfNights,
+            @RequestParam(name = "numberOfPeople", required = false) Integer numberOfPeople,
+            @RequestParam(name = "startPrice", required = false) Double startPrice,
+            @RequestParam(name = "endPrice", required = false) Double endPrice
+            ) {
+        List<Room> rooms = roomService.getRooms(startDate, numberOfNights, numberOfPeople, startPrice,endPrice, hotelId);
         return ResponseEntity.ok(toGetRoomsResponseFromListRooms(rooms));
     }
 

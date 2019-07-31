@@ -8,6 +8,8 @@ import org.springframework.lang.Nullable;
 
 import java.util.*;
 
+import static com.example.ISAums.util.Constants.DAY_IN_MILLISECONDS;
+
 public class UtilService {
 
     public static void copyNonNullProperties(Object src, Object target, @Nullable String... ignoreProperties) {
@@ -37,24 +39,23 @@ public class UtilService {
 
     public static HashMap<String, Date> getStartEndDateFromReportType(ReportType reportType) {
         HashMap<String, Date> dates = new HashMap<String ,Date>();
-        long DAY_IN_MS = 1000 * 60 * 60 * 24;
         Date start = null;
         Date end = null;
         Date now = new Date();
 
         if (reportType == reportType.DAILY) {
-            start = new Date(now.getTime() - (now.getTime() % DAY_IN_MS));
-            end = new Date((now.getTime() + DAY_IN_MS) - ((now.getTime() + DAY_IN_MS) % DAY_IN_MS));
+            start = new Date(now.getTime() - (now.getTime() % DAY_IN_MILLISECONDS));
+            end = new Date((now.getTime() + DAY_IN_MILLISECONDS) - ((now.getTime() + DAY_IN_MILLISECONDS) % DAY_IN_MILLISECONDS));
         }
 
         if (reportType == reportType.WEEKLY) {
-            end = new Date((now.getTime() + DAY_IN_MS) - ((now.getTime() + DAY_IN_MS) % DAY_IN_MS));
-            start = new Date(now.getTime() -  (DAY_IN_MS * 7));
+            end = new Date((now.getTime() + DAY_IN_MILLISECONDS) - ((now.getTime() + DAY_IN_MILLISECONDS) % DAY_IN_MILLISECONDS));
+            start = new Date(now.getTime() -  (DAY_IN_MILLISECONDS * 7));
         }
 
         if (reportType == reportType.MONTHLY) {
-            end = new Date((now.getTime() + DAY_IN_MS) - ((now.getTime() + DAY_IN_MS) % DAY_IN_MS));
-            start = new Date(now.getTime() -  (DAY_IN_MS * 30));
+            end = new Date((now.getTime() + DAY_IN_MILLISECONDS) - ((now.getTime() + DAY_IN_MILLISECONDS) % DAY_IN_MILLISECONDS));
+            start = new Date(now.getTime() -  (DAY_IN_MILLISECONDS * 30));
         }
 
         dates.put("start", start);
