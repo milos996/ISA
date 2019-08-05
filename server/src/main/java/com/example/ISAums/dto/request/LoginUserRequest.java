@@ -13,8 +13,6 @@ import static com.example.ISAums.util.ValidationConstraints.PASSWORD_HASH_SIZE;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@Getter
-@Setter
 public class LoginUserRequest {
 
     @NotBlank

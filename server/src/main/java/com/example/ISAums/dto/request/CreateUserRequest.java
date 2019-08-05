@@ -9,11 +9,10 @@ import javax.validation.constraints.Size;
 
 import static com.example.ISAums.util.ValidationConstraints.*;
 
+@Data
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@Getter
-@Setter
 public class CreateUserRequest {
 
     @NotBlank

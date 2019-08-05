@@ -13,19 +13,18 @@ import java.util.UUID;
 
 @Service
 public class UserDetailsServiceImpl implements UserDetailsService {
-
     @Autowired
     private UserRepository userRepository;
 
     @Override
-    @Transactional
+    @Transactional(readOnly = true)
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
         return this.userRepository.findByEmail(email);
 
     }
 
     // This method is used by JWTAuthenticationFilter
-    @Transactional
+    @Transactional(readOnly = true)
     public User loadUserById(UUID id) {
         return userRepository.findById(id).orElseThrow(
                 () -> new UsernameNotFoundException("User not found with id : " + id)
