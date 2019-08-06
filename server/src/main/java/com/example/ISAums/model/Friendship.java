@@ -5,7 +5,6 @@ import lombok.*;
 import org.hibernate.annotations.Where;
 
 import javax.persistence.*;
-import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 
 @Data
@@ -29,7 +28,6 @@ public class Friendship extends BaseEntity {
 
 	@Column(name = "invitation_status")
 	@Enumerated(EnumType.STRING)
-	@NotBlank
 	private InvitationStatus invitationStatus;
 
 }
