@@ -7,7 +7,8 @@ import org.hibernate.validator.constraints.Range;
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import java.sql.Time;
-import java.time.LocalDateTime;
+import java.time.LocalDate;
+import java.util.UUID;
 
 @Data
 @Builder
@@ -20,11 +21,11 @@ public class Flight extends BaseEntity {
 
   @Column(name = "departure_time")
   @NotNull
-  private LocalDateTime departureTime;
+  private LocalDate departureTime;
 
   @Column(name = "arrival_time")
   @NotNull
-  private LocalDateTime arrivalTime;
+  private LocalDate arrivalTime;
 
   @Column(name = "duration")
   @NotNull
@@ -39,6 +40,7 @@ public class Flight extends BaseEntity {
   @Range(min = 0)
   private Double price;
 
+
   @ManyToOne(fetch = FetchType.EAGER)
   @JoinColumn(name = "airline_destination_id")
   @NotNull
@@ -48,6 +50,7 @@ public class Flight extends BaseEntity {
   @JoinColumn(name = "airplane_id")
   @NotNull
   private Airplane airplane;
+
 
 }
 

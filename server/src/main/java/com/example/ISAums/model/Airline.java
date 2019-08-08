@@ -1,14 +1,12 @@
 package com.example.ISAums.model;
-
 import lombok.*;
 import org.hibernate.annotations.Where;
 import org.hibernate.validator.constraints.Range;
-import org.springframework.data.repository.cdi.Eager;
-
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
+import java.util.List;
 
 import static com.example.ISAums.util.ValidationConstraints.*;
 
@@ -41,7 +39,15 @@ public class Airline extends BaseEntity {
     @Range(min = 0)
     private Double handLuggagePrice;
 
+
     @OneToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "address_id")
     private Address address;
+
+    @OneToMany(fetch = FetchType.EAGER)
+    @NotNull
+    private List<Rating> rating;
+
+
+
 }
