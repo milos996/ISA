@@ -12,6 +12,9 @@ import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import java.util.UUID;
 
+import static com.example.ISAums.util.ValidationConstraints.RATING_MARK_MAX;
+import static com.example.ISAums.util.ValidationConstraints.RATING_MARK_MIN;
+
 @Data
 @Builder
 @Entity
@@ -31,7 +34,7 @@ public class Rating extends BaseEntity{
 
     @Column(name = "mark")
     @NotNull
-    @Range(min = 1, max = 10)
+    @Range(min = RATING_MARK_MIN, max = RATING_MARK_MAX)
     private Integer mark;
 
 

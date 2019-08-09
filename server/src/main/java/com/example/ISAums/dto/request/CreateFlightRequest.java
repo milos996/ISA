@@ -9,12 +9,13 @@ import lombok.NoArgsConstructor;
 import javax.validation.constraints.NotNull;
 import java.sql.Time;
 import java.time.LocalDate;
+import java.util.UUID;
 
 @Data
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class DefineFlightRequest {
+public class CreateFlightRequest {
 
     @NotNull
     private LocalDate departureTime;
@@ -35,7 +36,7 @@ public class DefineFlightRequest {
     private AirlineDestination airlineDestination;
 
     @NotNull
-    private Airplane airplane;
+    private UUID airplaneID;
 
 
 }

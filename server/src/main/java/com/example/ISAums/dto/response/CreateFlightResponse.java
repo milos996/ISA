@@ -10,10 +10,8 @@ import java.util.UUID;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@Getter
-@Setter
-
-public class DefineFlightResponse {
+@Data
+public class CreateFlightResponse {
 
     private UUID id;
 

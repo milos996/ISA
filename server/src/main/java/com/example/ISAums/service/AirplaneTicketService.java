@@ -17,36 +17,39 @@ import java.util.*;
 @Service
 public class AirplaneTicketService {
 
-    @Autowired
-    private AirplaneTicketRepository airplaneTicketRepository;
+    private final AirplaneTicketRepository airplaneTicketRepository;
+    private final FlightRepository flightRepository;
+    private final GroupTripRepository groupTripRepository;
+    private final UserRepository userRepository;
 
-    @Autowired
-    private FlightRepository flightRepository;
+    public AirplaneTicketService(AirplaneTicketRepository airplaneTicketRepository,
+                                 FlightRepository flightRepository, GroupTripRepository groupTripRepository,
+                                 UserRepository userRepository){
 
-    @Autowired
-    private GroupTripRepository groupTripRepository;
-
-    @Autowired
-    private UserRepository userRepository;
+        this.airplaneTicketRepository = airplaneTicketRepository;
+        this.flightRepository = flightRepository;
+        this.groupTripRepository = groupTripRepository;
+        this.userRepository = userRepository;
+    }
 
     //temporary
-    public void reservation(User user, Integer numberOfRow, Integer numberOfColumn, Integer numberOfSegment, Flight flight, GroupTrip groupTrip, GroupTripStatus groupTripStatus) {
+    public void reservation(UUID userID, Integer numberOfRow, Integer numberOfColumn, Integer numberOfSegment, UUID flightID, UUID groupTripID, GroupTripStatus groupTripStatus) {
 
 
-        Optional<User> tmpUser = userRepository.findById(user.getId());
-        Optional<Flight> tmpFlight = flightRepository.findById(flight.getId());
+        Optional<User> tmpUser = userRepository.findById(userID);
+        Optional<Flight> tmpFlight = flightRepository.findById(flightID);
 
         if(tmpUser.get() == null){
-            throw new EntityWithIdDoesNotExist("User", user.getId());
+            throw new EntityWithIdDoesNotExist("User", userID);
         }
 
         if(tmpFlight.get() == null){
-            throw new EntityWithIdDoesNotExist("Flight", flight.getId());
+            throw new EntityWithIdDoesNotExist("Flight", flightID);
         }
 
-        Optional<GroupTrip> tmpGTrip = groupTripRepository.findById(groupTrip.getId());
+        Optional<GroupTrip> tmpGTrip = groupTripRepository.findById(groupTripID);
         if(tmpGTrip.get() == null){
-            throw new EntityWithIdDoesNotExist("GroupTrip", groupTrip.getId());
+            throw new EntityWithIdDoesNotExist("GroupTrip", groupTripID);
         }
 
 
@@ -55,8 +58,8 @@ public class AirplaneTicketService {
                 .numberOfRow(numberOfRow)
                 .numberOfColumn(numberOfColumn)
                 .numberOfSegment(numberOfSegment)
-                .flight(flight)
-                .groupTrip(groupTrip)
+                .flight(tmpFlight.get())
+                .groupTrip(tmpGTrip.get())
                 .groupTripStatus(groupTripStatus)
                 .build();
 
@@ -64,7 +67,7 @@ public class AirplaneTicketService {
         airplaneTicketRepository.save(airplaneTicket);
     }
 
-    public List<Flight> getBoughtFlights(UUID airlineID, Date startDate, Date endDate) {
+    public Double getIncome(UUID airlineID, Date startDate, Date endDate) {
 
         List<UUID> boughtFlightIDs = airplaneTicketRepository.getBoughtFlights(String.valueOf(airlineID), startDate, endDate);
         List<Flight> flights = new ArrayList<Flight>(boughtFlightIDs.size());
@@ -74,6 +77,13 @@ public class AirplaneTicketService {
             flights.add(tmpFlight.get());
         }
 
-        return flights;
+        return flights.stream()
+                .mapToDouble(flight -> {
+                    return flight.getPrice();
+                })
+                .reduce(0, (subtotal, price) -> subtotal + price);
+
+
     }
+
 }

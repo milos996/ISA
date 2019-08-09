@@ -1,5 +1,5 @@
 package com.example.ISAums.service;
-import com.example.ISAums.dto.request.DefineFlightRequest;
+import com.example.ISAums.dto.request.CreateFlightRequest;
 import com.example.ISAums.exception.EntityWithIdDoesNotExist;
 import com.example.ISAums.model.AirlineDestination;
 import com.example.ISAums.model.Flight;
@@ -17,27 +17,31 @@ import java.util.UUID;
 @Service
 public class FlightService {
 
-    @Autowired
-    private FlightRepository flightRepository;
+    private final FlightRepository flightRepository;
+    private final AirlineDestinationRepository airlineDestinationRepository;
+    private final AirplaneRepository airplaneRepository;
 
-    @Autowired
-    private AirlineDestinationRepository airlineDestinationRepository;
+    public FlightService(FlightRepository flightRepository, AirlineDestinationRepository airlineDestinationRepository,
+                         AirplaneRepository airplaneRepository){
 
-    @Autowired
-    private AirplaneRepository airplaneRepository;
+        this.flightRepository = flightRepository;
+        this.airplaneRepository = airplaneRepository;
+        this.airlineDestinationRepository = airlineDestinationRepository;
+
+    }
 
     @Transactional(noRollbackFor = Exception.class)
-    public Flight defineFlight(DefineFlightRequest req) {
+    public Flight defineFlight(CreateFlightRequest req) {
 
         Optional<AirlineDestination> airlineDestination = airlineDestinationRepository.findById(req.getAirlineDestination().getId());
-        Optional<Airplane> airplane = airplaneRepository.findById(req.getAirplane().getId());
+        Optional<Airplane> airplane = airplaneRepository.findById(req.getAirplaneID());
 
         if(airlineDestination.get() == null){
             throw new EntityWithIdDoesNotExist("AirlineDestination", req.getAirlineDestination().getId());
         }
 
         if(airplane.get() == null){
-            throw new EntityWithIdDoesNotExist("Airplane", req.getAirplane().getId());
+            throw new EntityWithIdDoesNotExist("Airplane", req.getAirplaneID());
         }
 
 

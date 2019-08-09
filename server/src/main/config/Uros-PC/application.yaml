@@ -15,6 +15,20 @@ spring:
     generate-ddl: true
     hibernate.ddl-auto: update
 
+  mail:
+    host: smtp.gmail.com
+    port: 587
+    username: uroskojo96@gmail.com
+    password: taenokjcevtkhpya
+    properties:
+      mail:
+        smtp:
+          ssl:
+            trust: smtp.gmail.com
+          auth: true
+          starttls:
+            enable: true
+
 server.servlet.context-path: /api
 
 logging.level.org.springframework.web: DEBUG

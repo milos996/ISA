@@ -1,6 +1,5 @@
 package com.example.ISAums.converter;
 
-import com.example.ISAums.dto.request.DefineFlightRequest;
 import com.example.ISAums.dto.request.UpdateAddressRequest;
 import com.example.ISAums.model.Address;
 

@@ -1,6 +1,6 @@
 package com.example.ISAums.converter;
 
-import com.example.ISAums.dto.response.DefineFlightResponse;
+import com.example.ISAums.dto.response.CreateFlightResponse;
 import com.example.ISAums.dto.response.GetFlightForDestinationResponse;
 import com.example.ISAums.dto.response.SearchFlightsResponse;
 import com.example.ISAums.model.Flight;
@@ -12,9 +12,9 @@ public class FlightConverter {
 
 
 
-    public static DefineFlightResponse toDefineFlightResponseFromFlight(Flight flight){
+    public static CreateFlightResponse toDefineFlightResponseFromFlight(Flight flight){
 
-        return DefineFlightResponse.builder()
+        return CreateFlightResponse.builder()
                 .id(flight.getId())
                 .arrivalTime(flight.getArrivalTime())
                 .departureTime(flight.getDepartureTime())

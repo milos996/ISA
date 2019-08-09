@@ -2,19 +2,13 @@ package com.example.ISAums.model;
 
 import java.util.Collection;
 import java.util.Collections;
-import java.util.HashSet;
-import java.util.Set;
-
 import javax.persistence.*;
-
 import com.example.ISAums.model.enumeration.Role;
 import lombok.*;
-import org.hibernate.annotations.Where;/*
+import org.hibernate.annotations.Where;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
-*/
-
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.validation.constraints.NotBlank;
@@ -30,7 +24,7 @@ import static com.example.ISAums.util.ValidationConstraints.*;
 @AllArgsConstructor
 @Table(name = "user")
 @Where(clause = "is_deleted='false'")
-public class User extends BaseEntity {//implements UserDetails
+public class User extends BaseEntity implements UserDetails{
 
 
 	@Column(name = "first_name")
@@ -72,7 +66,7 @@ public class User extends BaseEntity {//implements UserDetails
 	@NotBlank
 	@Size(max = STATE_SIZE)
 	private String state;
-/*
+
 
 	@Override
 	public Collection<? extends GrantedAuthority> getAuthorities() {
@@ -113,5 +107,5 @@ public class User extends BaseEntity {//implements UserDetails
 		return true;
 	}
 
- */
+
 }

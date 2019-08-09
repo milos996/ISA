@@ -1,14 +1,14 @@
 package com.example.ISAums.controller;
-import com.example.ISAums.dto.request.DefineFlightRequest;
-import com.example.ISAums.dto.request.MakeAirplaneTicketReservationRequest;
+import com.example.ISAums.dto.request.CreateFlightRequest;
+import com.example.ISAums.dto.request.CreateAirplaneTicketReservationRequest;
 import com.example.ISAums.dto.request.SearchFlightsRequest;
-import com.example.ISAums.dto.response.DefineFlightResponse;
+import com.example.ISAums.dto.response.CreateFlightResponse;
 import com.example.ISAums.dto.response.GetFlightForDestinationResponse;
 import com.example.ISAums.dto.response.SearchFlightsResponse;
+import com.example.ISAums.email_service.EmailServiceImpl;
 import com.example.ISAums.model.Flight;
 import com.example.ISAums.service.AirplaneTicketService;
 import com.example.ISAums.service.FlightService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import java.util.List;
@@ -20,16 +20,28 @@ import static com.example.ISAums.converter.FlightConverter.*;
 @RequestMapping("/flights")
 public class FlightController {
 
-    @Autowired
-    private FlightService flightService;
+    private final FlightService flightService;
+    private final AirplaneTicketService airplaneTicketService;
+    private final EmailServiceImpl emailService;
 
-    @Autowired
-    private AirplaneTicketService airplaneTicketService;
+    public FlightController(FlightService flightService, AirplaneTicketService airplaneTicketService,
+                            EmailServiceImpl emailService){
 
+        this.flightService = flightService;
+        this.airplaneTicketService = airplaneTicketService;
+        this.emailService = emailService;
 
+    }
 
-    @PostMapping(value = "/defineFlight")
-    public ResponseEntity<DefineFlightResponse> defineFlight(@RequestBody  DefineFlightRequest req){
+    @PostMapping(value = "/sendInvitationForTrip")
+    public void sendInvitationForTrip(){
+
+        emailService.send("uroskojo96@gmail.com", "uroskojo96@gmail.com", "Invitation","linkzapotvrdu");
+
+    }
+
+    @PostMapping
+    public ResponseEntity<CreateFlightResponse> createFlight(@RequestBody CreateFlightRequest req){
 
         Flight flight = flightService.defineFlight(req);
         return ResponseEntity.ok(toDefineFlightResponseFromFlight(flight));
@@ -42,8 +54,8 @@ public class FlightController {
         return ResponseEntity.ok(toGetFlightForDestinationResponseFromFlights(flights));
     }
 
-    @PostMapping(value = "/searchFlights")
-    public ResponseEntity<List<SearchFlightsResponse>> searchFlights(@RequestBody SearchFlightsRequest req){
+    @GetMapping(value = "/search")
+    public ResponseEntity<List<SearchFlightsResponse>> search(@RequestBody SearchFlightsRequest req){
 
         List<Flight> flights = flightService.searchFlights(req.getDepartureAirport().getId(), req.getDestinationAirport().getId(),
                                      req.getDepartureTime(), req.getArrivalTime());
@@ -52,11 +64,11 @@ public class FlightController {
 
     }
     //temporary
-    @PostMapping(value = "/makeAirplaneTicketReservation")
-    public void ticketReservation(@RequestBody MakeAirplaneTicketReservationRequest req){
+    @PostMapping(value = "/createAirplaneTicketReservation")
+    public void ticketReservation(@RequestBody CreateAirplaneTicketReservationRequest req){
 
-        airplaneTicketService.reservation(req.getUser(), req.getNumberOfRow(), req.getNumberOfColumn()
-                    , req.getNumberOfSegment(), req.getFlight(), req.getGroupTrip(), req.getGroupTripStatus());
+        airplaneTicketService.reservation(req.getUserID(), req.getNumberOfRow(), req.getNumberOfColumn()
+                    , req.getNumberOfSegment(), req.getFlightID(), req.getGroupTripID(), req.getGroupTripStatus());
 
     }
 }

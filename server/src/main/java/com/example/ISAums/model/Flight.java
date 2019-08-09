@@ -8,7 +8,6 @@ import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import java.sql.Time;
 import java.time.LocalDate;
-import java.util.UUID;
 
 @Data
 @Builder

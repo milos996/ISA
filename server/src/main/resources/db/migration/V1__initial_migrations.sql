@@ -401,24 +401,6 @@ create table rating
 
 );
 
-create table airline_rating
-(
-    id varchar(255) not null
-        primary key,
-    is_deleted           bit          not null,
-    time_created         datetime     not null,
-    time_updated         datetime     null,
-    airline_name varchar(128) not null,
-    airline_id varchar(255) not null,
-    mark int not null,
-    rating_id varchar(255) not null,
-    constraint FK_RATED_AIRLINE
-        foreign key (airline_id) references airline (id),
-    constraint FK_RATING_OF_AIRLINE
-        foreign key (rating_id) references rating (id)
-
-);
-
 
 
 
