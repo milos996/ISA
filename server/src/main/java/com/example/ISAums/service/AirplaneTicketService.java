@@ -1,14 +1,9 @@
 package com.example.ISAums.service;
+import com.example.ISAums.dto.request.CreateQuickTicketBookingRequest;
 import com.example.ISAums.exception.EntityWithIdDoesNotExist;
-import com.example.ISAums.model.AirplaneTicket;
-import com.example.ISAums.model.Flight;
-import com.example.ISAums.model.GroupTrip;
-import com.example.ISAums.model.User;
+import com.example.ISAums.model.*;
 import com.example.ISAums.model.enumeration.GroupTripStatus;
-import com.example.ISAums.repository.AirplaneTicketRepository;
-import com.example.ISAums.repository.FlightRepository;
-import com.example.ISAums.repository.GroupTripRepository;
-import com.example.ISAums.repository.UserRepository;
+import com.example.ISAums.repository.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -21,15 +16,22 @@ public class AirplaneTicketService {
     private final FlightRepository flightRepository;
     private final GroupTripRepository groupTripRepository;
     private final UserRepository userRepository;
+    private final AirlineDestinationRepository airlineDestinationRepository;
+    private final AirlineRepository airlineRepository;
+    private final AirplaneRepository airplaneRepository;
 
     public AirplaneTicketService(AirplaneTicketRepository airplaneTicketRepository,
                                  FlightRepository flightRepository, GroupTripRepository groupTripRepository,
-                                 UserRepository userRepository){
+                                 UserRepository userRepository, AirlineDestinationRepository airlineDestinationRepository,
+                                 AirlineRepository airlineRepository, AirplaneRepository airplaneRepository){
 
         this.airplaneTicketRepository = airplaneTicketRepository;
         this.flightRepository = flightRepository;
         this.groupTripRepository = groupTripRepository;
         this.userRepository = userRepository;
+        this.airlineDestinationRepository = airlineDestinationRepository;
+        this.airlineRepository = airlineRepository;
+        this.airplaneRepository = airplaneRepository;
     }
 
     //temporary
@@ -86,4 +88,23 @@ public class AirplaneTicketService {
 
     }
 
+    public void createQuickTicketBooking(CreateQuickTicketBookingRequest req) {
+
+        UUID startAirlineId = airlineDestinationRepository.findAirlineByDestinationId(String.valueOf(req.getStartDestinationId()));
+        //Optional<Airline> startAirline = airlineRepository.findById(startAirlineId);
+        AirlineDestination endDestination = airlineDestinationRepository.findByDestinationId(String.valueOf(req.getEndDestinationId()));
+        Airplane airplane = airplaneRepository.findByAirlineId(startAirlineId);
+
+        Flight flight = Flight.builder()
+                        .airlineDestination(endDestination)
+                        .arrivalTime(req.getArrivalTime())
+                        .departureTime(req.getDepartureTime())
+                        .duration(req.getDuration())
+                        .length(req.getLength())
+                        .price(req.getPrice())
+                        .airplane(airplane)
+                        .build();
+
+        ///...
+    }
 }

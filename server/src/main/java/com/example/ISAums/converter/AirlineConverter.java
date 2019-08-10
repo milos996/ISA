@@ -2,10 +2,12 @@ package com.example.ISAums.converter;
 
 import com.example.ISAums.dto.response.GetAirlineDestinationsResponse;
 import com.example.ISAums.dto.response.GetAirlineIncomeResponse;
+import com.example.ISAums.dto.response.GetAirlineAverageRatingResponse;
 import com.example.ISAums.model.Destination;
 
 import java.util.Date;
 import java.util.List;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 public class AirlineConverter {
@@ -17,7 +19,6 @@ public class AirlineConverter {
                 .endDate(endDate)
                 .income(income)
                 .build();
-
 
     }
 
@@ -32,5 +33,13 @@ public class AirlineConverter {
 
     }
 
+    public static GetAirlineAverageRatingResponse toGetAirlineRatingResponseFromRating(Double avgRating, UUID airlineId){
+
+        return GetAirlineAverageRatingResponse.builder()
+                .airlineId(airlineId)
+                .avgRating(avgRating)
+                .build();
+
+    }
 
 }

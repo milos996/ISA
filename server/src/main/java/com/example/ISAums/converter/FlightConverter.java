@@ -1,11 +1,13 @@
 package com.example.ISAums.converter;
 
 import com.example.ISAums.dto.response.CreateFlightResponse;
+import com.example.ISAums.dto.response.GetFlightAverageRatingResponse;
 import com.example.ISAums.dto.response.GetFlightForDestinationResponse;
 import com.example.ISAums.dto.response.SearchFlightsResponse;
 import com.example.ISAums.model.Flight;
 
 import java.util.List;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 public class FlightConverter {
@@ -57,4 +59,14 @@ public class FlightConverter {
                 ).collect(Collectors.toList());
 
     }
+
+    public static GetFlightAverageRatingResponse toFlightAverageRatingResponseFromAverageRating(Double avgRating, UUID flightId){
+
+        return GetFlightAverageRatingResponse.builder()
+                .avgRating(avgRating)
+                .flightId(flightId)
+                .build();
+
+    }
+
 }

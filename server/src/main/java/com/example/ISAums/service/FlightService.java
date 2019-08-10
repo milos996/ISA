@@ -4,8 +4,8 @@ import com.example.ISAums.exception.EntityWithIdDoesNotExist;
 import com.example.ISAums.model.AirlineDestination;
 import com.example.ISAums.model.Flight;
 import com.example.ISAums.model.Airplane;
+import com.example.ISAums.model.enumeration.RatingType;
 import com.example.ISAums.repository.*;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import java.time.LocalDate;
@@ -20,18 +20,21 @@ public class FlightService {
     private final FlightRepository flightRepository;
     private final AirlineDestinationRepository airlineDestinationRepository;
     private final AirplaneRepository airplaneRepository;
+    private final RatingRepository ratingRepository;
 
     public FlightService(FlightRepository flightRepository, AirlineDestinationRepository airlineDestinationRepository,
-                         AirplaneRepository airplaneRepository){
+                         AirplaneRepository airplaneRepository,
+                         RatingRepository ratingRepository){
 
         this.flightRepository = flightRepository;
         this.airplaneRepository = airplaneRepository;
         this.airlineDestinationRepository = airlineDestinationRepository;
+        this.ratingRepository = ratingRepository;
 
     }
 
     @Transactional(noRollbackFor = Exception.class)
-    public Flight defineFlight(CreateFlightRequest req) {
+    public Flight createFlight(CreateFlightRequest req) {
 
         Optional<AirlineDestination> airlineDestination = airlineDestinationRepository.findById(req.getAirlineDestination().getId());
         Optional<Airplane> airplane = airplaneRepository.findById(req.getAirplaneID());
@@ -81,5 +84,17 @@ public class FlightService {
         }
 
         return flights;
+    }
+
+    public Double getAverageRatingOfFlights(UUID flightId) {
+
+        double sum = 0;
+        List<Integer> marks = ratingRepository.getMarksByEntityId(String.valueOf(flightId), RatingType.FLIGHT);
+
+        for(int i : marks)
+            sum += i;
+
+        return sum/marks.size();
+
     }
 }

@@ -1,7 +1,9 @@
 package com.example.ISAums.controller;
+import com.example.ISAums.dto.request.AirlineReq;
 import com.example.ISAums.dto.request.GetAirlineIncomeRequest;
 import com.example.ISAums.dto.response.GetAirlineDestinationsResponse;
 import com.example.ISAums.dto.response.GetAirlineIncomeResponse;
+import com.example.ISAums.dto.response.GetAirlineAverageRatingResponse;
 import com.example.ISAums.model.Destination;
 import com.example.ISAums.service.AirlineService;
 import com.example.ISAums.service.AirplaneTicketService;
@@ -10,8 +12,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 import java.util.UUID;
 
-import static com.example.ISAums.converter.AirlineConverter.toGetAirlineDestinationsResponseFromDestinations;
-import static com.example.ISAums.converter.AirlineConverter.toGetAirlineIncomeResponseFromIncome;
+import static com.example.ISAums.converter.AirlineConverter.*;
 
 @RestController
 @RequestMapping("/airlines")
@@ -35,7 +36,6 @@ public class AirlineController {
 
         return ResponseEntity.ok(toGetAirlineIncomeResponseFromIncome(req.getStartDate(), req.getEndDate(), income));
 
-
     }
 
     @GetMapping(value = "/getDestinations/{id}")
@@ -46,12 +46,15 @@ public class AirlineController {
         return ResponseEntity.ok(toGetAirlineDestinationsResponseFromDestinations(destinations));
     }
 
-/*
-    @GetMapping(value = "/getRating/{id}")
-    public ResponseEntity<GetAirlineRatingResponse> getRating(){
+    @GetMapping(value = "/getAverageRating/{id}")
+    public ResponseEntity<GetAirlineAverageRatingResponse> getAverageRating(@PathVariable(name = "id") UUID airlineId){
 
+        Double averageRating = airlineService.getAverageRating(airlineId);
 
+        return ResponseEntity.ok(toGetAirlineRatingResponseFromRating(averageRating, airlineId));
     }
-    */
+
+
+
 
 }
