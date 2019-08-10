@@ -1,7 +1,6 @@
 package com.example.ISAums.converter;
 
 import com.example.ISAums.dto.response.GetUserResponse;
-import com.example.ISAums.dto.response.RemoveFriendResponse;
 import com.example.ISAums.dto.response.UpdateUserProfileResponse;
 import com.example.ISAums.model.User;
 

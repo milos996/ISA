@@ -5,6 +5,7 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import javax.validation.constraints.NotBlank;
+import java.util.UUID;
 
 @Data
 @Builder
@@ -12,10 +13,8 @@ import javax.validation.constraints.NotBlank;
 @AllArgsConstructor
 public class SendFriendshipRequestRequest {
 
-    private UpdateUserProfileRequest sender;
+    private UUID senderId;
 
-    private UpdateUserProfileRequest invitedUser;
-
-    private InvitationStatus invitationStatus;
+    private UUID invitedUserId;
 
 }

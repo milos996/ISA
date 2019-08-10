@@ -10,4 +10,6 @@ import lombok.Getter;
 public class SendFriendshipRequestResponse {
 
     private InvitationStatus invitationStatus;
+
+    private String usernameOfInvitedUser;
 }

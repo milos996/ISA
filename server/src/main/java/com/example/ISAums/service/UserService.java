@@ -1,56 +1,53 @@
 package com.example.ISAums.service;
-
 import com.example.ISAums.dto.request.SendFriendshipRequestRequest;
 import com.example.ISAums.dto.request.UpdateUserProfileRequest;
 import com.example.ISAums.exception.CustomException;
-import com.example.ISAums.exception.EntityAlreadyExistsException;
 import com.example.ISAums.exception.EntityWithIdDoesNotExist;
 import com.example.ISAums.model.Friendship;
 import com.example.ISAums.model.enumeration.InvitationStatus;
 import com.example.ISAums.repository.FriendshipRepository;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
 import com.example.ISAums.model.User;
 import com.example.ISAums.repository.UserRepository;
 import org.springframework.transaction.annotation.Transactional;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
-
 import static com.example.ISAums.util.UtilService.copyNonNullProperties;
 
 @Service
 public class UserService {
 
-	@Autowired
-	private UserRepository userRepository;
 
-	@Autowired
-	private FriendshipRepository friendshipRepository;
+	private final UserRepository userRepository;
+
+	private final FriendshipRepository friendshipRepository;
+
+	public UserService(UserRepository userRepository, FriendshipRepository friendshipRepository){
+		this.userRepository = userRepository;
+		this.friendshipRepository = friendshipRepository;
+	}
 
 	public User save(User user) {
 		return userRepository.save(user);
 	}
 
-
 	@Transactional(rollbackFor = Exception.class)
-    public User updateUser(UpdateUserProfileRequest req) {
+    public User updateUser(UpdateUserProfileRequest request) {
 
-		if(!userRepository.existsById(req.getId())){
-			throw new EntityWithIdDoesNotExist("User", req.getId());
+		if(!userRepository.existsById(request.getId())){
+			throw new EntityWithIdDoesNotExist("User", request.getId());
 		}
 
-		if(userRepository.findByEmail(req.getEmail()) != null){
-			throw new CustomException("Email " + req.getEmail() + " already exist.");
+		if(userRepository.findByEmail(request.getEmail()) != null){
+			throw new CustomException("Email " + request.getEmail() + " already exist.");
 		}
-		Optional<User> user = userRepository.findById(req.getId());
-		copyNonNullProperties(req, user.get());
+
+		Optional<User> user = userRepository.findById(request.getId());
+		copyNonNullProperties(request, user.get());
 		save(user.get());
 		return user.get();
-
 	}
 	public List<User> getListOfFriends(UUID user_id){
 
@@ -66,30 +63,25 @@ public class UserService {
 
 	}
 
-	public Friendship sendFriendshipRequest(SendFriendshipRequestRequest req) {
+	public Friendship sendFriendshipRequest(SendFriendshipRequestRequest request) {
 
-        Optional<User> sender = userRepository.findById(req.getSender().getId());
-        copyNonNullProperties(req.getSender(), sender.get());
-        userRepository.save(sender.get());
-
-        Optional<User> invitedUser = userRepository.findById(req.getInvitedUser().getId());
-        copyNonNullProperties(req.getInvitedUser(), invitedUser.get());
-        userRepository.save(invitedUser.get());
+        Optional<User> sender = userRepository.findById(request.getSenderId());
+        Optional<User> invitedUser = userRepository.findById(request.getInvitedUserId());
 
 		Friendship friendship = Friendship.builder()
 				.sender(sender.get())
 				.invitedUser(invitedUser.get())
-				.invitationStatus(req.getInvitationStatus())
+				.invitationStatus(InvitationStatus.PENDING)
 				.build();
 
 		friendshipRepository.save(friendship);
+
 		return friendship;
 	}
 	@Transactional(rollbackFor = Exception.class)
-    public User removeFriend(UUID mine_id, UUID friend_id) {
+    public void removeFriend(UUID mine_id, UUID friend_id) {
 
 		friendshipRepository.removeFriendship(String.valueOf(mine_id), String.valueOf(friend_id));
-		return userRepository.findById(friend_id).get();
 
     }
 }
