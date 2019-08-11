@@ -1,7 +1,5 @@
 package com.example.ISAums.dto.request;
 
-import com.example.ISAums.model.AirlineDestination;
-import com.example.ISAums.model.Airplane;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -33,7 +31,7 @@ public class CreateFlightRequest {
     private Double price;
 
     @NotNull
-    private AirlineDestination airlineDestination;
+    private UUID airlineDestinationID;
 
     @NotNull
     private UUID airplaneID;

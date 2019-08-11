@@ -13,7 +13,6 @@ import java.util.UUID;
 @AllArgsConstructor
 public class CreateAirplaneTicketReservationRequest {
 
-
     @NotNull
     private UUID userID;
 

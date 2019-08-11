@@ -2,12 +2,11 @@ package com.example.ISAums.controller;
 
 import com.example.ISAums.dto.request.CreateQuickTicketBookingRequest;
 import com.example.ISAums.dto.response.CreateQuickTicketBookingResponse;
+import com.example.ISAums.model.AirplaneTicket;
 import com.example.ISAums.service.AirplaneTicketService;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+import static com.example.ISAums.converter.AirplaneTicketConverter.toCreateQuickTicketBookingResponseFromAirplaneTicket;
 
 @RestController
 @RequestMapping("/tickets")
@@ -18,13 +17,16 @@ public class AirplaneTicketController {
     public AirplaneTicketController(AirplaneTicketService airplaneTicketService){
         this.airplaneTicketService = airplaneTicketService;
     }
-/*
+
     @PostMapping
-    public ResponseEntity<CreateQuickTicketBookingResponse> createQuickTicketBooking(@RequestBody CreateQuickTicketBookingRequest req){
+    public ResponseEntity<CreateQuickTicketBookingResponse> createQuickTicketBooking(@RequestBody CreateQuickTicketBookingRequest request){
 
-         airplaneTicketService.createQuickTicketBooking(req);
+         AirplaneTicket airplaneTicket = airplaneTicketService.createQuickTicketBooking(request);
 
-    }*/
+         return ResponseEntity.ok(toCreateQuickTicketBookingResponseFromAirplaneTicket(airplaneTicket));
+    }
+
+
 
 
 }

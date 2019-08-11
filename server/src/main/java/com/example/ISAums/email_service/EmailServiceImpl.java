@@ -6,7 +6,7 @@ import org.springframework.stereotype.Component;
 @Component
 public class EmailServiceImpl implements  EmailService{
 
-    private JavaMailSender javaMailSender;
+    private final JavaMailSender javaMailSender;
 
     public EmailServiceImpl(JavaMailSender javaMailSender){
         this.javaMailSender = javaMailSender;

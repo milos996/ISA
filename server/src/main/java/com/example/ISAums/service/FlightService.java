@@ -30,30 +30,28 @@ public class FlightService {
         this.airplaneRepository = airplaneRepository;
         this.airlineDestinationRepository = airlineDestinationRepository;
         this.ratingRepository = ratingRepository;
-
     }
 
-    @Transactional(noRollbackFor = Exception.class)
-    public Flight createFlight(CreateFlightRequest req) {
+    @Transactional(rollbackFor = Exception.class)
+    public Flight createFlight(CreateFlightRequest request) {
 
-        Optional<AirlineDestination> airlineDestination = airlineDestinationRepository.findById(req.getAirlineDestination().getId());
-        Optional<Airplane> airplane = airplaneRepository.findById(req.getAirplaneID());
+        Optional<AirlineDestination> airlineDestination = airlineDestinationRepository.findById(request.getAirlineDestinationID());
+        Optional<Airplane> airplane = airplaneRepository.findById(request.getAirplaneID());
 
         if(airlineDestination.get() == null){
-            throw new EntityWithIdDoesNotExist("AirlineDestination", req.getAirlineDestination().getId());
+            throw new EntityWithIdDoesNotExist("AirlineDestination", request.getAirlineDestinationID());
         }
 
         if(airplane.get() == null){
-            throw new EntityWithIdDoesNotExist("Airplane", req.getAirplaneID());
+            throw new EntityWithIdDoesNotExist("Airplane", request.getAirplaneID());
         }
 
-
         Flight flight = Flight.builder()
-                .departureTime(req.getDepartureTime())
-                .arrivalTime(req.getArrivalTime())
-                .duration(req.getDuration())
-                .length(req.getLength())
-                .price(req.getPrice())
+                .departureTime(request.getDepartureTime())
+                .arrivalTime(request.getArrivalTime())
+                .duration(request.getDuration())
+                .length(request.getLength())
+                .price(request.getPrice())
                 .airlineDestination(airlineDestination.get())
                 .airplane(airplane.get())
                 .build();
@@ -63,19 +61,17 @@ public class FlightService {
         return flight;
     }
 
-
     public List<Flight> getFlightsForDestination(UUID destinationId) {
 
-        return flightRepository.getFlightsForDestination(String.valueOf(destinationId));
-
+       return flightRepository.getFlightsForDestination(String.valueOf(destinationId));
     }
 
-    public List<Flight> searchFlights(UUID depAirportID, UUID  destAirportID, LocalDate departureTime, LocalDate arrivalTime) {
+    public List<Flight> searchFlights(UUID depAirlineID, UUID  destAirlineID, LocalDate departureTime, LocalDate arrivalTime) {
 
-        String departureAirportID = String.valueOf(depAirportID);
-        String destinationAirportID = String.valueOf(destAirportID);
+        String departureAirlineID = String.valueOf(depAirlineID);
+        String destinationAirlineID = String.valueOf(destAirlineID);
 
-        List<UUID> flightIDs = flightRepository.search(departureAirportID, destinationAirportID, departureTime, arrivalTime);
+        List<UUID> flightIDs = flightRepository.search(departureAirlineID, destinationAirlineID, departureTime, arrivalTime);
         List<Flight> flights = new ArrayList<Flight>(flightIDs.size());
 
         for(int i = 0; i < flightIDs.size(); i++){
@@ -95,6 +91,20 @@ public class FlightService {
             sum += i;
 
         return sum/marks.size();
+    }
 
+    public List<Flight> getQuickBooking() {
+
+        List<Flight> flights = flightRepository.getQuickBookingFlights();
+        double discount = 10;
+        double currentPrice;
+
+        for(int i = 0; i < flights.size(); i++){
+
+            currentPrice = flights.get(i).getPrice();
+            flights.get(i).setPrice(currentPrice - currentPrice/100 * discount);
+        }
+
+        return  flights;
     }
 }

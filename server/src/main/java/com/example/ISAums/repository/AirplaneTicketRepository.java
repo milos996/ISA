@@ -14,4 +14,6 @@ public interface AirplaneTicketRepository extends JpaRepository<AirplaneTicket, 
             "on f.id = airpT.flight_id and airpT.time_created between ?2 and ?3 " +
             "inner join airplane a on f.airplane_id = a.id where a.airline_id = ?1", nativeQuery = true)
     List<UUID> getBoughtFlights(String airlineID, Date startDate, Date endDate);
+
+    List<AirplaneTicket> findAllByFlightId(UUID flightId);
 }

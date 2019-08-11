@@ -1,14 +1,12 @@
 package com.example.ISAums.dto.request;
 
-
-import com.example.ISAums.model.Airline;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-
 import javax.validation.constraints.NotNull;
 import java.time.LocalDate;
+import java.util.UUID;
 
 @Data
 @Builder
@@ -17,10 +15,10 @@ import java.time.LocalDate;
 public class SearchFlightsRequest {
 
     @NotNull
-    private Airline departureAirport;
+    private UUID departureAirlineId;
 
     @NotNull
-    private Airline destinationAirport;
+    private UUID destinationAirlineId;
 
     @NotNull
     private LocalDate departureTime;

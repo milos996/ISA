@@ -1,5 +1,5 @@
 package com.example.ISAums.controller;
-import com.example.ISAums.dto.request.AirlineReq;
+
 import com.example.ISAums.dto.request.GetAirlineIncomeRequest;
 import com.example.ISAums.dto.response.GetAirlineDestinationsResponse;
 import com.example.ISAums.dto.response.GetAirlineIncomeResponse;
@@ -18,7 +18,6 @@ import static com.example.ISAums.converter.AirlineConverter.*;
 @RequestMapping("/airlines")
 public class AirlineController {
 
-
     private final AirplaneTicketService airplaneTicketService;
     private final AirlineService airlineService;
 
@@ -27,7 +26,6 @@ public class AirlineController {
         this.airplaneTicketService = airplaneTicketService;
         this.airlineService = airlineService;
     }
-
 
     @GetMapping(value = "/getAirlineIncomeForDate")
     public ResponseEntity<GetAirlineIncomeResponse> getAirlineIncomeForDate(@RequestBody GetAirlineIncomeRequest req){
@@ -53,8 +51,5 @@ public class AirlineController {
 
         return ResponseEntity.ok(toGetAirlineRatingResponseFromRating(averageRating, airlineId));
     }
-
-
-
 
 }

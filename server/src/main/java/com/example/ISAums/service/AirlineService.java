@@ -1,15 +1,13 @@
 package com.example.ISAums.service;
 
-import com.example.ISAums.model.Airline;
 import com.example.ISAums.model.Destination;
-import com.example.ISAums.model.Flight;
 import com.example.ISAums.model.enumeration.RatingType;
 import com.example.ISAums.repository.AirlineDestinationRepository;
 import com.example.ISAums.repository.AirlineRepository;
 import com.example.ISAums.repository.DestinationRepository;
 import com.example.ISAums.repository.RatingRepository;
 import org.springframework.stereotype.Service;
-
+import org.springframework.transaction.annotation.Transactional;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -33,7 +31,7 @@ public class AirlineService {
         this.airlineRepository = airlineRepository;
     }
 
-
+    @Transactional(readOnly = true)
     public List<Destination> getDestinations(UUID airlineId) {
 
         List<UUID> destinationIDs = airlineDestinationRepository.getDestinationsByAirlineId(String.valueOf(airlineId));
@@ -45,8 +43,6 @@ public class AirlineService {
         }
 
         return destinations;
-
-
     }
 
     public Double getAverageRating(UUID airlineId) {
