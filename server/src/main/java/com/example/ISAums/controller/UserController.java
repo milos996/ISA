@@ -44,6 +44,7 @@ public class UserController {
 
 	@PostMapping(value = "/listOfFriends/{id}")
 	public ResponseEntity<List<GetUserResponse>> getListOfFriends(@PathVariable(name = "id") UUID user_id){
+
 		List<User> friends = userService.getListOfFriends(user_id);
 
 		return ResponseEntity.ok(toGetUserResponseFromUsers(friends));

@@ -19,7 +19,6 @@ import static com.example.ISAums.util.UtilService.copyNonNullProperties;
 @Service
 public class UserService {
 
-
 	private final UserRepository userRepository;
 
 	private final FriendshipRepository friendshipRepository;
@@ -47,6 +46,7 @@ public class UserService {
 		Optional<User> user = userRepository.findById(request.getId());
 		copyNonNullProperties(request, user.get());
 		save(user.get());
+
 		return user.get();
 	}
 	public List<User> getListOfFriends(UUID user_id){
@@ -60,7 +60,6 @@ public class UserService {
 		}
 
 		return friends;
-
 	}
 
 	public Friendship sendFriendshipRequest(SendFriendshipRequestRequest request) {
@@ -82,6 +81,5 @@ public class UserService {
     public void removeFriend(UUID mine_id, UUID friend_id) {
 
 		friendshipRepository.removeFriendship(String.valueOf(mine_id), String.valueOf(friend_id));
-
     }
 }

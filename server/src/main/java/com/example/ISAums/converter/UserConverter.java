@@ -3,12 +3,10 @@ package com.example.ISAums.converter;
 import com.example.ISAums.dto.response.GetUserResponse;
 import com.example.ISAums.dto.response.UpdateUserProfileResponse;
 import com.example.ISAums.model.User;
-
 import java.util.List;
 import java.util.stream.Collectors;
 
 public class UserConverter {
-
 
     public static UpdateUserProfileResponse toUpdateUserProfileResponseFromUser(User user){
 
@@ -34,9 +32,5 @@ public class UserConverter {
                     .build()
                     )
                     .collect(Collectors.toList());
-
     }
-
-
-
 }

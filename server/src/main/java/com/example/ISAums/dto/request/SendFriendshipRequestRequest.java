@@ -1,10 +1,9 @@
 package com.example.ISAums.dto.request;
-import com.example.ISAums.model.enumeration.InvitationStatus;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 import java.util.UUID;
 
 @Data
@@ -13,8 +12,10 @@ import java.util.UUID;
 @AllArgsConstructor
 public class SendFriendshipRequestRequest {
 
+    @NotNull
     private UUID senderId;
 
+    @NotNull
     private UUID invitedUserId;
 
 }
