@@ -41,7 +41,15 @@ public class FlightController {
 
         Flight flight = flightService.createFlight(request);
 
-        return ResponseEntity.ok(toDefineFlightResponseFromFlight(flight));
+        return ResponseEntity.ok(toCreateFlightResponseFromFlight(flight));
+    }
+
+    @PutMapping
+    public ResponseEntity<UpdateFlightResponse> update(@RequestBody UpdateFlightRequest request){
+
+        Flight flight = flightService.update(request);
+
+        return ResponseEntity.ok(toUpdateFlightResponseFromFlight(flight));
     }
 
     @GetMapping(value = "/destination/{id}")
@@ -59,14 +67,6 @@ public class FlightController {
         List<Flight> flights = flightService.searchFlights(departureAirlineId, destinationAirlineId, departureTime, arrivalTime);
 
         return ResponseEntity.ok(toSearchFlightsResponseFromFlights(flights));
-
-    }
-    //temporary
-    @PostMapping(value = "/createAirplaneTicketReservation")
-    public void ticketReservation(@RequestBody CreateAirplaneTicketReservationRequest req){
-
-        airplaneTicketService.reservation(req.getUserID(), req.getNumberOfRow(), req.getNumberOfColumn()
-                    , req.getNumberOfSegment(), req.getFlightID(), req.getGroupTripID(), req.getGroupTripStatus());
 
     }
 

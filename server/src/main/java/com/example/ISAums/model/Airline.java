@@ -6,8 +6,6 @@ import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
-
-
 import static com.example.ISAums.util.ValidationConstraints.*;
 
 @Data
@@ -38,7 +36,6 @@ public class Airline extends BaseEntity {
     @NotNull
     @Range(min = 0)
     private Double handLuggagePrice;
-
 
     @OneToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "address_id")

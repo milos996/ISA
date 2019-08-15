@@ -11,4 +11,6 @@ public interface AirlineDestinationRepository  extends JpaRepository<AirlineDest
             " on d.id = ad.destination_id where ad.airline_id = ?1", nativeQuery = true)
     List<UUID> getDestinationsByAirlineId(String airlineId);
 
+    @Query(value = "delete from airline_destination ad where ad.destination_id = ?1 and ad.airline_id = ?2", nativeQuery = true)
+    void remove(UUID destinationId, UUID airlineId);
 }

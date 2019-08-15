@@ -1,10 +1,13 @@
 package com.example.ISAums.service;
+import com.example.ISAums.dto.request.CreateAirplaneTicketReservationRequest;
 import com.example.ISAums.dto.request.CreateQuickTicketBookingRequest;
-import com.example.ISAums.exception.EntityWithIdDoesNotExist;
+import com.example.ISAums.email_service.EmailServiceImpl;
 import com.example.ISAums.model.*;
 import com.example.ISAums.model.enumeration.GroupTripStatus;
 import com.example.ISAums.repository.*;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
 import java.util.*;
 
 @Service
@@ -14,44 +17,103 @@ public class AirplaneTicketService {
     private final FlightRepository flightRepository;
     private final GroupTripRepository groupTripRepository;
     private final UserRepository userRepository;
+    private final EmailServiceImpl emailService;
 
     public AirplaneTicketService(AirplaneTicketRepository airplaneTicketRepository,
                                  FlightRepository flightRepository, GroupTripRepository groupTripRepository,
-                                 UserRepository userRepository){
+                                 UserRepository userRepository, EmailServiceImpl emailService){
 
         this.airplaneTicketRepository = airplaneTicketRepository;
         this.flightRepository = flightRepository;
         this.groupTripRepository = groupTripRepository;
         this.userRepository = userRepository;
+        this.emailService = emailService;
     }
-    //temporary
-    public void reservation(UUID userID, Integer numberOfRow, Integer numberOfColumn, Integer numberOfSegment, UUID flightID, UUID groupTripID, GroupTripStatus groupTripStatus) {
 
-        Optional<User> tmpUser = userRepository.findById(userID);
-        Optional<Flight> tmpFlight = flightRepository.findById(flightID);
+    @Transactional(rollbackFor = Exception.class)
+      public void reservation(CreateAirplaneTicketReservationRequest request){
 
-        if(tmpUser.get() == null){
-            throw new EntityWithIdDoesNotExist("User", userID);
+        boolean [][][]seatConfig = request.getSeatConfiguration();
+        Optional<Flight> flight = flightRepository.findById(request.getFlightID());
+        Airplane airplane = flight.get().getAirplane();
+
+        int numOfSegments = airplane.getNumberOfSegments();
+        int numOfColumns = airplane.getNumberOfColumnsPerSegment();
+        int numOfRows = airplane.getNumberOfRows();
+
+        int segment = 0;
+        int row = 0;
+        int column = 0;
+
+       List<String> coordinatesOfSeats = new ArrayList<>();
+
+        for(segment = 0; segment < numOfSegments; segment++) {
+            for (row = 0; row < numOfRows; row++) {
+                for (column = 0; column < numOfColumns; column++) {
+
+                    if(seatConfig[segment][row][column])
+                        coordinatesOfSeats.add(segment+":"+row+":"+column); //saving coordinates of reserved seat
+                }
+            }
         }
 
-        if(tmpFlight.get() == null){
-            throw new EntityWithIdDoesNotExist("Flight", flightID);
-        }
+        User userOwner = userRepository.findById(request.getUserID()).get();
+        String [] segment_row_column = coordinatesOfSeats.get(0).split(":");
 
-        Optional<GroupTrip> tmpGTrip = groupTripRepository.findById(groupTripID);
-        if(tmpGTrip.get() == null){
-            throw new EntityWithIdDoesNotExist("GroupTrip", groupTripID);
-        }
+        segment = Integer.parseInt(segment_row_column[0]);
+        row = Integer.parseInt(segment_row_column[1]);
+        column = Integer.parseInt(segment_row_column[2]);
 
         AirplaneTicket airplaneTicket = AirplaneTicket.builder()
-                .user(tmpUser.get())
-                .numberOfRow(numberOfRow)
-                .numberOfColumn(numberOfColumn)
-                .numberOfSegment(numberOfSegment)
-                .flight(tmpFlight.get())
-                .groupTrip(tmpGTrip.get())
-                .groupTripStatus(groupTripStatus)
+                .flight(flight.get())
+                .user(userOwner)
+                .groupTrip(null)
+                .groupTripStatus(null)
+                .numberOfSegment(segment+1)
+                .numberOfRow(row+1)
+                .numberOfColumn(column+1)
                 .build();
+
+        int counter = 0;
+
+        if(coordinatesOfSeats.size() > 1){
+
+            coordinatesOfSeats.remove(0);   // because of userOwner seat
+
+            GroupTrip groupTrip = GroupTrip.builder()
+                                    .name("Group Trip First")
+                                    .build();
+
+            groupTripRepository.save(groupTrip);
+            airplaneTicket.setGroupTrip(groupTrip);
+            airplaneTicket.setGroupTripStatus(GroupTripStatus.PENDING);
+
+            while(counter < coordinatesOfSeats.size()){
+
+                UUID userId = request.getInvitedUsers().get(counter);
+                Optional<User> invitedUser = userRepository.findById(userId);
+                emailService.send(userOwner.getEmail(), invitedUser.get().getEmail(), "Trip invitation", "link");
+
+                segment_row_column = coordinatesOfSeats.get(counter).split(":");
+
+                segment = Integer.parseInt(segment_row_column[0]);
+                row = Integer.parseInt(segment_row_column[1]);
+                column = Integer.parseInt(segment_row_column[2]);
+
+                AirplaneTicket airplaneTicketInvited = AirplaneTicket.builder()
+                        .flight(flight.get())
+                        .user(invitedUser.get())
+                        .groupTrip(groupTrip)
+                        .groupTripStatus(GroupTripStatus.PENDING)
+                        .numberOfSegment(segment+1)
+                        .numberOfRow(row+1)
+                        .numberOfColumn(column+1)
+                        .build();
+
+                airplaneTicketRepository.save(airplaneTicketInvited);
+                counter++;
+            }
+        }
 
         airplaneTicketRepository.save(airplaneTicket);
     }
@@ -90,6 +152,7 @@ public class AirplaneTicketService {
         return  seatsOfAirplane;
     }
 
+    @Transactional(rollbackFor = Exception.class)
     public AirplaneTicket createQuickTicketBooking(CreateQuickTicketBookingRequest request) {
 
         Optional<User> user = userRepository.findById(request.getUserId());

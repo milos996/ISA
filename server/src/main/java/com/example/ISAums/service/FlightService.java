@@ -1,5 +1,6 @@
 package com.example.ISAums.service;
 import com.example.ISAums.dto.request.CreateFlightRequest;
+import com.example.ISAums.dto.request.UpdateFlightRequest;
 import com.example.ISAums.exception.EntityWithIdDoesNotExist;
 import com.example.ISAums.model.AirlineDestination;
 import com.example.ISAums.model.Flight;
@@ -13,6 +14,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
+import static com.example.ISAums.util.UtilService.copyNonNullProperties;
 
 @Service
 public class FlightService {
@@ -106,5 +108,27 @@ public class FlightService {
         }
 
         return  flights;
+    }
+
+    @Transactional(rollbackFor = Exception.class)
+    public Flight update(UpdateFlightRequest request) {
+
+        if(!flightRepository.existsById(request.getId())){
+            throw new EntityWithIdDoesNotExist("Flight", request.getId());
+        }
+
+        Optional<Flight> flight = flightRepository.findById(request.getId());
+        UUID airlineDestinationId = flight.get().getAirlineDestination().getId();
+
+        if(!String.valueOf(airlineDestinationId).equals(String.valueOf(request.getAirlineDestinationId()))){
+
+            Optional<AirlineDestination> tmpAirlineDestination = airlineDestinationRepository.findById(request.getAirlineDestinationId());
+            flight.get().setAirlineDestination(tmpAirlineDestination.get());
+        }
+
+        copyNonNullProperties(request, flight.get(), "airlineDestination", "airplane");
+        flightRepository.save(flight.get());
+
+        return flight.get();
     }
 }

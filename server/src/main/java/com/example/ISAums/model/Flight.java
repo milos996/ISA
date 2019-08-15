@@ -3,7 +3,6 @@ package com.example.ISAums.model;
 import lombok.*;
 import org.hibernate.annotations.Where;
 import org.hibernate.validator.constraints.Range;
-
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import java.sql.Time;
@@ -38,7 +37,6 @@ public class Flight extends BaseEntity {
   @NotNull
   @Range(min = 0)
   private Double price;
-
 
   @ManyToOne(fetch = FetchType.EAGER)
   @JoinColumn(name = "airline_destination_id")

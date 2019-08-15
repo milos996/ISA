@@ -1,5 +1,6 @@
 package com.example.ISAums.controller;
 
+import com.example.ISAums.dto.request.CreateAirplaneTicketReservationRequest;
 import com.example.ISAums.dto.request.CreateQuickTicketBookingRequest;
 import com.example.ISAums.dto.response.CreateQuickTicketBookingResponse;
 import com.example.ISAums.model.AirplaneTicket;
@@ -26,6 +27,11 @@ public class AirplaneTicketController {
          return ResponseEntity.ok(toCreateQuickTicketBookingResponseFromAirplaneTicket(airplaneTicket));
     }
 
+    @PostMapping(value = "/createReservation")
+    public void ticketReservation(@RequestBody CreateAirplaneTicketReservationRequest request){
+
+        airplaneTicketService.reservation(request);
+    }
 
 
 

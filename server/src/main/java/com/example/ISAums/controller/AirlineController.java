@@ -1,17 +1,14 @@
 package com.example.ISAums.controller;
 
 import com.example.ISAums.dto.request.GetAirlineIncomeRequest;
-import com.example.ISAums.dto.response.GetAirlineDestinationsResponse;
+import com.example.ISAums.dto.request.UpdateAirlineRequest;
 import com.example.ISAums.dto.response.GetAirlineIncomeResponse;
 import com.example.ISAums.dto.response.GetAirlineAverageRatingResponse;
-import com.example.ISAums.model.Destination;
 import com.example.ISAums.service.AirlineService;
 import com.example.ISAums.service.AirplaneTicketService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import java.util.List;
 import java.util.UUID;
-
 import static com.example.ISAums.converter.AirlineConverter.*;
 
 @RestController
@@ -27,21 +24,20 @@ public class AirlineController {
         this.airlineService = airlineService;
     }
 
+    @PutMapping
+    public ResponseEntity update(@RequestBody UpdateAirlineRequest request){
+
+        airlineService.update(request);
+
+        return ResponseEntity.ok().build();
+    }
+
     @GetMapping(value = "/getAirlineIncomeForDate")
     public ResponseEntity<GetAirlineIncomeResponse> getAirlineIncomeForDate(@RequestBody GetAirlineIncomeRequest req){
 
         Double income = airplaneTicketService.getIncome(req.getAirlineID(), req.getStartDate(), req.getEndDate());
 
         return ResponseEntity.ok(toGetAirlineIncomeResponseFromIncome(req.getStartDate(), req.getEndDate(), income));
-
-    }
-
-    @GetMapping(value = "/getDestinations/{id}")
-    public ResponseEntity<List<GetAirlineDestinationsResponse>> getDestinations(@PathVariable(name = "id") UUID airlineId){
-
-        List<Destination> destinations = airlineService.getDestinations(airlineId);
-
-        return ResponseEntity.ok(toGetAirlineDestinationsResponseFromDestinations(destinations));
     }
 
     @GetMapping(value = "/getAverageRating/{id}")

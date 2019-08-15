@@ -8,7 +8,7 @@ import java.util.stream.Collectors;
 
 public class FlightConverter {
 
-    public static CreateFlightResponse toDefineFlightResponseFromFlight(Flight flight){
+    public static CreateFlightResponse toCreateFlightResponseFromFlight(Flight flight){
 
         return CreateFlightResponse.builder()
                 .id(flight.getId())
@@ -69,5 +69,12 @@ public class FlightConverter {
                                 .price(flight.getPrice())
                                 .build()
                 ).collect(Collectors.toList());
+    }
+
+    public static UpdateFlightResponse toUpdateFlightResponseFromFlight(Flight flight){
+
+        return UpdateFlightResponse.builder()
+                            .id(flight.getId())
+                            .build();
     }
 }
