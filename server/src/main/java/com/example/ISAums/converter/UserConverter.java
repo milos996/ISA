@@ -16,8 +16,8 @@ public class UserConverter {
                 .lastName(request.getLastName())
                 .phoneNumber(request.getPhoneNumber())
                 .city(request.getCity())
-                .state(request.getState())
                 .role(Role.USER)
+                .isEnabled(false)
                 .build();
     }
 
@@ -25,10 +25,11 @@ public class UserConverter {
         return CreateUserResponse.builder()
                 .id(user.getId())
                 .email(user.getEmail())
+                .message("Check your email to complete registration!")
                 .build();
     }
 
-    public static LoginUserResponse loginRepsonseFromToken(String token) {
+    public static LoginUserResponse toLoginUserResponseFromToken(String token) {
         return LoginUserResponse.builder()
                 .token(token)
                 .build();

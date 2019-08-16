@@ -72,6 +72,10 @@ public class User extends BaseEntity implements UserDetails {
 	@Size(max = STATE_SIZE)
 	private String state;
 
+	@NotNull
+	@Column(name = "is_enabled")
+	private Boolean isEnabled;
+
 
 	@Override
 	public Collection<? extends GrantedAuthority> getAuthorities() {
@@ -108,7 +112,5 @@ public class User extends BaseEntity implements UserDetails {
 	}
 
 	@Override
-	public boolean isEnabled() {
-		return true;
-	}
+	public boolean isEnabled() { return isEnabled; }
 }

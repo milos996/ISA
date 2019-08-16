@@ -22,7 +22,6 @@ public class JwtTokenUtil {
         this.customProperties = customProperties;
     }
 
-
     public String generateAuthToken(User user) {
         Date now = new Date();
         Date expiryDate = new Date(now.getTime() + customProperties.getJwtExpirationInMs());
@@ -58,7 +57,6 @@ public class JwtTokenUtil {
         }
         return false;
     }
-
 
     public UUID getUserIdFromJwt(String token) {
         Claims claims = Jwts.parser()

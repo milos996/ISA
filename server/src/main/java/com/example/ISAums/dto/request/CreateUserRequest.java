@@ -32,15 +32,15 @@ public class CreateUserRequest {
     private String password;
 
     @NotBlank
+    @Size(max = PASSWORD_HASH_SIZE)
+    private String password2nd;
+
+    @NotBlank
     @Size(max = PHONE_NUMBER_SIZE)
     private String phoneNumber;
 
     @NotBlank
     @Size(max = CITY_SIZE)
     private String city;
-
-    @NotBlank
-    @Size(max = STATE_SIZE)
-    private String state;
 
 }

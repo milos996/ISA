@@ -14,4 +14,6 @@ public class CreateUserResponse {
 
     private String email;
 
+    private String message;
+
 }
