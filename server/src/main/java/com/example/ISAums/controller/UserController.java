@@ -1,15 +1,19 @@
 package com.example.ISAums.controller;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import com.example.ISAums.service.UserService;
 
 @RestController
-@RequestMapping(value="api/users")
+@RequestMapping(value="/users")
 public class UserController {
 
-	@Autowired
-	private UserService userService;
+	private final UserService userService;
+
+	public UserController(UserService userService){
+		this.userService = userService;
+	}
+
+
+
+
 }

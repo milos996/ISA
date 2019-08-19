@@ -2,7 +2,6 @@ package com.example.ISAums.model;
 
 import lombok.*;
 import org.hibernate.annotations.Where;
-
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 
@@ -15,12 +14,10 @@ import javax.validation.constraints.NotNull;
 @Where(clause = "is_deleted='false'")
 public class AirlineDestination extends BaseEntity {
 
-
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "destination_id")
     @NotNull
     private Destination destination;
-
 
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "airline_id")

@@ -42,6 +42,6 @@ public class Airplane extends BaseEntity {
 
     @JoinColumn(name = "airline_id")
     @NotNull
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     private Airline airline;
 }

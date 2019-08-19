@@ -390,8 +390,16 @@ create table vehicle_reservation
         foreign key (vehicle_id) references vehicle (id)
 );
 
+create table rating
+(
+    id varchar(255) not null
+        primary key,
+    entity_id varchar(255) not null,
+    entity_type varchar(255) not null,
+    mark int not null
 
 
+);
 
 
 
