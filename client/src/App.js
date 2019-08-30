@@ -4,14 +4,15 @@ import HomeComponent from "./pages/Home";
 import LoginComponent from "./pages/Login";
 import HotelProfile from "./pages/HotelProfile";
 import PrivateRoute from "./components/UI/PrivateRoute";
-import "./styles/App.css";
+import ErrorInformationModal from "./components/UI/ErrorInformationModal";
 
 const App = () => {
   return (
     <Router>
       <PrivateRoute exact path="/" component={HomeComponent} />
+      <Route exact path="/user/:id/hotel" component={HotelProfile} />
       <Route exact path="/login" component={LoginComponent} />
-      <Route path="/user/:id/hotel/:hotelId" component={HotelProfile} />
+      <ErrorInformationModal />
     </Router>
   );
 };

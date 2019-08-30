@@ -1,2 +1,9 @@
 export const GET_HOTEL_DETAILS = "get_hotel_details";
 export const PUT_HOTEL_DETAILS = "put_hotel_details";
+export const PUT_CHANGE_HOTEL_SERVICES = "put_change_hotel_services";
+export const PUT_ADD_NEW_SERVICE = "put_add_new_service";
+export const SAVE_SERVICES = "save_services";
+export const PUT_HOTEL_SERVICES = "put_hotel_services";
+export const FETCH_HOTEL_SERVICES = "fetch_hotel_services";
+export const FETCH_HOTEL_DETAILS = "fetch_hotel_details";
+export const SAVE_ROOM_DETAILS = "save_room_details";
