@@ -37,7 +37,4 @@ public class UpdateUserProfileRequest {
 
     @Size(max = STATE_SIZE)
     private String state;
-
-
-
 }
