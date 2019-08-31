@@ -30,7 +30,6 @@ public class UserController {
 	public ResponseEntity<UpdateUserProfileResponse> updateUserProfile(@RequestBody UpdateUserProfileRequest request){
 
 		User user = userService.updateUser(request);
-
 		return ResponseEntity.ok(toUpdateUserProfileResponseFromUser(user));
 	}
 
@@ -38,7 +37,6 @@ public class UserController {
 	public ResponseEntity<SendFriendshipRequestResponse> sendFriendshipRequest(@RequestBody SendFriendshipRequestRequest request){
 
 		Friendship friendship = userService.sendFriendshipRequest(request);
-
 		return ResponseEntity.ok(toSendFriendshipRequestResponseFromFriendship(friendship));
 	}
 
@@ -46,7 +44,6 @@ public class UserController {
 	public ResponseEntity<List<GetUserResponse>> getListOfFriends(@PathVariable(name = "id") UUID user_id){
 
 		List<User> friends = userService.getListOfFriends(user_id);
-
 		return ResponseEntity.ok(toGetUserResponseFromUsers(friends));
 	}
 
@@ -54,7 +51,6 @@ public class UserController {
 	public ResponseEntity removeFriendFromListOfFriends(@RequestBody RemoveFriendshipRequest request){
 
         userService.removeFriend(request.getMineId(), request.getFriendsId());
-
 		return ResponseEntity.ok().build();
 	}
 

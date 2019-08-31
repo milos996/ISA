@@ -77,9 +77,9 @@ public class UserService {
 
 		return friendship;
 	}
+
 	@Transactional(rollbackFor = Exception.class)
     public void removeFriend(UUID mine_id, UUID friend_id) {
-
 		friendshipRepository.removeFriendship(String.valueOf(mine_id), String.valueOf(friend_id));
     }
 }

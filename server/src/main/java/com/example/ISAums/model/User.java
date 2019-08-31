@@ -13,7 +13,6 @@ import javax.persistence.Entity;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
-
 import static com.example.ISAums.util.ValidationConstraints.*;
 
 @Data
@@ -66,7 +65,6 @@ public class User extends BaseEntity implements UserDetails{
 	@Size(max = STATE_SIZE)
 	private String state;
 
-
 	@Override
 	public Collection<? extends GrantedAuthority> getAuthorities() {
 		return Collections.singletonList(new SimpleGrantedAuthority(this.getRole().toString()));
@@ -105,6 +103,5 @@ public class User extends BaseEntity implements UserDetails{
 	public boolean isEnabled() {
 		return true;
 	}
-
-
+	
 }

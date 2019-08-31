@@ -1,5 +1,4 @@
 package com.example.ISAums.dto.request;
-
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -38,7 +37,4 @@ public class UpdateUserProfileRequest {
 
     @Size(max = STATE_SIZE)
     private String state;
-
-
-
 }

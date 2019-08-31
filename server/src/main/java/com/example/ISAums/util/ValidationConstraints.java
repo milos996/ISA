@@ -28,7 +28,8 @@ public class ValidationConstraints {
     public final static int LONGITUDE_MAX = 180;
     public final static int LATITUDE_MAX= 90;
 
-
+    public final static int RATING_MARK_MIN = 1;
+    public final static int RATING_MARK_MAX = 10;
 
 
 
