@@ -6,7 +6,12 @@ import { makeStyles } from "@material-ui/core/styles";
 import TextField from "@material-ui/core/TextField";
 import Modal from "@material-ui/core/Modal";
 import img from "../../assets/building.png";
-import { fetchHotelDetails, putHotelDetails } from "../../store/hotel/actions";
+import {
+  fetchHotelDetails,
+  putHotelDetails,
+  putHotelLocationInformation,
+  saveHotelDetails
+} from "../../store/hotel/actions";
 import { MODAL_CONTENT } from "../../constants/hotel";
 import { selectHotelDetails } from "../../store/hotel/selectors";
 import Report from "./Report";
@@ -23,7 +28,12 @@ export default function HotelInformation({ hotelId }) {
     value: ""
   });
 
-  function setAddress(address) {}
+  function setStreet(street) {
+    dispatch(putHotelLocationInformation({ street }));
+  }
+  function handleSaveButton() {
+    dispatch(saveHotelDetails(hotelDetails));
+  }
 
   useEffect(() => {
     dispatch(fetchHotelDetails({ hotelId }));
@@ -68,7 +78,6 @@ export default function HotelInformation({ hotelId }) {
           >
             Report
           </Button>
-          {/* <Button>Rooms</Button> */}
           <Button
             onClick={() =>
               setModalContent({
@@ -90,6 +99,14 @@ export default function HotelInformation({ hotelId }) {
               root: classes.root
             }}
           >
+            <Button
+              variant="contained"
+              color="primary"
+              className={classes.button}
+              onClick={handleSaveButton}
+            >
+              Save
+            </Button>
             <TextField
               label="Name"
               className={classes.textField}
@@ -112,7 +129,7 @@ export default function HotelInformation({ hotelId }) {
               }}
             />
           </Container>
-          <ISAMap address={hotelDetails.address} setAddress={setAddress} />
+          <ISAMap address={hotelDetails.address} setStreet={setStreet} />
         </Container>
       </Container>
     </div>
@@ -126,7 +143,7 @@ const useStyles = makeStyles(theme => ({
   },
   inputs: {
     display: "flex",
-    flexDirection: "row"
+    flexDirection: "column"
   },
   textField: {
     marginLeft: theme.spacing(1),
@@ -145,5 +162,10 @@ const useStyles = makeStyles(theme => ({
     padding: "0px 0px 0px 0px",
     border: "0px none",
     justifyContent: "flex-end"
+  },
+  button: {
+    margin: theme.spacing(1),
+    width: "30%",
+    marginLeft: "auto"
   }
 }));

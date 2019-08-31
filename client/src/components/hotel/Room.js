@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { makeStyles } from "@material-ui/core/styles";
+import { useDispatch } from "react-redux";
 import Card from "@material-ui/core/Card";
 import CardActions from "@material-ui/core/CardActions";
 import CardContent from "@material-ui/core/CardContent";
@@ -10,13 +11,16 @@ import IconButton from "@material-ui/core/IconButton";
 import Modal from "@material-ui/core/Modal";
 import EditRoom from "./EditRoom";
 import IsaDialog from "../UI/IsaDialog";
+import { deleteRoom } from "../../store/hotel/actions";
 
 export default function HotelRoom({ room }) {
   const classes = useStyles();
+  const dispatch = useDispatch();
   const [isEditModalVisible, setEditModalVisibility] = useState(false);
   const [isDialogForDeleteVisible, setDialogVisibility] = useState(false);
 
   function handleDeleteRoom() {
+    dispatch(deleteRoom({ roomId: room.id }));
     setDialogVisibility(false);
   }
 

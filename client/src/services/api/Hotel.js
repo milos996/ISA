@@ -4,18 +4,19 @@ import { format } from "util";
 const ENDPOINTS = {
   HOTEL_SERVICES: "/hotel-services/%s",
   HOTEL_DETAILS: "/hotels/%s",
-  ROOM_DETAILS: "/rooms"
+  SAVE_HOTEL: "/hotels",
+  ROOM_DETAILS: "/rooms",
+  DELETE_ROOM: "/rooms/%s"
 };
 class HotelService extends HttpBaseClient {
   fetchServices = hotelId => {
     this.getApiClient().get(format(ENDPOINTS.HOTEL_SERVICES, hotelId));
   };
 
-  changeServices = (services, hotelId) => {
-    const formedData = formDataForChangeService(services);
+  saveServices = (hotelId, services) => {
     this.getApiClient().put(
       format(ENDPOINTS.HOTEL_SERVICES, hotelId),
-      formedData
+      services
     );
   };
 
@@ -24,6 +25,14 @@ class HotelService extends HttpBaseClient {
   };
   saveRoomDetails = roomDetails => {
     return this.getApiClient().put(ENDPOINTS.ROOM_DETAILS, roomDetails);
+  };
+
+  deleteRoom = roomId => {
+    return this.getApiClient().delete(format(ENDPOINTS.DELETE_ROOM, roomId));
+  };
+
+  saveHotel = hotelDetails => {
+    return this.getApiClient().put(ENDPOINTS.SAVE_HOTEL, hotelDetails);
   };
 }
 

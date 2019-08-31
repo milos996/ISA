@@ -121,6 +121,7 @@ export default function Services({ closeModal, hotelId }) {
         onClick={() => {
           dispatch(
             saveServices({
+              hotelId,
               services: hotelServices,
               callback: () => {
                 closeModal();

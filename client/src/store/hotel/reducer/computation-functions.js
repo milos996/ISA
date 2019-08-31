@@ -67,3 +67,16 @@ export function setServices(state, data) {
     services
   };
 }
+
+export function putHotelLocationInformation(state, payload) {
+  return {
+    ...state,
+    data: {
+      ...state.data,
+      address: {
+        ...state.data.address,
+        ...payload
+      }
+    }
+  };
+}

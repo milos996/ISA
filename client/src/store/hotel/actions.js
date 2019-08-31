@@ -6,7 +6,11 @@ import {
   PUT_HOTEL_SERVICES,
   FETCH_HOTEL_SERVICES,
   FETCH_HOTEL_DETAILS,
-  SAVE_ROOM_DETAILS
+  SAVE_ROOM_DETAILS,
+  DELETE_ROOM,
+  GET_HOTEL_LOCATION_ON_LAT_LNG,
+  PUT_HOTEL_LOCATION_INFORMATION,
+  SAVE_HOTEL_DETAILS
 } from "./constants";
 
 export const putHotelDetails = payload => ({
@@ -46,5 +50,25 @@ export const fetchHotelDetails = payload => ({
 
 export const saveRoomDetails = payload => ({
   type: SAVE_ROOM_DETAILS,
+  payload
+});
+
+export const deleteRoom = payload => ({
+  type: DELETE_ROOM,
+  payload
+});
+
+export const getHotelLocationOnLatLng = payload => ({
+  type: GET_HOTEL_LOCATION_ON_LAT_LNG,
+  payload
+});
+
+export const putHotelLocationInformation = payload => ({
+  type: PUT_HOTEL_LOCATION_INFORMATION,
+  payload
+});
+
+export const saveHotelDetails = payload => ({
+  type: SAVE_HOTEL_DETAILS,
   payload
 });
