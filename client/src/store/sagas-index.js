@@ -1,7 +1,8 @@
-import { all, spawn, call } from "redux-saga/effects";
+import { all, spawn, call, put } from "redux-saga/effects";
+import flatten from "lodash.flatten";
 import * as userSaga from "./user/saga";
 import * as hotelSaga from "./hotel/saga";
-import flatten from "lodash.flatten";
+import { putError } from "./common/actions";
 
 export default function* rootSaga() {
   let sagas = flatten(
@@ -17,7 +18,8 @@ export default function* rootSaga() {
           try {
             yield call(saga);
           } catch (e) {
-            console.log(e);
+            // TODO: Uncomment when finished with application
+            // yield put(putError(e.message));
           }
         }
       })
