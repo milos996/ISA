@@ -17,8 +17,8 @@ export default function HotelRooms() {
     >
       <h2>Rooms</h2>
       <div className="rooms-container">
-        {rooms.map(room => (
-          <HotelRoom key={room.id} room={room} />
+        {Object.keys(rooms).map(roomId => (
+          <HotelRoom key={roomId} room={rooms[roomId]} />
         ))}
       </div>
     </Container>

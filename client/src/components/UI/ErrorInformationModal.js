@@ -13,14 +13,14 @@ export default function ErrorInformationModal() {
   const dispatch = useDispatch();
   const error = useSelector(selectError);
 
-  const handleOpen = () => {
+  function handleOpen() {
     setOpen(true);
-  };
+  }
 
-  const handleClose = () => {
+  function handleClose() {
     dispatch(putError(null));
     setOpen(false);
-  };
+  }
 
   useEffect(() => {
     handleOpen();
