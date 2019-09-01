@@ -10,7 +10,8 @@ import {
   DELETE_ROOM,
   GET_HOTEL_LOCATION_ON_LAT_LNG,
   PUT_HOTEL_LOCATION_INFORMATION,
-  SAVE_HOTEL_DETAILS
+  SAVE_HOTEL_DETAILS,
+  PUT_DELETE_ROOM_WITH_ID
 } from "./constants";
 
 export const putHotelDetails = payload => ({
@@ -70,5 +71,10 @@ export const putHotelLocationInformation = payload => ({
 
 export const saveHotelDetails = payload => ({
   type: SAVE_HOTEL_DETAILS,
+  payload
+});
+
+export const putDeleteRoomWithId = payload => ({
+  type: PUT_DELETE_ROOM_WITH_ID,
   payload
 });

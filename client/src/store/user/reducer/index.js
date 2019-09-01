@@ -1,4 +1,4 @@
-import {} from "../constants";
+import { PUT_USER_DATA } from "../constants";
 import * as computationFunctions from "./computation-functions";
 
 const initialState = {
@@ -15,6 +15,8 @@ const userReducer = (state = initialState, { type, payload }) => {
   return state;
 };
 
-const actionHandler = {};
+const actionHandler = {
+  [PUT_USER_DATA]: computationFunctions.putUserData
+};
 
 export default userReducer;

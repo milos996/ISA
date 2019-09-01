@@ -91,3 +91,9 @@ code {
   border: 0px none;
   justify-content: flex-end;
 }
+
+a:link,
+.button {
+  text-decoration: none;
+  color: #ffffff;
+}

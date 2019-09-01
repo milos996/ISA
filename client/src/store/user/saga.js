@@ -1,6 +1,18 @@
-import { take } from "redux-saga/effects";
+import { take, put } from "redux-saga/effects";
+import { LOGOUT } from "./constants";
+import { putUserData } from "./actions";
 
-export function* userSaga() {
-  yield take("USER_SAGA_OPTION");
-  console.log("user saga izvrsena");
+export function* logout() {
+  const { payload } = yield take(LOGOUT);
+
+  // TODO Implement delete from window.storage
+  yield put(
+    putUserData({
+      data: null,
+      token: null
+    })
+  );
+  console.log("sad");
+
+  payload.callback();
 }

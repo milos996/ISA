@@ -11,7 +11,8 @@ import {
 import {
   putHotelServices,
   putHotelDetails,
-  putHotelLocationInformation
+  putHotelLocationInformation,
+  putDeleteRoomWithId
 } from "./actions";
 import hotelServices from "../../services/api/Hotel";
 import locationService from "../../services/LocationService";
@@ -59,7 +60,9 @@ export function* saveRoomDetails() {
 export function* deleteRoom() {
   const { payload } = yield take(DELETE_ROOM);
 
-  const { data } = yield call(hotelServices.deleteRoom, payload.roomId);
+  yield call(hotelServices.deleteRoom, payload.roomId);
+
+  yield put(putDeleteRoomWithId(payload.roomId));
 }
 
 export function* getHotelLocationOnLatLng() {
@@ -84,5 +87,5 @@ export function* getHotelLocationOnLatLng() {
 export function* saveHotelDetails() {
   const { payload } = yield take(SAVE_HOTEL_DETAILS);
 
-  const { data } = yield call(hotelServices.saveHotel, payload);
+  yield call(hotelServices.saveHotel, payload);
 }
