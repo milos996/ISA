@@ -11,3 +11,4 @@ export const DELETE_ROOM = "delete_room";
 export const GET_HOTEL_LOCATION_ON_LAT_LNG = "get_hotel_location_on_lat_lng";
 export const PUT_HOTEL_LOCATION_INFORMATION = "put_hotel_location_information";
 export const SAVE_HOTEL_DETAILS = "save_hotel_details";
+export const PUT_DELETE_ROOM_WITH_ID = "put_delete_room_with_id";

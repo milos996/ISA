@@ -1,5 +1,4 @@
 package com.example.ISAums.model;
-
 import java.util.Collection;
 import java.util.Collections;
 import javax.persistence.*;
@@ -24,6 +23,7 @@ import static com.example.ISAums.util.ValidationConstraints.*;
 @Table(name = "user")
 @Where(clause = "is_deleted='false'")
 public class User extends BaseEntity implements UserDetails{
+
 
 	@Column(name = "first_name")
 	@NotBlank
@@ -103,4 +103,5 @@ public class User extends BaseEntity implements UserDetails{
 	public boolean isEnabled() {
 		return true;
 	}
+	
 }

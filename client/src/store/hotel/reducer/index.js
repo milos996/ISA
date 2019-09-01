@@ -3,7 +3,8 @@ import {
   PUT_CHANGE_HOTEL_SERVICES,
   PUT_ADD_NEW_SERVICE,
   PUT_HOTEL_SERVICES,
-  PUT_HOTEL_LOCATION_INFORMATION
+  PUT_HOTEL_LOCATION_INFORMATION,
+  PUT_DELETE_ROOM_WITH_ID
 } from "../constants";
 import * as computationFunctions from "./computation-functions";
 
@@ -54,8 +55,8 @@ const initialState = {
       selected: true
     }
   },
-  rooms: [
-    {
+  rooms: {
+    0: {
       id: 0,
       number: 2,
       floor: 1,
@@ -65,7 +66,7 @@ const initialState = {
       priceAutumn: 0,
       numberOfPeople: 2
     },
-    {
+    2: {
       id: 2,
       number: 3,
       floor: 1,
@@ -75,7 +76,7 @@ const initialState = {
       priceAutumn: 0,
       numberOfPeople: 2
     },
-    {
+    3: {
       id: 3,
       number: 4,
       floor: 1,
@@ -85,7 +86,7 @@ const initialState = {
       priceAutumn: 0,
       numberOfPeople: 2
     },
-    {
+    4: {
       id: 4,
       number: 2,
       floor: 2,
@@ -95,7 +96,7 @@ const initialState = {
       priceAutumn: 0,
       numberOfPeople: 2
     },
-    {
+    5: {
       id: 5,
       number: 3,
       floor: 2,
@@ -105,7 +106,7 @@ const initialState = {
       priceAutumn: 0,
       numberOfPeople: 2
     },
-    {
+    123: {
       id: 123,
       number: 10,
       floor: 2,
@@ -115,7 +116,7 @@ const initialState = {
       priceAutumn: 0,
       numberOfPeople: 2
     }
-  ]
+  }
 };
 
 const hotelReducer = (state = initialState, { type, payload }) => {
@@ -132,7 +133,8 @@ const actionHandler = {
   [PUT_ADD_NEW_SERVICE]: computationFunctions.addNewService,
   [PUT_HOTEL_SERVICES]: computationFunctions.setServices,
   [PUT_HOTEL_LOCATION_INFORMATION]:
-    computationFunctions.putHotelLocationInformation
+    computationFunctions.putHotelLocationInformation,
+  [PUT_DELETE_ROOM_WITH_ID]: computationFunctions.deleteRoomWithId
 };
 
 export default hotelReducer;

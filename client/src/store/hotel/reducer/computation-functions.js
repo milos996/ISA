@@ -80,3 +80,12 @@ export function putHotelLocationInformation(state, payload) {
     }
   };
 }
+
+export function deleteRoomWithId(state, roomId) {
+  const { [roomId]: deleteRoom, ...restRooms } = state.rooms;
+
+  return {
+    ...state,
+    rooms: restRooms
+  };
+}

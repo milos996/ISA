@@ -1,6 +1,11 @@
-import { PUT_HOTEL_DETAILS } from "./constants";
+import { LOGOUT, PUT_USER_DATA } from "./constants";
 
-export const putHotelDetails = payload => ({
-  type: PUT_HOTEL_DETAILS,
+export const logoutUser = payload => ({
+  type: LOGOUT,
+  payload
+});
+
+export const putUserData = payload => ({
+  type: PUT_USER_DATA,
   payload
 });
