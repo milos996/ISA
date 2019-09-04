@@ -53,7 +53,7 @@ export default function HotelInformation({ hotelId }) {
               hotelId={hotelDetails.id}
             />
           )}
-         // ako je uslov sa leve strane true renderuj ovo desno od '&&'
+         
           {modalContent.value === MODAL_CONTENT.REPORT && <Report />}
 
           <Button

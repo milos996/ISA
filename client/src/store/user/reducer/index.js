@@ -1,12 +1,5 @@
-import { PUT_USER_DATA, SAVE_USER_DATA } from "../constants";
+import { PUT_USER_DATA, PUT_USER_TOKEN, PUT_FRIENDS_DATA, PUT_FOUND_USERS_DATA } from "../constants";
 import * as computationFunctions from "./computation-functions";
-/*
-const initialState = {
-  data: null,
-  token: null,
-  service: null
-};
-*/
 
 const initialState = {
   data: {
@@ -31,7 +24,24 @@ const initialState = {
     firstname: "Bojan",
     lastname: "Bojanovic",
     email:  "bojan@gmail.com",
-  }]
+  }],
+  token: null,
+  service: null,
+  foundUsers: [
+
+    {
+      id: "1",
+      firstname: "Dejan",
+      lastname: "Dejanovic",
+      email:  "dejan@gmail.com",
+    },
+    {
+      id: "2",
+      firstname: "Dejan",
+      lastname: "Bojanovic",
+      email:  "bojan@gmail.com",
+    }
+  ]
 }
 
 const userReducer = (state = initialState, { type, payload }) => {
@@ -43,7 +53,10 @@ const userReducer = (state = initialState, { type, payload }) => {
 };
 
 const actionHandler = {
-  [PUT_USER_DATA]: computationFunctions.putUserData 
+  [PUT_USER_DATA]: computationFunctions.putUserData,
+  [PUT_USER_TOKEN]:  computationFunctions.putUserToken,
+  [PUT_FRIENDS_DATA]: computationFunctions.putFriendsData,
+  [PUT_FOUND_USERS_DATA]: computationFunctions.putFoundUsersData
 };
 
 export default userReducer;
