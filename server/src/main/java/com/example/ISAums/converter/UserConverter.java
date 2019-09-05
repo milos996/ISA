@@ -1,6 +1,8 @@
 package com.example.ISAums.converter;
 
+import com.example.ISAums.dto.request.ChangePasswordRequest;
 import com.example.ISAums.dto.request.CreateUserRequest;
+import com.example.ISAums.dto.response.ChangePasswordResponse;
 import com.example.ISAums.dto.response.CreateUserResponse;
 import com.example.ISAums.dto.response.LoginUserResponse;
 import com.example.ISAums.model.User;
@@ -34,4 +36,11 @@ public class UserConverter {
                 .token(token)
                 .build();
     }
+
+    public static ChangePasswordResponse toChangePasswordResponse(String message) {
+        return ChangePasswordResponse.builder()
+                .message(message)
+                .build();
+    }
+
 }

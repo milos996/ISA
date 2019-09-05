@@ -1,7 +1,9 @@
 package com.example.ISAums.controller;
 
+import com.example.ISAums.dto.request.ChangePasswordRequest;
 import com.example.ISAums.dto.request.CreateUserRequest;
 import com.example.ISAums.dto.request.LoginUserRequest;
+import com.example.ISAums.dto.response.ChangePasswordResponse;
 import com.example.ISAums.dto.response.CreateUserResponse;
 import com.example.ISAums.dto.response.LoginUserResponse;
 import com.example.ISAums.model.User;
@@ -16,6 +18,7 @@ import java.io.IOException;
 
 import static com.example.ISAums.converter.UserConverter.toLoginUserResponseFromToken;
 import static com.example.ISAums.converter.UserConverter.toCreateUserResponseFromUser;
+import static com.example.ISAums.converter.UserConverter.toChangePasswordResponse;
 
 
 @RestController
@@ -43,5 +46,11 @@ public class AuthController {
     @RequestMapping(value = "/login")
     public ResponseEntity<LoginUserResponse> login(@RequestBody LoginUserRequest request) {
         return ResponseEntity.ok(toLoginUserResponseFromToken(authService.login(request)));
+    }
+
+    @PutMapping
+    @RequestMapping(value = "/password/update")
+    public ResponseEntity<ChangePasswordResponse> updatePassword(@RequestBody ChangePasswordRequest request) {
+        return ResponseEntity.ok(toChangePasswordResponse(authService.updatePassword(request)));
     }
 }

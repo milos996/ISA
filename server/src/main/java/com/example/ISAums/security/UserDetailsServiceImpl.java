@@ -1,5 +1,6 @@
 package com.example.ISAums.security;
 
+import com.example.ISAums.repository.RentACarAdminRepository;
 import com.example.ISAums.repository.UserRepository;
 import com.example.ISAums.model.User;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -11,7 +12,7 @@ import org.springframework.transaction.annotation.Transactional;
 public class UserDetailsServiceImpl implements UserDetailsService {
     private final UserRepository userRepository;
 
-    public UserDetailsServiceImpl(UserRepository userRepository) {
+    public UserDetailsServiceImpl(UserRepository userRepository, RentACarAdminRepository rentACarAdminRepository) {
         this.userRepository = userRepository;
     }
 
