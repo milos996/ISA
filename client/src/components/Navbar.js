@@ -42,9 +42,14 @@ export default function Navbar() {
             UMS Ticket, reservations management
           </Typography>
           {userToken ? (
-            <Button color="inherit" onClick={handleLogout}>
-              Logout
-            </Button>
+            <div>
+              <Button color="inherit" onClick={handleLogout}>
+                Logout
+              </Button>
+              <Link className="button" to="/user-profile">
+                <Button color="inherit">Profile</Button>
+              </Link>
+            </div>
           ) : (
             <div>
               <Link className="button" to="/register">

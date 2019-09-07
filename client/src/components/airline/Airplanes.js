@@ -6,38 +6,34 @@ import { selectAirlineAirplanes } from "../../store/airline/selectors";
 import { fetchAirlineAirplanes } from "../../store/airline/actions";
 import Airplane from "./Airplane";
 
-export default function Airplanes({ airlineId }){
+export default function Airplanes({ airlineId }) {
+  const classes = useStyles();
+  const dispatch = useDispatch();
+  const airplanes = useSelector(selectAirlineAirplanes);
 
-    const classes = useStyles();
-    const dispatch = useDispatch();
-    const airplanes = useSelector(selectAirlineAirplanes);
-    
-    useEffect(() => {
-        dispatch(fetchAirlineAirplanes({ airlineId }));
-    }, [airlineId]);
+  useEffect(() => {
+    dispatch(fetchAirlineAirplanes({ airlineId }));
+  }, [airlineId]);
 
-    function renderAirplanes(){
-        return  airplanes.map((airplane) =>{
-            return  (
-                <Airplane key={airplane.id} airplane={airplane}/>
-            )
-        })
-    }
-    return(
-        <Container classes = {{
-            root: classes.root
-        }}>
-            <h1>Airplanes</h1>
-            <div className="rooms-container">
-            { renderAirplanes() }
-            </div>
-        </Container>
-    );
+  return (
+    <Container
+      classes={{
+        root: classes.root
+      }}
+    >
+      <h1>Airplanes</h1>
+      <div className="rooms-container">
+        {airplanes.map(airplane => (
+          <Airplane key={airplane.id} airplane={airplane} />
+        ))}
+      </div>
+    </Container>
+  );
 }
 
 const useStyles = makeStyles(theme => ({
-    root: {
-      display: "flex",
-      flexDirection: "column"
-    }
-  }));
+  root: {
+    display: "flex",
+    flexDirection: "column"
+  }
+}));

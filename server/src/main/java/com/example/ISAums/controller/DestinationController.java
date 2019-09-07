@@ -26,12 +26,4 @@ public class DestinationController {
 
         return ResponseEntity.ok(toCreateDestinationResponseFromDestination(destination));
     }
-
-    @DeleteMapping
-    public ResponseEntity remove(@RequestBody DeleteDestinationFromAirlineRequest request){
-
-        destinationService.removeFromAirline(request);
-
-        return ResponseEntity.ok().build();
-    }
 }

@@ -8,6 +8,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.UUID;
 
 import static com.example.ISAums.converter.AirplaneConverter.toGetAirplaneResponseFromAirplanes;
 
@@ -25,11 +26,11 @@ public class AirplaneController {
     public ResponseEntity update(@RequestBody UpdateAirplaneRequest request){
 
         airplaneService.update(request);
-        return ResponseEntity.ok().build();
+        return (ResponseEntity) ResponseEntity.noContent();
     }
 
     @GetMapping(value = "/{airlineId}")
-    public ResponseEntity<List<GetAirplaneResponse>> getAirplanesByAirline(@PathVariable(name = "airlineId") String airlineId){
+    public ResponseEntity<List<GetAirplaneResponse>> getAirplanesByAirline(@PathVariable(name = "airlineId") UUID airlineId){
         List<Airplane> airplanes = airplaneService.getAirplanesByAirline(airlineId);
         return ResponseEntity.ok(toGetAirplaneResponseFromAirplanes(airplanes));
     }

@@ -48,7 +48,7 @@ public class AirlineController {
         return ResponseEntity.ok(toGetAirlineIncomeResponseFromIncome(req.getStartDate(), req.getEndDate(), income));
     }
 
-    @GetMapping(value = "/averageRating/{id}")
+    @GetMapping(value = "/airline/{id}/average-rating")
     public ResponseEntity<GetAirlineAverageRatingResponse> getAverageRating(@PathVariable(name = "id") UUID airlineId){
 
         Double averageRating = airlineService.getAverageRating(airlineId);

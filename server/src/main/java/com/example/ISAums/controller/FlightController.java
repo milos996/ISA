@@ -69,14 +69,14 @@ public class FlightController {
     }
 
     @GetMapping(value = "/quickBooking/{airlineId}")
-    public ResponseEntity<List<FlightForQuickBookingResponse>> getQuickBooking(@PathVariable(name = "airlineId") String airlineId){
+    public ResponseEntity<List<FlightForQuickBookingResponse>> getQuickBooking(@PathVariable(name = "airlineId") UUID airlineId){
 
         List<Flight> flights = flightService.getQuickBooking(airlineId);
         return ResponseEntity.ok(toFlightsForQuickBookingResponseFromFlights(flights));
     }
 
     @GetMapping(value = "/{airlineId}")
-    public ResponseEntity<List<GetFlightAverageRatingResponse>> getFlightsOfAirlineWithRatings(@PathVariable(name = "airlineId") String airlineId){
+    public ResponseEntity<List<GetFlightAverageRatingResponse>> getFlightsOfAirlineWithRatings(@PathVariable(name = "airlineId") UUID airlineId){
 
         List<Flight> flights = flightService.getFlightsOfAirline(airlineId);
         List<GetFlightAverageRatingResponse> flightWithRatings = flightService.getFlightsWithRatings(flights);
@@ -84,7 +84,7 @@ public class FlightController {
     }
 
     @GetMapping(value = "/destinations/{airlineId}")
-    public ResponseEntity<List<GetAirlineDestinationResponse>> getDestinations(@PathVariable(name = "id") String airlineId){
+    public ResponseEntity<List<GetAirlineDestinationResponse>> getDestinations(@PathVariable(name = "id") UUID airlineId){
 
         List<AirlineDestination> destinations = flightService.getDestinations(airlineId);
         return ResponseEntity.ok(toGetAirlineDestinationResponseFromDestinations(destinations));

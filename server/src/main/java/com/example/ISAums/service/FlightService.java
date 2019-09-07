@@ -114,9 +114,9 @@ public class FlightService {
         return flightWithRatings;
     }
 
-    public List<Flight> getQuickBooking(String airlineId) {
+    public List<Flight> getQuickBooking(UUID airlineId) {
 
-        List<UUID> flightIDs = flightRepository.getQuickBookingFlights(UUID.fromString(airlineId));
+        List<UUID> flightIDs = flightRepository.getQuickBookingFlights(airlineId);
         List<Flight> flights = new ArrayList<>(flightIDs.size());
         double discount = 10;
         double currentPrice;
@@ -164,9 +164,9 @@ public class FlightService {
         return airlineDestination.get();
     }
 
-    public List<Flight> getFlightsOfAirline(String airlineId) {
+    public List<Flight> getFlightsOfAirline(UUID airlineId) {
 
-        List<UUID> flightIDs = flightRepository.getFlightsByAirlineId(UUID.fromString(airlineId));
+        List<UUID> flightIDs = flightRepository.getFlightsByAirlineId(airlineId);
         List<Flight> flights = new ArrayList<>(flightIDs.size());
 
         for(int i = 0; i < flightIDs.size(); i++){
@@ -177,9 +177,9 @@ public class FlightService {
         return flights;
     }
 
-    public List<AirlineDestination> getDestinations(String airlineId) {
+    public List<AirlineDestination> getDestinations(UUID airlineId) {
 
-        List<UUID> airlineDestinationIDs = flightRepository.getAirlineDestinations(UUID.fromString(airlineId));
+        List<UUID> airlineDestinationIDs = flightRepository.getAirlineDestinations(airlineId);
         List<AirlineDestination> airlineDestinations = new ArrayList<>(airlineDestinationIDs.size());
 
         for(int i = 0; i < airlineDestinationIDs.size(); i++){

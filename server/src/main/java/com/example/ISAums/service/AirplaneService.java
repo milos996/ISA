@@ -27,7 +27,7 @@ public class AirplaneService {
         airplaneRepository.save(airplane.get());
     }
 
-    public List<Airplane> getAirplanesByAirline(String airlineId) {
-        return airplaneRepository.findAllByAirlineId(UUID.fromString(airlineId));
+    public List<Airplane> getAirplanesByAirline(UUID airlineId) {
+        return airplaneRepository.findAllByAirlineId(airlineId);
     }
 }
