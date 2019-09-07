@@ -39,6 +39,7 @@ export function* saveServices() {
 }
 
 export function* fetchHotelServices() {
+  
   const { payload } = yield take(FETCH_HOTEL_DETAILS);
 
   const { data } = yield call(hotelServices.fetchHotelDetails, payload.hotelId);

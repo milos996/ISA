@@ -80,7 +80,7 @@ public class UserService {
 
 	public Friendship sendFriendshipRequest(SendFriendshipRequestRequest request) {
 
-        Optional<User> sender = userRepository.findById(request.getSenderId());
+        Optional<User> sender = userRepository.findById(request.getSenderUserId());
         Optional<User> invitedUser = userRepository.findById(request.getInvitedUserId());
 
 		Friendship friendship = Friendship.builder()
@@ -98,5 +98,13 @@ public class UserService {
     public void removeFriend(UUID mine_id, UUID friend_id) {
 		friendshipRepository.removeFriendship(String.valueOf(mine_id), String.valueOf(friend_id));
     }
+
+    public List<User> find(String name) {
+		return userRepository.findAllByFirstName(name);
+    }
+
+	public void updatePassword(String newPassword) {
+		//...
+	}
 
 }
