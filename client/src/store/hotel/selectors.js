@@ -20,10 +20,18 @@ export const selectServices = () =>
         )
   );
 
+export const selectHotelServices = state => {
+  return state[reducer].services;
+};
+
 export const selectHotelDetails = state => {
   return state[reducer].data;
 };
 
 export const selectHotelRooms = state => {
   return state[reducer].rooms;
+};
+
+export const selectHotels = state => {
+  return state[reducer].hotels;
 };

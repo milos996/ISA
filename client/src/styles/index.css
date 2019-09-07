@@ -97,3 +97,31 @@ a:link,
   text-decoration: none;
   color: #ffffff;
 }
+
+.a-i-fs {
+  align-items: flex-start;
+}
+
+.f-ww {
+  flex-wrap: wrap;
+}
+
+.ml-sm {
+  margin-left: 25px;
+}
+
+.p-sm {
+  padding: 16px;
+}
+
+.modal-container-2 {
+  position: relative;
+  left: 30%;
+  width: 40%;
+  display: flex;
+  flex-direction: column;
+  background: #cce8ff;
+  padding: 0px 0px 0px 0px;
+  border: 0px none;
+  justify-content: flex-end;
+}

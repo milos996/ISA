@@ -12,7 +12,6 @@ export function* logout() {
       token: null
     })
   );
-  console.log("sad");
 
   payload.callback();
 }

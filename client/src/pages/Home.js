@@ -2,11 +2,11 @@ import React from "react";
 import Container from "@material-ui/core/Container";
 import { makeStyles } from "@material-ui/core/styles";
 import NavigationCards from "../components/UI/NavigationCards";
-import plane from "./../assets/black-plane.png";
-import building from "./../assets/skyline.png";
-import car from "./../assets/car.png";
+import plane from "../assets/black-plane.png";
+import building from "../assets/skyline.png";
+import car from "../assets/car.png";
 
-export default function HomeComponent({ history }) {
+export default function HomePage({ history }) {
   const classes = useStyles();
   return (
     <Container classes={{ root: classes.root }}>
