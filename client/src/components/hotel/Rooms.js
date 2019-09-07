@@ -1,13 +1,23 @@
-import React from "react";
-import { useSelector } from "react-redux";
+import React, { useEffect } from "react";
+import { useSelector, useDispatch } from "react-redux";
 import { makeStyles } from "@material-ui/core/styles";
 import { Container } from "@material-ui/core";
-import { selectHotelRooms } from "../../store/hotel/selectors";
+import { selectHotelRoomsForEdit } from "../../store/hotel/selectors";
 import HotelRoom from "./Room";
+import { fetchHotelRooms } from "../../store/hotel/actions";
 
-export default function HotelRooms() {
-  const rooms = useSelector(selectHotelRooms);
+export default function HotelRooms({ hotelId }) {
+  const rooms = useSelector(selectHotelRoomsForEdit);
   const classes = useStyles();
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    dispatch(
+      fetchHotelRooms({
+        hotelId
+      })
+    );
+  }, [hotelId]);
 
   return (
     <Container

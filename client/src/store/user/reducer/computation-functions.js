@@ -1,37 +1,33 @@
 export function putUserData(state, payload) {
-
   return {
     ...state,
-    data:{
+    data: {
       ...state.data,
       ...payload
     }
   };
 }
 
-export function putUserToken(state, payload){
-  
+export function putUserToken(state, payload) {
   return {
     ...state,
-    token: payload  
+    token: payload
   };
 }
 
-export function putFriendsData(state, payload){
-
+export function putFriendsData(state, payload) {
   return {
     ...state,
-    friends:{
+    friends: {
       ...state.friends,
       ...payload
     }
-  }
+  };
 }
 
-export function putFoundUsersData(state, payload){
-
+export function putFoundUsersData(state, payload) {
   return {
     ...state,
     payload
-  }
+  };
 }
