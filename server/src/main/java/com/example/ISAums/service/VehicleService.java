@@ -17,7 +17,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.*;
 
 import static com.example.ISAums.util.UtilService.copyNonNullProperties;
-import static com.example.ISAums.converter.VehicleConverter.toVehicleFromRequest;
+import static com.example.ISAums.converter.VehicleConverter.*;
 
 @Service
 public class VehicleService {
@@ -33,14 +33,7 @@ public class VehicleService {
 
     @Transactional(rollbackFor = Exception.class)
     public Vehicle create(CreateVehicleRequest request) {
-        logger.info(request.getBrand());
-        logger.info(request.getModel());
-        logger.info(request.getType());
-
-        if (vehicleRepository.findByBrandAndModelAndYearOfProduction(request.getBrand(), request.getModel(), request.getYearOfProduction()) != null)
-            throw new CustomException("Vehicle: " + request.getBrand() + " " + request.getModel() + " produced in " + request.getYearOfProduction() + " already exist");
-
-        Vehicle vehicle = toVehicleFromRequest(request);
+        Vehicle vehicle = toVehicleFromCreateVehicleRequest(request);
 
         RentACar rentACar = rentACarRepository.findByName(request.getRentACarName());
         if (rentACar == null)
@@ -60,46 +53,42 @@ public class VehicleService {
 
     @Transactional(rollbackFor = Exception.class)
     public Vehicle update(UpdateVehicleRequest request) {
-        Optional<Vehicle> vehicle = vehicleRepository.findById(request.getId());
+        Vehicle vehicle = vehicleRepository.findById(request.getId()).orElse(null);
 
-        if (vehicle.isPresent() == false)
+        if (vehicle == null)
             throw new EntityWithIdDoesNotExist("Vehicle", request.getId());
 
-        if(vehicleRepository.findByBrandAndModelAndYearOfProduction(request.getBrand(), request.getModel(), request.getYearOfProduction()) != null)
-            throw new EntityAlreadyExistsException(request.getBrand() + " " + request.getModel() + " produced in " + request.getYearOfProduction());
-
         if (request.getModel() != null)
-            vehicle.get().setModel(request.getModel());
+            vehicle.setModel(request.getModel());
 
         if (request.getBrand() != null)
-            vehicle.get().setBrand(request.getBrand());
+            vehicle.setBrand(request.getBrand());
 
         if (request.getYearOfProduction() != null)
-            vehicle.get().setYearOfProduction(request.getYearOfProduction());
+            vehicle.setYearOfProduction(request.getYearOfProduction());
 
         if (request.getNumberOfSeats() != null)
-            vehicle.get().setNumberOfPeople(request.getNumberOfSeats());
+            vehicle.setNumberOfPeople(request.getNumberOfSeats());
 
         if (request.getPricePerDay() != null)
-            vehicle.get().setPricePerDay(request.getPricePerDay());
+            vehicle.setPricePerDay(request.getPricePerDay());
 
         if (request.getType() != null)
-            vehicle.get().setType(request.getType());
+            vehicle.setType(request.getType());
 
         if (request.getRentACarName() != null) {
             RentACar rentACar = rentACarRepository.findByName(request.getRentACarName());
             if (rentACar == null)
                 throw new CustomException("Rent a car with name " + request.getRentACarName() + " does not exist");
 
-            vehicle.get().setRentACar(rentACar);
+            vehicle.setRentACar(rentACar);
         }
 
         //copyNonNullProperties(request, vehicle.get());
 
-        logger.info(vehicle.get().getBrand());
-        vehicleRepository.save(vehicle.get());
+        vehicleRepository.save(vehicle);
 
-        return vehicle.get();
+        return vehicle;
     }
 
     @Transactional(rollbackFor = Exception.class)

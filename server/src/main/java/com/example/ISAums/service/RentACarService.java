@@ -55,16 +55,10 @@ public class RentACarService {
         if (rentACarRepository.existsByName(request.getName()))
             throw new EntityAlreadyExistsException(request.getName());
 
-        Address addressLL = addressRepository.findByLongitudeAndLatitude(request.getLongitude(), request.getLatitude());
-        Address address = addressRepository.findByStreetAndCityAndState(request.getStreet(), request.getCity(), request.getState());
+        Address address = addressRepository.findByLongitudeAndLatitude(request.getAddress().getLongitude(), request.getAddress().getLatitude());
 
         if (address != null)
-            if (rentACarRepository.findByAddress_Id(address.getId()) != null)
-                throw new CustomException("Rent a car service already exist in " + request.getStreet() + ", " + request.getCity() + ", " + request.getState());
-
-        if (addressLL != null)
-            if (rentACarRepository.findByAddress_Id(addressLL.getId()) != null)
-                throw new CustomException("Rent a car service already exist on this point: " + request.getLongitude() + ", " + request.getLatitude());
+            throw new CustomException("Rent a car service already exist on this point: " + request.getAddress().getLongitude() + ", " + request.getAddress().getLatitude());
 
         RentACar rentACar = toRentACarFromRequest(request);
 
@@ -88,35 +82,33 @@ public class RentACarService {
 
         Optional<Address> address = addressRepository.findById(rentACar.get().getAddress().getId());
 
-//        if (request.getStreet() != null)
-//            rentACar.get().getAddress().setStreet(request.getStreet());
-//
-//        if (request.getCity() != null)
-//            rentACar.get().getAddress().setCity(request.getCity());
-//
-//        if (request.getState() != null)
-//            rentACar.get().getAddress().setState(request.getState());
-//
-//        if (request.getLatitude() != null)
-//            rentACar.get().getAddress().setLatitude(request.getLatitude());
-//
-//        if (request.getLongitude() != null)
-//            rentACar.get().getAddress().setLongitude(request.getLongitude());
-//
-//        if (request.getName() != null)
-//            rentACar.get().setName(request.getName());
-//
-//        if (request.getDescription() != null)
-//            rentACar.get().setDescription(request.getDescription());
+        if (request.getStreet() != null)
+            rentACar.get().getAddress().setStreet(request.getStreet());
+
+        if (request.getCity() != null)
+            rentACar.get().getAddress().setCity(request.getCity());
+
+        if (request.getState() != null)
+            rentACar.get().getAddress().setState(request.getState());
+
+        if (request.getLatitude() != null)
+            rentACar.get().getAddress().setLatitude(request.getLatitude());
+
+        if (request.getLongitude() != null)
+            rentACar.get().getAddress().setLongitude(request.getLongitude());
+
+        if (request.getName() != null)
+            rentACar.get().setName(request.getName());
+
+        if (request.getDescription() != null)
+            rentACar.get().setDescription(request.getDescription());
 
 
-        UUID addres_id = address.get().getId();
+        UUID address_id = address.get().getId();
         copyNonNullProperties(request, address.get());
-        address.get().setId(addres_id);
+        address.get().setId(address_id);
         addressRepository.save(address.get());
 
-
-        copyNonNullProperties(request, rentACar.get(), "address");
         rentACarRepository.save(rentACar.get());
 
         return rentACar.get();

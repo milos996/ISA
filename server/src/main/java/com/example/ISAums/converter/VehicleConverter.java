@@ -32,14 +32,6 @@ public class VehicleConverter {
                 .collect(Collectors.toList());
     }
 
-    public static UpdateVehicleResponse toUpdateVehicleResponseFromVehicle(Vehicle vehicle) {
-        return UpdateVehicleResponse.builder()
-                .id(vehicle.getId())
-                .brand(vehicle.getBrand())
-                .model(vehicle.getModel())
-                .build();
-    }
-
     public static CreateVehicleResponse toCreateVehicleResponseFromVehicle(Vehicle vehicle) {
         return CreateVehicleResponse.builder()
                 .id(vehicle.getId())
@@ -48,7 +40,15 @@ public class VehicleConverter {
                 .build();
     }
 
-    public static Vehicle toVehicleFromRequest(CreateVehicleRequest request) {
+    public static UpdateVehicleResponse toUpdateVehicleResponseFromVehicle(Vehicle vehicle) {
+        return UpdateVehicleResponse.builder()
+                .id(vehicle.getId())
+                .brand(vehicle.getBrand())
+                .model(vehicle.getModel())
+                .build();
+    }
+
+    public static Vehicle toVehicleFromCreateVehicleRequest(CreateVehicleRequest request) {
         return Vehicle.builder()
                 .brand(request.getBrand())
                 .model(request.getModel())
@@ -77,6 +77,5 @@ public class VehicleConverter {
                 .map(vehicle -> toSearchVehicleResponseFromVehicle(vehicle))
                 .collect(Collectors.toList());
     }
-
 
 }

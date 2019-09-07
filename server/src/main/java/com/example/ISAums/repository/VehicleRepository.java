@@ -12,7 +12,6 @@ import java.util.UUID;
 
 @Repository
 public interface VehicleRepository extends JpaRepository<Vehicle, UUID> {
-    Vehicle findByBrandAndModelAndYearOfProduction(String brand, String model, Integer yearOfProduction);
 
     @Query(value = "SELECT * FROM vehicle v " +
                    "LEFT JOIN rent_a_car_location racl on racl.rent_a_car_id = v.rent_a_car_id " +

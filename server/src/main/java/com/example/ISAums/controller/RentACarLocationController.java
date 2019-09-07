@@ -51,14 +51,14 @@ public class RentACarLocationController {
 
     @GetMapping
     @RequestMapping("/search")
-    public ResponseEntity<List<SearchRentACarLocationResponse>> get(
+    public ResponseEntity<List<SearchRentACarLocationResponse>> search(
             @RequestParam(name = "city", required = false) String city,
             @RequestParam(name = "state", required = false) String state,
             @RequestParam(name = "name", required = false) String name,
             @RequestParam(name = "pickUpDate", required = false) String pickUpDate,
             @RequestParam(name = "dropOffDate", required = false) String dropOffDate
     ) {
-        return ResponseEntity.ok(toSearchRentACarLocationsResponseFromRentACarLocations(rentACarLocationService.search(city, state, name, pickUpDate, dropOffDate)));
+        return ResponseEntity.ok(toSearchRentACarLocationResponseFromRentACarLocations(rentACarLocationService.search(city, state, name, pickUpDate, dropOffDate)));
     }
 
 

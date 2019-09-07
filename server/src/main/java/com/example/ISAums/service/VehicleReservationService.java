@@ -12,9 +12,7 @@ import com.example.ISAums.repository.VehicleReservationRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.concurrent.TimeUnit;
-
-import static com.example.ISAums.converter.VehicleReservationConverter.toVehicleReservationFromCreateVehicleReservationRequest;
+import static com.example.ISAums.converter.VehicleReservationConverter.*;
 
 @Service
 public class VehicleReservationService {
@@ -61,7 +59,7 @@ public class VehicleReservationService {
         if (request.getPickUpDate().compareTo(request.getDropOffDate()) >= 0)
             throw new CustomException("Pick up date must be before drop off date!");
 
-        VehicleReservation vehicleReservation = toVehicleReservationFromCreateVehicleReservationRequest(request);
+        VehicleReservation vehicleReservation = toVehicleReservationFromCreateRequest(request);
         vehicleReservation.setVehicle(vehicle);
 
         long diff = request.getDropOffDate().getTime() - request.getPickUpDate().getTime();

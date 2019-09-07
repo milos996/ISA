@@ -16,10 +16,7 @@ import javax.servlet.http.HttpServletRequest;
 
 import java.io.IOException;
 
-import static com.example.ISAums.converter.UserConverter.toLoginUserResponseFromToken;
-import static com.example.ISAums.converter.UserConverter.toCreateUserResponseFromUser;
-import static com.example.ISAums.converter.UserConverter.toChangePasswordResponse;
-
+import static com.example.ISAums.converter.UserConverter.*;
 
 @RestController
 @RequestMapping(value="/auth")
@@ -46,7 +43,7 @@ public class AuthController {
     @PostMapping
     @RequestMapping(value = "/login")
     public ResponseEntity<LoginUserResponse> login(@RequestBody LoginUserRequest request) {
-        return ResponseEntity.ok(toLoginUserResponseFromToken(authService.login(request)));
+        return ResponseEntity.ok(authService.login(request));
     }
 
     @PutMapping

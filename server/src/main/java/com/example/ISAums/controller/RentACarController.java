@@ -11,10 +11,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 import java.util.UUID;
 
-import static com.example.ISAums.converter.RentACarConverter.toGetRentACarsResponseFromRentACar;
-import static com.example.ISAums.converter.RentACarConverter.toCreateRentACarResponseFromRentACar;
-import static com.example.ISAums.converter.RentACarConverter.toUpdateRentACarResponseFromRentACar;
-import static com.example.ISAums.converter.RentACarConverter.toSearchRentACarsResponseFromRentACars;
+import static com.example.ISAums.converter.RentACarConverter.*;
 
 @RestController
 @RequestMapping("/rent-a-cars")
@@ -50,14 +47,14 @@ public class RentACarController {
 
     @GetMapping
     @RequestMapping("/search")
-    public ResponseEntity<List<SearchRentACarResponse>> get(
+    public ResponseEntity<List<SearchRentACarResponse>> search(
             @RequestParam(name = "city", required = false) String city,
             @RequestParam(name = "state", required = false) String state,
             @RequestParam(name = "name", required = false) String name,
             @RequestParam(name = "pickUpDate", required = false) String pickUpDate,
             @RequestParam(name = "dropOffDate", required = false) String dropOffDate
     ) {
-        return ResponseEntity.ok(toSearchRentACarsResponseFromRentACars(rentACarService.search(city, state, name, pickUpDate, dropOffDate)));
+        return ResponseEntity.ok(toSearchRentACarResponseFromRentACars(rentACarService.search(city, state, name, pickUpDate, dropOffDate)));
     }
 
 }

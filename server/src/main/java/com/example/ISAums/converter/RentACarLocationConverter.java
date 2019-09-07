@@ -1,6 +1,5 @@
 package com.example.ISAums.converter;
 
-import com.example.ISAums.dto.request.CreateRentACarLocationRequest;
 import com.example.ISAums.dto.response.*;
 import com.example.ISAums.model.AgencyLocation;
 import com.example.ISAums.model.RentACar;
@@ -13,13 +12,6 @@ public class RentACarLocationConverter {
 
     public static CreateRentACarLocationResponse toCreateRentACarLocationResponseFromRentACarLocation(RentACarLocation rentACarLocation) {
         return CreateRentACarLocationResponse.builder()
-                .rentACarName(rentACarLocation.getRentACar().getName())
-                .location(rentACarLocation.getAgencyLocation().getCity() + ", " + rentACarLocation.getAgencyLocation().getState())
-                .build();
-    }
-
-    public static UpdateRentACarLocationResponse toUpdateRentACarLocationResponseFromRentACarLocation(RentACarLocation rentACarLocation) {
-        return UpdateRentACarLocationResponse.builder()
                 .rentACarName(rentACarLocation.getRentACar().getName())
                 .location(rentACarLocation.getAgencyLocation().getCity() + ", " + rentACarLocation.getAgencyLocation().getState())
                 .build();
@@ -38,14 +30,21 @@ public class RentACarLocationConverter {
                 .collect(Collectors.toList());
     }
 
-    public static RentACarLocation toRentACarLocationFromRequest(RentACar rentACar, AgencyLocation agencyLocation) {
+    public static UpdateRentACarLocationResponse toUpdateRentACarLocationResponseFromRentACarLocation(RentACarLocation rentACarLocation) {
+        return UpdateRentACarLocationResponse.builder()
+                .rentACarName(rentACarLocation.getRentACar().getName())
+                .location(rentACarLocation.getAgencyLocation().getCity() + ", " + rentACarLocation.getAgencyLocation().getState())
+                .build();
+    }
+
+    public static RentACarLocation toRentACarLocationFromCreateRequest(RentACar rentACar, AgencyLocation agencyLocation) {
         return RentACarLocation.builder()
                 .rentACar(rentACar)
                 .agencyLocation(agencyLocation)
                 .build();
     }
 
-    public static SearchRentACarLocationResponse toSearchRentACarLocationsResponseFromRentACarLocation(RentACarLocation rentACarLocation) {
+    public static SearchRentACarLocationResponse toSearchRentACarLocationResponseFromRentACarLocation(RentACarLocation rentACarLocation) {
         return SearchRentACarLocationResponse.builder()
                 .rentACarName(rentACarLocation.getRentACar().getName())
                 .city(rentACarLocation.getAgencyLocation().getCity())
@@ -55,9 +54,9 @@ public class RentACarLocationConverter {
                 .build();
     }
 
-    public static List<SearchRentACarLocationResponse> toSearchRentACarLocationsResponseFromRentACarLocations(List<RentACarLocation> rentACarLocations) {
+    public static List<SearchRentACarLocationResponse> toSearchRentACarLocationResponseFromRentACarLocations(List<RentACarLocation> rentACarLocations) {
         return rentACarLocations.stream()
-                .map(rentACarLocation -> toSearchRentACarLocationsResponseFromRentACarLocation(rentACarLocation))
+                .map(rentACarLocation -> toSearchRentACarLocationResponseFromRentACarLocation(rentACarLocation))
                 .collect(Collectors.toList());
     }
 

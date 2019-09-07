@@ -32,12 +32,6 @@ public class UserConverter {
                 .build();
     }
 
-    public static LoginUserResponse toLoginUserResponseFromToken(String token) {
-        return LoginUserResponse.builder()
-                .token(token)
-                .build();
-    }
-
     public static ChangePasswordResponse toChangePasswordResponse(String message) {
         return ChangePasswordResponse.builder()
                 .message(message)

@@ -41,7 +41,7 @@ public class VehicleController {
         return ResponseEntity.ok(toUpdateVehicleResponseFromVehicle(vehicleService.update(request)));
     }
 
-    //TOO is vehicle reserved?
+    //TODO is vehicle reserved?
     @DeleteMapping
     @RequestMapping("/{id}")
     public ResponseEntity<DeleteVehicleResponse> delete(@PathVariable(name = "id") UUID vehicleId) {

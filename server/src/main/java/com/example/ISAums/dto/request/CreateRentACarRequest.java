@@ -7,6 +7,7 @@ import lombok.NoArgsConstructor;
 import org.hibernate.validator.constraints.Range;
 
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
@@ -26,24 +27,7 @@ public class CreateRentACarRequest {
     @Size(max = DESCRIPTION_SIZE)
     private String description;
 
-    @NotBlank
-    @Size(max = STREET_SIZE)
-    private String street;
-
-    @NotBlank
-    @Size(max = CITY_SIZE)
-    private String city;
-
-    @NotBlank
-    @Size(max = STATE_SIZE)
-    private String state;
-
     @NotNull
-    @Range(min=0, max=LONGITUDE_MAX)
-    private Double longitude;
-
-    @NotNull
-    @Range(min=0 , max=LATITUDE_MAX)
-    private Double latitude;
+    private CreateAddressRequest address;
 
 }

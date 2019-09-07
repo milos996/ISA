@@ -9,8 +9,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import javax.xml.ws.Response;
-
 import static com.example.ISAums.converter.VehicleReservationConverter.toCreateVehicleReservationResponseFromVehicle;
 
 @RestController
@@ -24,7 +22,7 @@ public class VehicleReservationController {
     }
 
     @PostMapping
-    public ResponseEntity<CreateVehicleReservationResponse> create(@RequestBody CreateVehicleReservationRequest request) {
+    public ResponseEntity<CreateVehicleReservationResponse> reserve(@RequestBody CreateVehicleReservationRequest request) {
         return ResponseEntity.ok(toCreateVehicleReservationResponseFromVehicle(vehicleReservationService.reserve(request)));
     }
 }

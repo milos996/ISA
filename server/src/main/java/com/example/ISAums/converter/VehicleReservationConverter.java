@@ -2,13 +2,12 @@ package com.example.ISAums.converter;
 
 import com.example.ISAums.dto.request.CreateVehicleReservationRequest;
 import com.example.ISAums.dto.response.CreateVehicleReservationResponse;
-import com.example.ISAums.dto.response.CreateVehicleResponse;
 import com.example.ISAums.model.Vehicle;
 import com.example.ISAums.model.VehicleReservation;
 
 public class VehicleReservationConverter {
 
-    public static VehicleReservation toVehicleReservationFromCreateVehicleReservationRequest(CreateVehicleReservationRequest request){
+    public static VehicleReservation toVehicleReservationFromCreateRequest(CreateVehicleReservationRequest request){
         return VehicleReservation.builder()
                 .startDate(request.getPickUpDate())
                 .endDate(request.getDropOffDate())

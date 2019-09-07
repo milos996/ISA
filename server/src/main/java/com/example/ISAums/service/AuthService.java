@@ -4,11 +4,10 @@ import com.example.ISAums.converter.UserConverter;
 import com.example.ISAums.dto.request.ChangePasswordRequest;
 import com.example.ISAums.dto.request.CreateUserRequest;
 import com.example.ISAums.dto.request.LoginUserRequest;
+import com.example.ISAums.dto.response.LoginUserResponse;
 import com.example.ISAums.exception.CustomException;
 import com.example.ISAums.exception.EntityAlreadyExistsException;
-import com.example.ISAums.model.RentACar;
-import com.example.ISAums.model.RentACarAdmin;
-import com.example.ISAums.model.User;
+import com.example.ISAums.model.*;
 import com.example.ISAums.model.enumeration.Role;
 import com.example.ISAums.repository.AddressRepository;
 import com.example.ISAums.repository.RentACarAdminRepository;
@@ -16,12 +15,12 @@ import com.example.ISAums.repository.VerificationTokenRepository;
 import com.example.ISAums.repository.UserRepository;
 import com.example.ISAums.security.JwtTokenUtil;
 import com.example.ISAums.security.UserDetailsServiceImpl;
-import com.example.ISAums.model.VerificationToken;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.AuthenticationException;
+import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -31,7 +30,9 @@ import org.springframework.transaction.annotation.Transactional;
 import javax.mail.MessagingException;
 import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.List;
 import java.util.UUID;
 
 @Service
@@ -76,10 +77,6 @@ public class AuthService {
         request.setPassword(bCryptPasswordEncoder.encode(request.getPassword()));
 
         User user = UserConverter.toCreateUserFromRequest(request);
-        if(addressRepository.findByCity(request.getCity()) == null)
-            throw new CustomException("Cannot find state for " + request.getCity());
-
-        user.setState(addressRepository.findByCity(request.getCity()).getState());
 
         userRepository.save(user);
 
@@ -111,21 +108,15 @@ public class AuthService {
     }
 
     @Transactional(readOnly = true)
-    public String login(LoginUserRequest request) {
+    public LoginUserResponse login(LoginUserRequest request) {
         try {
                 User user = userDetailsService.loadUserByUsername(request.getEmail());
-
-                if (user == null)
-                    return "Invalid email.";
-
-                if (user.isEnabled() == false)
-                    return "Check your email for activation!";
 
                 RentACarAdmin rentACarAdmin;
                 if (user.getAuthorities().toArray()[0].toString().equals(Role.RENT_A_CAR_ADMIN.name())) {
                     rentACarAdmin = rentACarAdminRepository.findByUser_Id(user.getId());
                     if (rentACarAdmin.isFirstLogin() == true)
-                        return "You need to change your password first!";
+                        throw new  CustomException("You need to change your password first!");
                 }
 
                 UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(user, request.getPassword(), user.getAuthorities());
@@ -133,13 +124,15 @@ public class AuthService {
 
                 if (authentication.isAuthenticated()) {
                     SecurityContextHolder.getContext().setAuthentication(authentication);
-                    return jwtTokenUtil.generateAuthToken((User) user);
+                    String token = jwtTokenUtil.generateAuthToken((User) user);
+
+                    return new LoginUserResponse(user.getUsername(), token, user.getAuthorities().toArray()[0].toString());
                 }
         } catch (AuthenticationException e) {
-            throw new CustomException("Invalid email or password." + " " + request.getEmail() + " " + request.getPassword());
+            throw new CustomException("Invalid combination email-password.");
         }
 
-        return "Invalid credentials.";
+        throw new CustomException("Invalid combination email-password.");
     }
 
     @Transactional(rollbackFor = Exception.class)

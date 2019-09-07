@@ -43,4 +43,9 @@ public class CreateUserRequest {
     @Size(max = CITY_SIZE)
     private String city;
 
+    @NotBlank
+    @Size(max = CITY_SIZE)
+    private String state;
+
+
 }
