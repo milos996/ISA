@@ -13,7 +13,7 @@ import java.util.UUID;
 public class SendFriendshipRequestRequest {
 
     @NotNull
-    private UUID senderId;
+    private UUID senderUserId;
 
     @NotNull
     private UUID invitedUserId;
