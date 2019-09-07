@@ -1,4 +1,5 @@
 export function putHotelDetails(state, payload) {
+  
   return {
     ...state,
     data: {
@@ -78,5 +79,14 @@ export function putHotelLocationInformation(state, payload) {
         ...payload
       }
     }
+  };
+}
+
+export function deleteRoomWithId(state, roomId) {
+  const { [roomId]: deleteRoom, ...restRooms } = state.rooms;
+
+  return {
+    ...state,
+    rooms: restRooms
   };
 }

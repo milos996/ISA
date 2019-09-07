@@ -6,20 +6,28 @@ import {
   userTokenSelector
 } from "./../../store/user/selectors";
 
-const PrivateRoute = ({ component: Component, ...rest }) => {
+const PrivateRoute = ({ component: Component, accessRole = null, ...rest }) => {
   const userData = useSelector(userDataSelector);
   const userToken = useSelector(userTokenSelector);
+
+  function hasRightRole() {
+    if (!accessRole) {
+      return true;
+    }
+
+    return accessRole === userData.role;
+  }
 
   return (
     <Route
       {...rest}
       render={props =>
-        userData && userToken ? (
+        userData && userToken && hasRightRole() ? (
           <Component {...props} />
         ) : (
           <Redirect
             to={{
-              pathname: "/login",
+              pathname: "/page-not-found",
               state: { from: props.location }
             }}
           />
