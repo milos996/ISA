@@ -57,7 +57,7 @@ export function* sendFriendshipRequest(){
 
 export function* removeFriend(){
   const { payload } = yield take(REMOVE_FRIEND);
-  yield call(userService.removeFriend, payload.userId, payload.friendsId);
+  yield call(userService.removeFriend, payload.friendsId);
   const { data } = yield call(userService.fetchFriends, payload.userId);
   yield put(putFriendsData({ data }));
 }

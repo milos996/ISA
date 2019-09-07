@@ -86,4 +86,8 @@ public class UserService {
     public List<User> find(String name) {
 		return userRepository.findAllByFirstName(name);
     }
+
+    public void updatePassword(String newPassword) {
+		//...
+    }
 }

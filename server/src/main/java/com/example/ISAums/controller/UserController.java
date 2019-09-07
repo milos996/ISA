@@ -1,6 +1,7 @@
 package com.example.ISAums.controller;
 import com.example.ISAums.dto.request.RemoveFriendshipRequest;
 import com.example.ISAums.dto.request.SendFriendshipRequestRequest;
+import com.example.ISAums.dto.request.UpdatePasswordRequest;
 import com.example.ISAums.dto.request.UpdateUserProfileRequest;
 import com.example.ISAums.dto.response.GetUserResponse;
 import com.example.ISAums.dto.response.SendFriendshipRequestResponse;
@@ -47,7 +48,7 @@ public class UserController {
 		return ResponseEntity.ok(toGetUserResponseFromUsers(friends));
 	}
 
-	@DeleteMapping
+	@DeleteMapping(value = "/friendship/")
 	public ResponseEntity removeFriendFromListOfFriends(@RequestBody RemoveFriendshipRequest request){
 
         userService.removeFriend(request.getMineId(), request.getFriendsId());
@@ -59,4 +60,11 @@ public class UserController {
 		List<User> users = userService.find(name);
 		return ResponseEntity.ok(toGetUserResponseFromUsers(users));
 	}
+
+	@PutMapping(value = "/password/update/")
+	public ResponseEntity updatePassword(@RequestBody UpdatePasswordRequest request){
+		userService.updatePassword(request.getNewPassword());
+		return ResponseEntity.ok().build();
+	}
+
 }

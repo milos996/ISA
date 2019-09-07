@@ -5,10 +5,10 @@ const  ENDPOINTS = {
 
     SAVE_USER: "/users",
     FETCH_FRIENDS: "/users/listOfFriends/%s",
-    SAVE_PASSWORD: "/users/%s",
+    SAVE_PASSWORD: "/users/password/update/",
     FETCH_BY_NAME: "/users/find/%s",
-    SEND_FRIENDSHIP_REQUEST: "/users/friendshipRequest",
-    REMOVE_FRIEND: "/users"
+    REMOVE_FRIEND: "/users/friendship",
+    FRIENDSHIP: "/users/friedship/%s"
 };
 
 class UserService extends HttpBaseClient{
@@ -20,22 +20,21 @@ class UserService extends HttpBaseClient{
     fetchFriends = userId => {
         return this.getApiClient.get(format(ENDPOINTS.FETCH_FRIENDS, userId));
     }
-
-    //not exists on backend yet
-    savePassword = (password, userId) => {
-        return this.getApiClient().put(format(ENDPOINTS.SAVE_PASSWORD, userId), password);
+    //didn't finish on backend
+    savePassword = password => {
+        return this.getApiClient().put(ENDPOINTS.SAVE_PASSWORD, {password});
     }
 
     fetchByName = name => {
         return this.getApiClient().get(format(ENDPOINTS.FETCH_BY_NAME), name);
     }
 
-    sendFriendshipRequest = (senderUserId, invitedUserId) => {
-        return this.getApiClient().post(ENDPOINTS.SEND_FRIENDSHIP_REQUEST, senderUserId, invitedUserId);
+    sendFriendshipRequest = invitedUserId => {
+        return this.getApiClient().post(format(ENDPOINTS.FRIENDSHIP, invitedUserId));
     }
 
-    removeFriend = (userId, friendsId) => {
-        return this.getApiClient().delete(ENDPOINTS.REMOVE_FRIEND, userId, friendsId);
+    removeFriend = friendsId => {
+        return this.getApiClient().delete(format(ENDPOINTS.FRIENDSHIP, friendsId))
     }
 }
 export default new UserService();
