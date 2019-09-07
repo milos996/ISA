@@ -37,7 +37,8 @@ public class AuthController {
         return ResponseEntity.ok(toCreateUserResponseFromUser(user));
     }
 
-    @RequestMapping(value = "/registration/confirm", method = RequestMethod.GET)
+    @GetMapping
+    @RequestMapping(value = "/registration/confirm")
     public ResponseEntity<String> confirmRegistration(@RequestParam("token") String token) {
         return ResponseEntity.ok(authService.registrationConfirm(token));
     }

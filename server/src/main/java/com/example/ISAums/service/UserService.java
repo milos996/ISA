@@ -20,6 +20,7 @@ import org.springframework.stereotype.Service;
 import com.example.ISAums.model.User;
 import com.example.ISAums.repository.UserRepository;
 import org.springframework.transaction.annotation.Transactional;
+import sun.reflect.annotation.ExceptionProxy;
 
 
 @Service
@@ -30,18 +31,22 @@ public class UserService {
         this.userRepository = ur;
     }
 
+    @Transactional(rollbackFor = Exception.class)
     public User save(User user) {
         return userRepository.save(user);
     }
 
+    @Transactional(readOnly = true)
     public User findByEmail(String email) {
         return userRepository.findByEmail(email);
     }
 
+    @Transactional(readOnly = true)
     public boolean existsByEmail(String email) {
         return  userRepository.existsByEmail(email);
     }
 
+    @Transactional(readOnly = true)
     public boolean existsByPhoneNumber(String phoneNumber) {
         return  userRepository.existsByPhoneNumber(phoneNumber);
     }

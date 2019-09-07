@@ -6,6 +6,7 @@ import com.example.ISAums.dto.request.CreateUserRequest;
 import com.example.ISAums.dto.request.LoginUserRequest;
 import com.example.ISAums.exception.CustomException;
 import com.example.ISAums.exception.EntityAlreadyExistsException;
+import com.example.ISAums.model.RentACar;
 import com.example.ISAums.model.RentACarAdmin;
 import com.example.ISAums.model.User;
 import com.example.ISAums.model.enumeration.Role;
@@ -31,6 +32,7 @@ import javax.mail.MessagingException;
 import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
 import java.util.Calendar;
+import java.util.UUID;
 
 @Service
 public class AuthService {
@@ -121,7 +123,7 @@ public class AuthService {
 
                 RentACarAdmin rentACarAdmin;
                 if (user.getAuthorities().toArray()[0].toString().equals(Role.RENT_A_CAR_ADMIN.name())) {
-                    rentACarAdmin = rentACarAdminRepository.findByUserId(user.getId());
+                    rentACarAdmin = rentACarAdminRepository.findByUser_Id(user.getId());
                     if (rentACarAdmin.isFirstLogin() == true)
                         return "You need to change your password first!";
                 }
@@ -155,7 +157,7 @@ public class AuthService {
 
                 user.setPassword(bCryptPasswordEncoder.encode(request.getNewPassword()));
 
-                RentACarAdmin rentACarAdmin = rentACarAdminRepository.findByUserId(user.getId());
+                RentACarAdmin rentACarAdmin = rentACarAdminRepository.findByUser_Id(UUID.fromString(authentication.getName()));
                 rentACarAdmin.setFirstLogin(false);
                 rentACarAdminRepository.save(rentACarAdmin);
 

@@ -8,6 +8,7 @@ import lombok.NoArgsConstructor;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 import java.util.Date;
+import java.util.UUID;
 
 @Builder
 @NoArgsConstructor
@@ -16,10 +17,13 @@ import java.util.Date;
 public class CreateVehicleReservationRequest {
 
     @NotNull
-    private Date pickUp;
+    private UUID vehicleId;
 
     @NotNull
-    private Date dropOff;
+    private Date pickUpDate;
+
+    @NotNull
+    private Date dropOffDate;
 
     @NotEmpty
     private String pickUpLocation;
@@ -27,10 +31,6 @@ public class CreateVehicleReservationRequest {
     @NotEmpty
     private String dropOffLocation;
 
-    @NotEmpty
-    private String vehicleType;
-
-    @NotEmpty
-    private String numberOfPassengers;
-
+    @NotNull
+    private UUID airplaneTicketId;
 }

@@ -16,34 +16,20 @@ import static com.example.ISAums.util.ValidationConstraints.*;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class RentACarResponse {
+public class GetRentACarResponse {
 
-    @NotBlank
-    @Size(max = NAME_SIZE)
     private String name;
 
-    @NotBlank
-    @Size(max = DESCRIPTION_SIZE)
     private String description;
 
-    @NotBlank
-    @Size(max = STREET_SIZE)
     private String street;
 
-    @NotBlank
-    @Size(max = CITY_SIZE)
     private String city;
 
-    @NotBlank
-    @Size(max = STATE_SIZE)
     private String state;
 
-    @NotNull
-    @Range(min=0, max=LONGITUDE_MAX)
     private Double longitude;
 
-    @NotNull
-    @Range(min=0 , max=LATITUDE_MAX)
     private Double latitude;
 
 
