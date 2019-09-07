@@ -18,11 +18,7 @@ export function* logout() {
     putUserData({
       data: null
     }),
-    putUserToken(
-      {
-        token: null
-      }
-    )
+    putUserToken(null)
   );
 
   payload.callback();

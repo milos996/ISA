@@ -3,10 +3,7 @@ import UserInformation from "../components/user/Information";
 
 export default function UserProfile({ match }){
     
-  return (
-    
+  return (  
       <UserInformation userId={match.params.id} />
-    
   );
 };
-

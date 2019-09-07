@@ -52,7 +52,7 @@ export default function Password({ closeModal, userId }){
                 })
               );
           }else{
-              console.log("They are not equal");
+              alert("They are not equal");
             }          
         }}
       >

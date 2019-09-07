@@ -13,7 +13,7 @@ export function putUserToken(state, payload){
   
   return {
     ...state,
-    ...payload  
+    token: payload  
   };
 }
 
@@ -35,20 +35,3 @@ export function putFoundUsersData(state, payload){
     payload
   }
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
