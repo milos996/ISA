@@ -8,11 +8,11 @@ create table address
     time_created datetime not null,
     time_updated datetime null,
     city varchar(128) null,
-	state varchar(128) null,
-	latitude double null,
-	longitude double null,
-	street varchar(255) null,
-	constraint UK_ADDRESS_CITY_STATE_STREET
+    state varchar(128) null,
+    latitude double null,
+    longitude double null,
+    street varchar(255) null,
+    constraint UK_ADDRESS_CITY_STATE_STREET
         unique (state, city, street)
 );
 
@@ -390,14 +390,11 @@ create table vehicle_reservation
         foreign key (vehicle_id) references vehicle (id)
 );
 
-
-
-
-
-
-
-
-
-
-
-
+create table rating
+(
+    id varchar(255) not null
+        primary key,
+    entity_id varchar(255) not null,
+    entity_type varchar(255) not null,
+    mark int not null
+);

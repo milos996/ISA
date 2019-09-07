@@ -3,7 +3,6 @@ package com.example.ISAums.model;
 import com.example.ISAums.model.enumeration.InvitationStatus;
 import lombok.*;
 import org.hibernate.annotations.Where;
-
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
@@ -28,8 +27,8 @@ public class Friendship extends BaseEntity {
 	private User invitedUser;
 
 	@Column(name = "invitation_status")
-	@Enumerated(EnumType.STRING)
 	@NotBlank
+	@Enumerated(EnumType.STRING)
 	private InvitationStatus invitationStatus;
 
 }

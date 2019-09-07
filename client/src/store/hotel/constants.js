@@ -1,0 +1,14 @@
+export const GET_HOTEL_DETAILS = "get_hotel_details";
+export const PUT_HOTEL_DETAILS = "put_hotel_details";
+export const PUT_CHANGE_HOTEL_SERVICES = "put_change_hotel_services";
+export const PUT_ADD_NEW_SERVICE = "put_add_new_service";
+export const SAVE_SERVICES = "save_services";
+export const PUT_HOTEL_SERVICES = "put_hotel_services";
+export const FETCH_HOTEL_SERVICES = "fetch_hotel_services";
+export const FETCH_HOTEL_DETAILS = "fetch_hotel_details";
+export const SAVE_ROOM_DETAILS = "save_room_details";
+export const DELETE_ROOM = "delete_room";
+export const GET_HOTEL_LOCATION_ON_LAT_LNG = "get_hotel_location_on_lat_lng";
+export const PUT_HOTEL_LOCATION_INFORMATION = "put_hotel_location_information";
+export const SAVE_HOTEL_DETAILS = "save_hotel_details";
+export const PUT_DELETE_ROOM_WITH_ID = "put_delete_room_with_id";

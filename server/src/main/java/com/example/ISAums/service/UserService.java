@@ -1,35 +1,32 @@
 package com.example.ISAums.service;
 
-import com.example.ISAums.converter.UserConverter;
-import com.example.ISAums.dto.request.CreateUserRequest;
-import com.example.ISAums.dto.request.LoginUserRequest;
 import com.example.ISAums.exception.CustomException;
-import com.example.ISAums.exception.EntityAlreadyExistsException;
-import com.example.ISAums.security.JwtTokenUtil;
-import com.example.ISAums.security.UserDetailsServiceImpl;
-import org.springframework.security.authentication.AnonymousAuthenticationToken;
-import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.AuthenticationException;
-import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import com.example.ISAums.dto.request.SendFriendshipRequestRequest;
+import com.example.ISAums.dto.request.UpdateUserProfileRequest;
+import com.example.ISAums.exception.EntityWithIdDoesNotExist;
+import com.example.ISAums.model.Friendship;
+import com.example.ISAums.model.enumeration.InvitationStatus;
+import com.example.ISAums.repository.FriendshipRepository;
 import org.springframework.stereotype.Service;
-
 import com.example.ISAums.model.User;
 import com.example.ISAums.repository.UserRepository;
 import org.springframework.transaction.annotation.Transactional;
-import sun.reflect.annotation.ExceptionProxy;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
+import java.util.UUID;
 
+import static com.example.ISAums.util.UtilService.copyNonNullProperties;
 
 @Service
 public class UserService {
     private final UserRepository userRepository;
+	private final FriendshipRepository friendshipRepository;
 
-    public UserService(UserRepository ur) {
-        this.userRepository = ur;
-    }
+	public UserService(UserRepository userRepository, FriendshipRepository friendshipRepository){
+		this.userRepository = userRepository;
+		this.friendshipRepository = friendshipRepository;
+	}
 
     @Transactional(rollbackFor = Exception.class)
     public User save(User user) {
@@ -49,6 +46,57 @@ public class UserService {
     @Transactional(readOnly = true)
     public boolean existsByPhoneNumber(String phoneNumber) {
         return  userRepository.existsByPhoneNumber(phoneNumber);
+    }
+
+	@Transactional(rollbackFor = Exception.class)
+    public User updateUser(UpdateUserProfileRequest request) {
+
+		if(!userRepository.existsById(request.getId())){
+			throw new EntityWithIdDoesNotExist("User", request.getId());
+		}
+
+		if(userRepository.findByEmail(request.getEmail()) != null){
+			throw new CustomException("Email " + request.getEmail() + " already exist.");
+		}
+
+		Optional<User> user = userRepository.findById(request.getId());
+		copyNonNullProperties(request, user.get());
+		save(user.get());
+
+		return user.get();
+	}
+	public List<User> getListOfFriends(UUID user_id){
+
+		List<UUID> ids = friendshipRepository.getFriends(user_id.toString());
+		List<User> friends = new ArrayList<User>(ids.size());
+
+		for(int i = 0; i < ids.size(); i++){
+			Optional<User> tmp = userRepository.findById(UUID.fromString(String.valueOf(ids.get(i))));
+			friends.add(tmp.get());
+		}
+
+		return friends;
+	}
+
+	public Friendship sendFriendshipRequest(SendFriendshipRequestRequest request) {
+
+        Optional<User> sender = userRepository.findById(request.getSenderId());
+        Optional<User> invitedUser = userRepository.findById(request.getInvitedUserId());
+
+		Friendship friendship = Friendship.builder()
+				.sender(sender.get())
+				.invitedUser(invitedUser.get())
+				.invitationStatus(InvitationStatus.PENDING)
+				.build();
+
+		friendshipRepository.save(friendship);
+
+		return friendship;
+	}
+
+	@Transactional(rollbackFor = Exception.class)
+    public void removeFriend(UUID mine_id, UUID friend_id) {
+		friendshipRepository.removeFriendship(String.valueOf(mine_id), String.valueOf(friend_id));
     }
 
 }

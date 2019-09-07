@@ -1,12 +1,12 @@
 package com.example.ISAums.converter;
 
-import com.example.ISAums.dto.request.ChangePasswordRequest;
 import com.example.ISAums.dto.request.CreateUserRequest;
-import com.example.ISAums.dto.response.ChangePasswordResponse;
-import com.example.ISAums.dto.response.CreateUserResponse;
-import com.example.ISAums.dto.response.LoginUserResponse;
+import com.example.ISAums.dto.response.*;
 import com.example.ISAums.model.User;
 import com.example.ISAums.model.enumeration.Role;
+
+import java.util.List;
+import java.util.stream.Collectors;
 
 public class UserConverter {
 
@@ -18,6 +18,7 @@ public class UserConverter {
                 .lastName(request.getLastName())
                 .phoneNumber(request.getPhoneNumber())
                 .city(request.getCity())
+                .state(request.getState())
                 .role(Role.USER)
                 .isEnabled(false)
                 .build();
@@ -43,4 +44,29 @@ public class UserConverter {
                 .build();
     }
 
+    public static UpdateUserProfileResponse toUpdateUserProfileResponseFromUser(User user) {
+        return UpdateUserProfileResponse.builder()
+                .id(user.getId())
+                .firstName(user.getFirstName())
+                .lastName(user.getLastName())
+                .build();
+    }
+
+    public static List<GetUserResponse> toGetUserResponseFromUsers(List<User> friends) {
+        return friends.stream()
+                .map(user -> GetUserResponse.builder()
+                        .id(user.getId())
+                        .firstName(user.getFirstName())
+                        .lastName(user.getLastName())
+                        .email(user.getEmail())
+                        .password(user.getPassword())
+                        .phoneNumber(user.getPhoneNumber())
+                        .city(user.getCity())
+                        .state(user.getState())
+                        .build()
+                )
+                .collect(Collectors.toList());
+    }
+
 }
+

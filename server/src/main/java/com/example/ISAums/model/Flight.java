@@ -3,11 +3,10 @@ package com.example.ISAums.model;
 import lombok.*;
 import org.hibernate.annotations.Where;
 import org.hibernate.validator.constraints.Range;
-
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import java.sql.Time;
-import java.time.LocalDateTime;
+import java.time.LocalDate;
 
 @Data
 @Builder
@@ -20,11 +19,11 @@ public class Flight extends BaseEntity {
 
   @Column(name = "departure_time")
   @NotNull
-  private LocalDateTime departureTime;
+  private LocalDate departureTime;
 
   @Column(name = "arrival_time")
   @NotNull
-  private LocalDateTime arrivalTime;
+  private LocalDate arrivalTime;
 
   @Column(name = "duration")
   @NotNull
@@ -48,6 +47,7 @@ public class Flight extends BaseEntity {
   @JoinColumn(name = "airplane_id")
   @NotNull
   private Airplane airplane;
+
 
 }
 
