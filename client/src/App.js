@@ -5,6 +5,7 @@ import LoginComponent from "./pages/Login";
 import HotelProfile from "./pages/HotelProfile";
 import PrivateRoute from "./components/UI/PrivateRoute";
 import ErrorInformationModal from "./components/UI/ErrorInformationModal";
+import AirlineProfile from "./pages/AirlineProfile";
 
 const App = () => {
   return (
@@ -12,6 +13,7 @@ const App = () => {
       <PrivateRoute exact path="/" component={HomeComponent} />
       <Route exact path="/user/:id/hotel" component={HotelProfile} />
       <Route exact path="/login" component={LoginComponent} />
+      <Route exact path="/airline/:id" component={AirlineProfile} />
       <ErrorInformationModal />
     </Router>
   );

@@ -72,6 +72,11 @@ code {
   padding: 0px 0px 0px 0px;
   border: 0px none;
   justify-content: flex-end;
+  
+}
+
+.scroll {
+  overflow: scroll;
 }
 
 .rooms-container {

@@ -4,6 +4,8 @@ import com.example.ISAums.dto.request.GetAirlineIncomeRequest;
 import com.example.ISAums.dto.request.UpdateAirlineRequest;
 import com.example.ISAums.dto.response.GetAirlineIncomeResponse;
 import com.example.ISAums.dto.response.GetAirlineAverageRatingResponse;
+import com.example.ISAums.dto.response.GetAirlineResponse;
+import com.example.ISAums.model.Airline;
 import com.example.ISAums.service.AirlineService;
 import com.example.ISAums.service.AirplaneTicketService;
 import org.springframework.http.ResponseEntity;
@@ -32,6 +34,12 @@ public class AirlineController {
         return ResponseEntity.ok().build();
     }
 
+    @GetMapping(value = "/{id}")
+    public ResponseEntity<GetAirlineResponse> getAirline(@PathVariable(name = "id") String airlineId){
+        Airline airline = airlineService.getAirline(airlineId);
+        return ResponseEntity.ok(toGetAirlineResponseFromAirline(airline));
+    }
+
     @GetMapping(value = "/getAirlineIncomeForDate")
     public ResponseEntity<GetAirlineIncomeResponse> getAirlineIncomeForDate(@RequestBody GetAirlineIncomeRequest req){
 
@@ -40,7 +48,7 @@ public class AirlineController {
         return ResponseEntity.ok(toGetAirlineIncomeResponseFromIncome(req.getStartDate(), req.getEndDate(), income));
     }
 
-    @GetMapping(value = "/getAverageRating/{id}")
+    @GetMapping(value = "/averageRating/{id}")
     public ResponseEntity<GetAirlineAverageRatingResponse> getAverageRating(@PathVariable(name = "id") UUID airlineId){
 
         Double averageRating = airlineService.getAverageRating(airlineId);

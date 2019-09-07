@@ -87,4 +87,7 @@ public class AirlineService {
         }
     }
 
+    public Airline getAirline(String airlineId) {
+        return airlineRepository.findById(UUID.fromString(airlineId)).get();
+    }
 }

@@ -10,6 +10,8 @@ import org.springframework.web.bind.annotation.*;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.UUID;
+
+import static com.example.ISAums.converter.DestinationConverter.toGetAirlineDestinationResponseFromDestinations;
 import static com.example.ISAums.converter.FlightConverter.*;
 
 @RestController
@@ -18,15 +20,12 @@ public class FlightController {
 
     private final FlightService flightService;
 
-    private final AirplaneTicketService airplaneTicketService;
-
     private final EmailServiceImpl emailService;
 
-    public FlightController(FlightService flightService, AirplaneTicketService airplaneTicketService,
+    public FlightController(FlightService flightService,
                             EmailServiceImpl emailService){
 
         this.flightService = flightService;
-        this.airplaneTicketService = airplaneTicketService;
         this.emailService = emailService;
     }
 
@@ -67,21 +66,28 @@ public class FlightController {
         List<Flight> flights = flightService.searchFlights(departureAirlineId, destinationAirlineId, departureTime, arrivalTime);
 
         return ResponseEntity.ok(toSearchFlightsResponseFromFlights(flights));
-
     }
 
-    @GetMapping(value = "/flightAverageRating/{id}")
-    public ResponseEntity<GetFlightAverageRatingResponse> getFlightAverageRating(@PathVariable(name = "id") UUID flightId){
+    @GetMapping(value = "/quickBooking/{airlineId}")
+    public ResponseEntity<List<FlightForQuickBookingResponse>> getQuickBooking(@PathVariable(name = "airlineId") String airlineId){
 
-        Double averageRating = flightService.getAverageRatingOfFlights(flightId);
-
-        return ResponseEntity.ok(toFlightAverageRatingResponseFromAverageRating(averageRating, flightId));
-    }
-
-    @GetMapping(value = "/quickBooking")
-    public ResponseEntity<List<FlightForQuickBookingResponse>> getQuickBooking(){
-
-        List<Flight> flights = flightService.getQuickBooking();
+        List<Flight> flights = flightService.getQuickBooking(airlineId);
         return ResponseEntity.ok(toFlightsForQuickBookingResponseFromFlights(flights));
     }
+
+    @GetMapping(value = "/{airlineId}")
+    public ResponseEntity<List<GetFlightAverageRatingResponse>> getFlightsOfAirlineWithRatings(@PathVariable(name = "airlineId") String airlineId){
+
+        List<Flight> flights = flightService.getFlightsOfAirline(airlineId);
+        List<GetFlightAverageRatingResponse> flightWithRatings = flightService.getFlightsWithRatings(flights);
+        return ResponseEntity.ok(flightWithRatings);
+    }
+
+    @GetMapping(value = "/destinations/{airlineId}")
+    public ResponseEntity<List<GetAirlineDestinationResponse>> getDestinations(@PathVariable(name = "id") String airlineId){
+
+        List<AirlineDestination> destinations = flightService.getDestinations(airlineId);
+        return ResponseEntity.ok(toGetAirlineDestinationResponseFromDestinations(destinations));
+    }
+
 }
