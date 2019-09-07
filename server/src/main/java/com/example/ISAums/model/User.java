@@ -24,7 +24,6 @@ import static com.example.ISAums.util.ValidationConstraints.*;
 @Where(clause = "is_deleted='false'")
 public class User extends BaseEntity implements UserDetails{
 
-
 	@Column(name = "first_name")
 	@NotBlank
 	@Size(max = FIRST_NAME_SIZE)
@@ -65,6 +64,10 @@ public class User extends BaseEntity implements UserDetails{
 	@Size(max = STATE_SIZE)
 	private String state;
 
+	@NotNull
+	@Column(name = "is_enabled")
+	private Boolean isEnabled;
+
 	@Override
 	public Collection<? extends GrantedAuthority> getAuthorities() {
 		return Collections.singletonList(new SimpleGrantedAuthority(this.getRole().toString()));
@@ -100,8 +103,6 @@ public class User extends BaseEntity implements UserDetails{
 	}
 
 	@Override
-	public boolean isEnabled() {
-		return true;
-	}
-	
+	public boolean isEnabled() { return isEnabled; }
+
 }

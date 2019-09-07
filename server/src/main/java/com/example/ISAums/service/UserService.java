@@ -1,7 +1,8 @@
 package com.example.ISAums.service;
+
+import com.example.ISAums.exception.CustomException;
 import com.example.ISAums.dto.request.SendFriendshipRequestRequest;
 import com.example.ISAums.dto.request.UpdateUserProfileRequest;
-import com.example.ISAums.exception.CustomException;
 import com.example.ISAums.exception.EntityWithIdDoesNotExist;
 import com.example.ISAums.model.Friendship;
 import com.example.ISAums.model.enumeration.InvitationStatus;
@@ -14,13 +15,12 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
+
 import static com.example.ISAums.util.UtilService.copyNonNullProperties;
 
 @Service
 public class UserService {
-
-	private final UserRepository userRepository;
-
+    private final UserRepository userRepository;
 	private final FriendshipRepository friendshipRepository;
 
 	public UserService(UserRepository userRepository, FriendshipRepository friendshipRepository){
@@ -28,9 +28,25 @@ public class UserService {
 		this.friendshipRepository = friendshipRepository;
 	}
 
-	public User save(User user) {
-		return userRepository.save(user);
-	}
+    @Transactional(rollbackFor = Exception.class)
+    public User save(User user) {
+        return userRepository.save(user);
+    }
+
+    @Transactional(readOnly = true)
+    public User findByEmail(String email) {
+        return userRepository.findByEmail(email);
+    }
+
+    @Transactional(readOnly = true)
+    public boolean existsByEmail(String email) {
+        return  userRepository.existsByEmail(email);
+    }
+
+    @Transactional(readOnly = true)
+    public boolean existsByPhoneNumber(String phoneNumber) {
+        return  userRepository.existsByPhoneNumber(phoneNumber);
+    }
 
 	@Transactional(rollbackFor = Exception.class)
     public User updateUser(UpdateUserProfileRequest request) {
@@ -64,7 +80,7 @@ public class UserService {
 
 	public Friendship sendFriendshipRequest(SendFriendshipRequestRequest request) {
 
-        Optional<User> sender = userRepository.findById(request.getSenderId());
+        Optional<User> sender = userRepository.findById(request.getSenderUserId());
         Optional<User> invitedUser = userRepository.findById(request.getInvitedUserId());
 
 		Friendship friendship = Friendship.builder()
@@ -82,4 +98,13 @@ public class UserService {
     public void removeFriend(UUID mine_id, UUID friend_id) {
 		friendshipRepository.removeFriendship(String.valueOf(mine_id), String.valueOf(friend_id));
     }
+
+    public List<User> find(String name) {
+		return userRepository.findAllByFirstName(name);
+    }
+
+	public void updatePassword(String newPassword) {
+		//...
+	}
+
 }

@@ -35,3 +35,14 @@ export const selectHotelRooms = state => {
 export const selectHotels = state => {
   return state[reducer].hotels;
 };
+
+export const selectHotelRoomsForEdit = state => {
+  const rooms = {};
+  state[reducer].rooms.forEach(room => {
+    rooms[room.id] = {
+      ...room
+    };
+  });
+
+  return rooms;
+};

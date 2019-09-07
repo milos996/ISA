@@ -2,14 +2,14 @@ package com.example.ISAums.model;
 
 import lombok.*;
 import org.hibernate.annotations.Where;
+import org.hibernate.validator.constraints.Range;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
-import static com.example.ISAums.util.ValidationConstraints.DESCRIPTION_SIZE;
-import static com.example.ISAums.util.ValidationConstraints.NAME_SIZE;
+import static com.example.ISAums.util.ValidationConstraints.*;
 
 @Data
 @Builder
@@ -34,5 +34,12 @@ public class RentACar extends BaseEntity {
     @JoinColumn(name = "address_id")
     @OneToOne(fetch = FetchType.LAZY)
     private Address address;
+
+
+
+//    @Range(min = 0, max = MAX_RATING)
+//    @Column(name = "rating")
+//    private Double rating;
+
 }
 

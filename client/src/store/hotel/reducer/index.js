@@ -26,68 +26,6 @@ const initialState = {
   },
   report: {},
   services: {},
-  // rooms: {
-  //   0: {
-  //     id: 0,
-  //     number: 2,
-  //     floor: 1,
-  //     priceSummer: 12312,
-  //     priceWinter: 0,
-  //     priceSpring: 0,
-  //     priceAutumn: 0,
-  //     numberOfPeople: 2
-  //   },
-  //   2: {
-  //     id: 2,
-  //     number: 3,
-  //     floor: 1,
-  //     priceSummer: 123123,
-  //     priceWinter: 0,
-  //     priceSpring: 0,
-  //     priceAutumn: 0,
-  //     numberOfPeople: 2
-  //   },
-  //   3: {
-  //     id: 3,
-  //     number: 4,
-  //     floor: 1,
-  //     priceSummer: 1211658458,
-  //     priceWinter: 0,
-  //     priceSpring: 0,
-  //     priceAutumn: 0,
-  //     numberOfPeople: 2
-  //   },
-  //   4: {
-  //     id: 4,
-  //     number: 2,
-  //     floor: 2,
-  //     priceSummer: 679569,
-  //     priceWinter: 0,
-  //     priceSpring: 0,
-  //     priceAutumn: 0,
-  //     numberOfPeople: 2
-  //   },
-  //   5: {
-  //     id: 5,
-  //     number: 3,
-  //     floor: 2,
-  //     priceSummer: 1,
-  //     priceWinter: 0,
-  //     priceSpring: 0,
-  //     priceAutumn: 0,
-  //     numberOfPeople: 2
-  //   },
-  //   123: {
-  //     id: 123,
-  //     number: 10,
-  //     floor: 2,
-  //     priceSummer: 2,
-  //     priceWinter: 0,
-  //     priceSpring: 0,
-  //     priceAutumn: 0,
-  //     numberOfPeople: 2
-  //   }
-  // },
   hotels: [
     {
       id: 12,

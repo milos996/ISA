@@ -6,6 +6,7 @@ import HotelProfilePage from "./pages/HotelProfile";
 import PrivateRoute from "./components/UI/PrivateRoute";
 import HotelsPage from "./pages/Hotels";
 import HotelRoomsPage from "./pages/HotelRooms";
+import UserProfile from "./pages/UserProfile";
 
 const App = () => {
   return (
@@ -32,6 +33,7 @@ const App = () => {
         path="/hotel-reservation/:id/rooms"
         component={HotelRoomsPage}
       />
+      <Route exact path="/user/:id" component={UserProfile} />
       <Route
         exact
         path="/page-not-found"

@@ -121,9 +121,10 @@ export function* reserveRooms() {
 
 export function* searchHotelsBasedOnFilters() {
   const { payload } = yield take(SEARCH_HOTEL_BASED_ON_FILTERS);
-  console.log(payload);
 
   const { data } = yield hotelServices.fetchHotels(payload);
+
+  yield put(putHotels(data));
 }
 
 const MOCK_ROOMS = [
@@ -132,6 +133,10 @@ const MOCK_ROOMS = [
     number: 2,
     floor: 1,
     price: 12,
+    priceSummer: 12.4,
+    priceWinter: 123.2,
+    priceAutumn: 59.12,
+    priceSpring: 12,
     numberOfPeople: 2
   },
   {
@@ -139,6 +144,10 @@ const MOCK_ROOMS = [
     number: 3,
     floor: 1,
     price: 1,
+    priceSummer: 12.4,
+    priceWinter: 123.2,
+    priceAutumn: 59.12,
+    priceSpring: 12,
     numberOfPeople: 2
   },
   {
@@ -146,6 +155,10 @@ const MOCK_ROOMS = [
     number: 4,
     floor: 1,
     price: 12,
+    priceSummer: 12.4,
+    priceWinter: 123.2,
+    priceAutumn: 59.12,
+    priceSpring: 12,
     numberOfPeople: 1
   },
   {
@@ -153,6 +166,10 @@ const MOCK_ROOMS = [
     number: 2,
     floor: 2,
     price: 1,
+    priceSummer: 12.4,
+    priceWinter: 123.2,
+    priceAutumn: 59.12,
+    priceSpring: 12,
     numberOfPeople: 3
   },
   {
@@ -160,6 +177,10 @@ const MOCK_ROOMS = [
     number: 3,
     floor: 2,
     price: 4,
+    priceSummer: 12.4,
+    priceWinter: 123.2,
+    priceAutumn: 59.12,
+    priceSpring: 12,
     numberOfPeople: 56
   },
   {
@@ -167,6 +188,10 @@ const MOCK_ROOMS = [
     number: 10,
     floor: 2,
     price: 1,
+    priceSummer: 12.4,
+    priceWinter: 123.2,
+    priceAutumn: 59.12,
+    priceSpring: 12,
     numberOfPeople: 1
   }
 ];
