@@ -1,4 +1,6 @@
-import { 
+import {
+  REGISTRATION,
+  LOGIN,
   LOGOUT,
   PUT_USER_DATA,
   SAVE_USER_DATA,
@@ -11,6 +13,17 @@ import {
   SEND_FRIENDSHIP_REQUEST,
   REMOVE_FRIEND
 } from "./constants";
+import Password from "../../components/user/Password";
+
+export const registerUser = payload => ({
+  type: REGISTRATION,
+  payload
+});
+
+export const loginUser = payload => ({
+  type: LOGIN,
+  payload
+});
 
 export const logoutUser = payload => ({
   type: LOGOUT,

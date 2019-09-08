@@ -20,8 +20,6 @@ export default function Navbar() {
     dispatch(
       logoutUser({
         callback: () => {
-          console.log(history);
-
           history.push("/");
         }
       })
