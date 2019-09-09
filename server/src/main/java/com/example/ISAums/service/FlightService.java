@@ -1,6 +1,7 @@
 package com.example.ISAums.service;
 import com.example.ISAums.dto.request.CreateFlightRequest;
 import com.example.ISAums.dto.request.UpdateFlightRequest;
+import com.example.ISAums.dto.response.GetFlightAverageRatingResponse;
 import com.example.ISAums.exception.EntityWithIdDoesNotExist;
 import com.example.ISAums.model.AirlineDestination;
 import com.example.ISAums.model.Flight;
@@ -96,11 +97,35 @@ public class FlightService {
         return sum/marks.size();
     }
 
-    public List<Flight> getQuickBooking() {
+    public List<GetFlightAverageRatingResponse> getFlightsWithRatings(List<Flight> flights){
 
-        List<Flight> flights = flightRepository.getQuickBookingFlights();
+        List<GetFlightAverageRatingResponse> flightWithRatings = new ArrayList<>(flights.size());
+
+        for(int i = 0; i < flights.size(); i++){
+            Optional<Flight> flight = flightRepository.findById(flights.get(i).getId());
+            double rating = getAverageRatingOfFlights(flights.get(i).getId());
+
+            GetFlightAverageRatingResponse getFlightAverageRatingResponse = GetFlightAverageRatingResponse.builder()
+                                                                    .flight(flight.get())
+                                                                    .avgRating(rating)
+                                                                    .build();
+            flightWithRatings.add(getFlightAverageRatingResponse);
+        }
+
+        return flightWithRatings;
+    }
+
+    public List<Flight> getQuickBooking(UUID airlineId) {
+
+        List<UUID> flightIDs = flightRepository.getQuickBookingFlights(airlineId);
+        List<Flight> flights = new ArrayList<>(flightIDs.size());
         double discount = 10;
         double currentPrice;
+
+        for(int i = 0; i < flightIDs.size(); i++){
+            Optional<Flight> tmp = flightRepository.findById(UUID.fromString(String.valueOf(flightIDs.get(i))));
+            flights.add(tmp.get());
+        }
 
         for(int i = 0; i < flights.size(); i++){
 
@@ -131,5 +156,38 @@ public class FlightService {
         flightRepository.save(flight.get());
 
         return flight.get();
+    }
+
+    public AirlineDestination getFlightDestination(String flightId) {
+
+        UUID airlineDestinationId = flightRepository.getFlightDestination(UUID.fromString(flightId));
+        Optional<AirlineDestination> airlineDestination = airlineDestinationRepository.findById(airlineDestinationId);
+        return airlineDestination.get();
+    }
+
+    public List<Flight> getFlightsOfAirline(UUID airlineId) {
+
+        List<UUID> flightIDs = flightRepository.getFlightsByAirlineId(airlineId);
+        List<Flight> flights = new ArrayList<>(flightIDs.size());
+
+        for(int i = 0; i < flightIDs.size(); i++){
+            Optional<Flight> tmp = flightRepository.findById(UUID.fromString(String.valueOf(flightIDs.get(i))));
+            flights.add(tmp.get());
+        }
+
+        return flights;
+    }
+
+    public List<AirlineDestination> getDestinations(UUID airlineId) {
+
+        List<UUID> airlineDestinationIDs = flightRepository.getAirlineDestinations(airlineId);
+        List<AirlineDestination> airlineDestinations = new ArrayList<>(airlineDestinationIDs.size());
+
+        for(int i = 0; i < airlineDestinationIDs.size(); i++){
+            Optional<AirlineDestination> tmp = airlineDestinationRepository.findById(UUID.fromString(String.valueOf(airlineDestinationIDs.get(i))));
+            airlineDestinations.add(tmp.get());
+        }
+
+        return airlineDestinations;
     }
 }

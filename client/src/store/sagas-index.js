@@ -3,11 +3,12 @@ import flatten from "lodash.flatten";
 import * as userSaga from "./user/saga";
 import * as hotelSaga from "./hotel/saga";
 import * as airplaneTicketSaga from "./airplane_ticket/saga";
+import * as airlineSaga from "./airline/saga";
 import { putError } from "./common/actions";
 
 export default function* rootSaga() {
   let sagas = flatten(
-    [userSaga, hotelSaga, airplaneTicketSaga].map(saga =>
+    [userSaga, hotelSaga, airplaneTicketSaga, airlineSaga].map(saga =>
       Object.keys(saga).map(sagaFunctionName => saga[sagaFunctionName])
     )
   );
