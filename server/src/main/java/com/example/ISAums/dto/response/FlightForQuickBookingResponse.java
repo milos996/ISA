@@ -2,9 +2,8 @@ package com.example.ISAums.dto.response;
 
 import lombok.Builder;
 import lombok.Data;
-
 import java.sql.Time;
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.UUID;
 
 @Data
@@ -13,9 +12,9 @@ public class FlightForQuickBookingResponse {
 
     private UUID id;
 
-    private LocalDate departureTime;
+    private LocalDateTime departureTime;
 
-    private LocalDate arrivalTime;
+    private LocalDateTime arrivalTime;
 
     private Time duration;
 

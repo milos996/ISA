@@ -4,7 +4,7 @@ package com.example.ISAums.dto.response;
 import lombok.*;
 
 import java.sql.Time;
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.UUID;
 
 @Builder
@@ -15,9 +15,9 @@ public class CreateFlightResponse {
 
     private UUID id;
 
-    private LocalDate departureTime;
+    private LocalDateTime departureTime;
 
-    private LocalDate arrivalTime;
+    private LocalDateTime arrivalTime;
 
     private Time duration;
 

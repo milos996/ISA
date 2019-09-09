@@ -6,7 +6,7 @@ import org.hibernate.validator.constraints.Range;
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import java.sql.Time;
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 @Data
 @Builder
@@ -19,11 +19,11 @@ public class Flight extends BaseEntity {
 
   @Column(name = "departure_time")
   @NotNull
-  private LocalDate departureTime;
+  private LocalDateTime departureTime;
 
   @Column(name = "arrival_time")
   @NotNull
-  private LocalDate arrivalTime;
+  private LocalDateTime arrivalTime;
 
   @Column(name = "duration")
   @NotNull

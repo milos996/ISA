@@ -7,6 +7,8 @@ import PrivateRoute from "./components/UI/PrivateRoute";
 import HotelsPage from "./pages/Hotels";
 import HotelRoomsPage from "./pages/HotelRooms";
 import UserProfile from "./pages/UserProfile";
+import TicketReservation from "./components/airplane_ticket/TicketReservation";
+import ChooseSeats from "./components/airplane_ticket/ChooseSeats";
 
 const App = () => {
   return (
@@ -23,6 +25,12 @@ const App = () => {
       <Route exact path="/rent-a-cars" component={() => <h1>Rent a cars</h1>} />
       <Route exact path="/login" component={LoginPage} />
       <Route exact path="/hotel-reservation" component={HotelsPage} />
+      <Route exact path="/ticket-reservation" component={TicketReservation} />
+      <Route
+        exact
+        path="/ticket-reservation/choose-seat"
+        component={ChooseSeats}
+      />
       <Route
         exact
         path="/hotel-reservation/:id/rooms"

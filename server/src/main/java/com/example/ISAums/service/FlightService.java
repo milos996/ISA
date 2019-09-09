@@ -9,7 +9,8 @@ import com.example.ISAums.model.enumeration.RatingType;
 import com.example.ISAums.repository.*;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -68,13 +69,13 @@ public class FlightService {
        return flightRepository.getFlightsForDestination(String.valueOf(destinationId));
     }
 
-    public List<Flight> searchFlights(UUID depAirlineID, UUID  destAirlineID, LocalDate departureTime, LocalDate arrivalTime) {
+    public List<Flight> searchFlights(String fromDestinationCity, String toDestinationCity, String departureDate, String arrivalDate) {
 
-        String departureAirlineID = String.valueOf(depAirlineID);
-        String destinationAirlineID = String.valueOf(destAirlineID);
+        LocalDateTime departureLocalDate = LocalDateTime.parse(departureDate, DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
+        LocalDateTime arrivalLocalDate = LocalDateTime.parse(arrivalDate, DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
 
-        List<UUID> flightIDs = flightRepository.search(departureAirlineID, destinationAirlineID, departureTime, arrivalTime);
-        List<Flight> flights = new ArrayList<Flight>(flightIDs.size());
+        List<UUID> flightIDs = flightRepository.search(fromDestinationCity, toDestinationCity, departureLocalDate, arrivalLocalDate);
+        List<Flight> flights = new ArrayList<>(flightIDs.size());
 
         for(int i = 0; i < flightIDs.size(); i++){
             Optional<Flight> tmp = flightRepository.findById(UUID.fromString(String.valueOf(flightIDs.get(i))));

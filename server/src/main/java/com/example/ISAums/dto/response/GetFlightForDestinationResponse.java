@@ -5,7 +5,7 @@ import com.example.ISAums.model.AirlineDestination;
 import com.example.ISAums.model.Airplane;
 import lombok.*;
 import java.sql.Time;
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 @Data
 @AllArgsConstructor
@@ -13,9 +13,9 @@ import java.time.LocalDate;
 @Builder
 public class GetFlightForDestinationResponse {
 
-    private LocalDate departureTime;
+    private LocalDateTime departureTime;
 
-    private LocalDate arrivalTime;
+    private LocalDateTime arrivalTime;
 
     private Time duration;
 

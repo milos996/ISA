@@ -3,11 +3,9 @@ import com.example.ISAums.dto.request.*;
 import com.example.ISAums.dto.response.*;
 import com.example.ISAums.email_service.EmailServiceImpl;
 import com.example.ISAums.model.*;
-import com.example.ISAums.service.AirplaneTicketService;
 import com.example.ISAums.service.FlightService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import java.time.LocalDate;
 import java.util.List;
 import java.util.UUID;
 import static com.example.ISAums.converter.FlightConverter.*;
@@ -18,15 +16,11 @@ public class FlightController {
 
     private final FlightService flightService;
 
-    private final AirplaneTicketService airplaneTicketService;
-
     private final EmailServiceImpl emailService;
 
-    public FlightController(FlightService flightService, AirplaneTicketService airplaneTicketService,
-                            EmailServiceImpl emailService){
+    public FlightController(FlightService flightService, EmailServiceImpl emailService){
 
         this.flightService = flightService;
-        this.airplaneTicketService = airplaneTicketService;
         this.emailService = emailService;
     }
 
@@ -60,14 +54,13 @@ public class FlightController {
         return ResponseEntity.ok(toGetFlightForDestinationResponseFromFlights(flights));
     }
 
-    @GetMapping(value = "/search?departureAirlineId={departureAirlineId}&destinationAirlineId={destinationAirlineId}&departureTime={departureTime}&arrivalTime={arrivalTime}")
-    public ResponseEntity<List<SearchFlightsResponse>> search(@PathVariable(name = "departureAirlineId") UUID departureAirlineId, @PathVariable(name = "destinationAirlineId") UUID destinationAirlineId,
-                                                              @PathVariable(name = "departureTime") LocalDate departureTime, @PathVariable(name = "arrivalTime") LocalDate arrivalTime){
+    @GetMapping(value = "/search/fromDestinationCity={fromDestinationCity}&toDestinationCity={toDestinationCity}&departureDate={departureDate}&arrivalDate={arrivalDate}")
+    public ResponseEntity<List<SearchFlightsResponse>> search(@PathVariable(name = "fromDestinationCity") String fromDestinationCity, @PathVariable(name = "toDestinationCity") String toDestinationCity,
+                                                              @PathVariable(name = "departureDate") String departureDate, @PathVariable(name = "arrivalDate") String arrivalDate){
 
-        List<Flight> flights = flightService.searchFlights(departureAirlineId, destinationAirlineId, departureTime, arrivalTime);
+        List<Flight> flights = flightService.searchFlights(fromDestinationCity, toDestinationCity, departureDate, arrivalDate);
 
         return ResponseEntity.ok(toSearchFlightsResponseFromFlights(flights));
-
     }
 
     @GetMapping(value = "/flightAverageRating/{id}")
