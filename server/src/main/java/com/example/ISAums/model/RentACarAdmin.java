@@ -22,4 +22,7 @@ public class RentACarAdmin extends BaseEntity {
     @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "rent_a_car_id")
     private RentACar rentACar;
+
+    @Column(name = "is_first_login")
+    private boolean isFirstLogin;
 }

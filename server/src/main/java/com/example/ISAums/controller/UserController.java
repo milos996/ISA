@@ -1,4 +1,7 @@
 package com.example.ISAums.controller;
+
+import org.springframework.web.bind.annotation.*;
+
 import com.example.ISAums.dto.request.RemoveFriendshipRequest;
 import com.example.ISAums.dto.request.SendFriendshipRequestRequest;
 import com.example.ISAums.dto.request.UpdatePasswordRequest;
@@ -9,7 +12,6 @@ import com.example.ISAums.dto.response.UpdateUserProfileResponse;
 import com.example.ISAums.model.Friendship;
 import com.example.ISAums.model.User;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
 import com.example.ISAums.service.UserService;
 import java.util.List;
 import java.util.UUID;
@@ -17,10 +19,10 @@ import static com.example.ISAums.converter.FriendshipRequestConverter.toSendFrie
 import static com.example.ISAums.converter.UserConverter.toGetUserResponseFromUsers;
 import static com.example.ISAums.converter.UserConverter.toUpdateUserProfileResponseFromUser;
 
+
 @RestController
 @RequestMapping(value="/users")
 public class UserController {
-
 	private final UserService userService;
 
 	public UserController(UserService userService){

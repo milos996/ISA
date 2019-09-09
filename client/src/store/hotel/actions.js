@@ -11,7 +11,13 @@ import {
   GET_HOTEL_LOCATION_ON_LAT_LNG,
   PUT_HOTEL_LOCATION_INFORMATION,
   SAVE_HOTEL_DETAILS,
-  PUT_DELETE_ROOM_WITH_ID
+  PUT_DELETE_ROOM_WITH_ID,
+  FETCH_HOTELS,
+  PUT_HOTELS,
+  FETCH_HOTEL_ROOMS,
+  PUT_HOTEL_ROOMS,
+  RESERVE_ROOMS,
+  SEARCH_HOTEL_BASED_ON_FILTERS
 } from "./constants";
 
 export const putHotelDetails = payload => ({
@@ -76,5 +82,34 @@ export const saveHotelDetails = payload => ({
 
 export const putDeleteRoomWithId = payload => ({
   type: PUT_DELETE_ROOM_WITH_ID,
+  payload
+});
+
+export const fetchHotels = payload => ({
+  type: FETCH_HOTELS,
+  payload
+});
+export const putHotels = payload => ({
+  type: PUT_HOTELS,
+  payload
+});
+
+export const fetchHotelRooms = payload => ({
+  type: FETCH_HOTEL_ROOMS,
+  payload
+});
+
+export const putHotelRooms = payload => ({
+  type: PUT_HOTEL_ROOMS,
+  payload
+});
+
+export const reserveRooms = payload => ({
+  type: RESERVE_ROOMS,
+  payload
+});
+
+export const searchHotelsBasedOnFilters = payload => ({
+  type: SEARCH_HOTEL_BASED_ON_FILTERS,
   payload
 });
