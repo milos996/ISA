@@ -4,6 +4,7 @@ import HomePage from "./pages/Home";
 import LoginPage from "./pages/Login";
 import HotelProfilePage from "./pages/HotelProfile";
 import PrivateRoute from "./components/UI/PrivateRoute";
+import AirlineProfile from "./pages/AirlineProfile";
 import HotelsPage from "./pages/Hotels";
 import HotelRoomsPage from "./pages/HotelRooms";
 import UserProfile from "./pages/UserProfile";
@@ -21,6 +22,7 @@ const App = () => {
       <Route exact path="/airlines" component={() => <h1>Airlines</h1>} />
       <Route exact path="/hotels" component={() => <h1>Hotels</h1>} />
       <Route exact path="/rent-a-cars" component={() => <h1>Rent a cars</h1>} />
+      <Route exact path="/airline/:id" component={AirlineProfile} />
       <Route exact path="/login" component={LoginPage} />
       <Route exact path="/hotel-reservation" component={HotelsPage} />
       <Route
@@ -34,6 +36,7 @@ const App = () => {
         component={HotelRoomsPage}
       />
       <Route exact path="/user/:id" component={UserProfile} />
+                
       <Route
         exact
         path="/page-not-found"

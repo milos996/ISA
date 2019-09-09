@@ -1,8 +1,11 @@
 package com.example.ISAums.converter;
 
-import com.example.ISAums.dto.response.GetAirlineDestinationsResponse;
+import com.example.ISAums.dto.response.GetAirlineDestinationResponse;
 import com.example.ISAums.dto.response.GetAirlineIncomeResponse;
 import com.example.ISAums.dto.response.GetAirlineAverageRatingResponse;
+import com.example.ISAums.dto.response.GetAirlineResponse;
+import com.example.ISAums.model.Airline;
+import com.example.ISAums.model.AirlineDestination;
 import com.example.ISAums.model.Destination;
 import java.util.Date;
 import java.util.List;
@@ -20,21 +23,23 @@ public class AirlineConverter {
                 .build();
     }
 
-    public static List<GetAirlineDestinationsResponse> toGetAirlineDestinationsResponseFromDestinations(List<Destination> destinations){
-
-        return destinations.stream()
-                .map(destination -> GetAirlineDestinationsResponse.builder()
-                        .city(destination.getCity())
-                        .state(destination.getState())
-                        .build()
-                ).collect(Collectors.toList());
-    }
-
     public static GetAirlineAverageRatingResponse toGetAirlineRatingResponseFromRating(Double avgRating, UUID airlineId){
 
         return GetAirlineAverageRatingResponse.builder()
                 .airlineId(airlineId)
                 .avgRating(avgRating)
+                .build();
+    }
+
+    public static GetAirlineResponse toGetAirlineResponseFromAirline(Airline airline){
+
+        return GetAirlineResponse.builder()
+                .id(airline.getId())
+                .address(airline.getAddress())
+                .checkingInSuitcasePrice(airline.getCheckingInSuitcasePrice())
+                .handLuggagePrice(airline.getHandLuggagePrice())
+                .description(airline.getDescription())
+                .name(airline.getName())
                 .build();
     }
 }

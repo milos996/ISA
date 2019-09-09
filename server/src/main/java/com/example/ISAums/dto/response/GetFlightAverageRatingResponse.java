@@ -1,5 +1,6 @@
 package com.example.ISAums.dto.response;
 
+import com.example.ISAums.model.Flight;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -13,7 +14,7 @@ import java.util.UUID;
 @Data
 public class GetFlightAverageRatingResponse {
 
-    private UUID flightId;
+    private Flight flight;
 
     private double avgRating;
 }

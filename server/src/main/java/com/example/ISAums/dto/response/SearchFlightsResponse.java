@@ -7,6 +7,7 @@ import lombok.NoArgsConstructor;
 
 import java.sql.Time;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.UUID;
 
 @Data
@@ -17,9 +18,9 @@ public class SearchFlightsResponse {
 
     private UUID id;
 
-    private LocalDate departureTime;
+    private LocalDateTime departureTime;
 
-    private LocalDate arrivalTime;
+    private LocalDateTime arrivalTime;
 
     private Time duration;
 
