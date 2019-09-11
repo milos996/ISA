@@ -34,6 +34,7 @@ export default function EditRoom({ room, closeModal }) {
         label="Number of people"
         defaultValue={roomDetails.numberOfPeople}
         className={classes.textField}
+        type="number"
         margin="normal"
         onChange={({ currentTarget }) => {
           setRoomDetails(currState => ({
@@ -47,6 +48,7 @@ export default function EditRoom({ room, closeModal }) {
         defaultValue={roomDetails.priceSummer}
         className={classes.textField}
         margin="normal"
+        type="number"
         onChange={({ currentTarget }) => {
           setRoomDetails(currState => ({
             ...currState,
@@ -60,6 +62,7 @@ export default function EditRoom({ room, closeModal }) {
         defaultValue={roomDetails.priceWinter}
         className={classes.textField}
         margin="normal"
+        type="number"
         onChange={({ currentTarget }) => {
           setRoomDetails(currState => ({
             ...currState,
@@ -72,6 +75,7 @@ export default function EditRoom({ room, closeModal }) {
         defaultValue={roomDetails.priceAutumn}
         className={classes.textField}
         margin="normal"
+        type="number"
         onChange={({ currentTarget }) => {
           setRoomDetails(currState => ({
             ...currState,
@@ -84,6 +88,7 @@ export default function EditRoom({ room, closeModal }) {
         defaultValue={roomDetails.priceSpring}
         className={classes.textField}
         margin="normal"
+        type="number"
         onChange={({ currentTarget }) => {
           setRoomDetails(currState => ({
             ...currState,

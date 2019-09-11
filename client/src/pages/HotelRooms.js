@@ -1,29 +1,31 @@
-import 'date-fns';
-import React, { useEffect, useState } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
+import "date-fns";
+import React, { useEffect, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
 import {
   KeyboardDatePicker,
   MuiPickersUtilsProvider
-} from '@material-ui/pickers';
-import TextField from '@material-ui/core/TextField';
-import Button from '@material-ui/core/Button';
-import DateFnsUtils from '@date-io/date-fns';
-import Modal from '@material-ui/core/Modal';
-import NavigationCards from '../components/UI/NavigationCards';
-import { makeStyles } from '@material-ui/core/styles';
-import { fetchHotelRooms } from '../store/hotel/actions';
-import { selectHotelRooms } from '../store/hotel/selectors';
-import room from '../assets/room.png';
-import { formatRoomDetails } from '../util/format';
-import { fetchHotelService, reserveRooms } from '../store/hotel/actions';
-import SelectServices from '../components/hotel/SelectServices';
-import { addRemoveItemFromList } from '../util/hotel';
-import { getDiffBetweenTwoDates } from '../util/date';
+} from "@material-ui/pickers";
+import TextField from "@material-ui/core/TextField";
+import Button from "@material-ui/core/Button";
+import DateFnsUtils from "@date-io/date-fns";
+import Modal from "@material-ui/core/Modal";
+import NavigationCards from "../components/UI/NavigationCards";
+import { makeStyles } from "@material-ui/core/styles";
+import { fetchHotelRooms } from "../store/hotel/actions";
+import { selectHotelRooms } from "../store/hotel/selectors";
+import { userTokenSelector } from "../store/user/selectors";
+import room from "../assets/room.png";
+import { formatRoomDetails } from "../util/format";
+import { fetchHotelService, reserveRooms } from "../store/hotel/actions";
+import SelectServices from "../components/hotel/SelectServices";
+import { addRemoveItemFromList } from "../util/hotel";
+import { getDiffBetweenTwoDates } from "../util/date";
 
 export default function HotelRoomsPage({ match, history, location }) {
   const classes = useStyles();
   const dispatch = useDispatch();
   const rooms = useSelector(selectHotelRooms);
+  const userToken = useSelector(userTokenSelector);
   const [date, setDate] = useState(
     location.state.startDate && location.state.startDate
   );
@@ -46,7 +48,7 @@ export default function HotelRoomsPage({ match, history, location }) {
   function handleSearchButton() {
     if (!date || !numberOfNights || !numberOfPeople) {
       alert(
-        'You must pick a date, number of nights you want to stay and number of people per room!'
+        "You must pick a date, number of nights you want to stay and number of people per room!"
       );
       return;
     }
@@ -88,7 +90,7 @@ export default function HotelRoomsPage({ match, history, location }) {
         additionalServices: selectedAdditionalServices,
         date,
         numberOfNights,
-        airplaneTicketId: 'airplain'
+        airplaneTicketId: "airplain"
       })
     );
   }
@@ -135,7 +137,7 @@ export default function HotelRoomsPage({ match, history, location }) {
             value={date}
             onChange={handleDateChange}
             KeyboardButtonProps={{
-              'aria-label': 'change date'
+              "aria-label": "change date"
             }}
           />
         </MuiPickersUtilsProvider>
@@ -200,7 +202,7 @@ export default function HotelRoomsPage({ match, history, location }) {
       >
         AdditionalServices
       </Button>
-      {!!selectedRooms.length && (
+      {!!userToken && !!selectedRooms.length && (
         <Button
           variant="contained"
           color="primary"
@@ -223,9 +225,11 @@ export default function HotelRoomsPage({ match, history, location }) {
             title={`${val.floor} - ${val.number}`}
             description={formatRoomDetails(val, numberOfNights)}
             cardClick={() => {
-              setSelectedRooms(currState =>
-                addRemoveItemFromList(currState, val)
-              );
+              if (!!userToken) {
+                setSelectedRooms(currState =>
+                  addRemoveItemFromList(currState, val)
+                );
+              }
             }}
           />
         ))}
@@ -236,8 +240,8 @@ export default function HotelRoomsPage({ match, history, location }) {
 
 const useStyles = makeStyles(theme => ({
   container: {
-    display: 'flex',
-    flexWrap: 'wrap'
+    display: "flex",
+    flexWrap: "wrap"
   },
   textField: {
     marginLeft: theme.spacing(1),

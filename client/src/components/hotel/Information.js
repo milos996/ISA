@@ -39,6 +39,10 @@ export default function HotelInformation({ hotelId }) {
     dispatch(fetchHotelDetails({ hotelId }));
   }, [hotelId]);
 
+  if (!hotelDetails.id) {
+    return <div>Loading....</div>;
+  }
+
   return (
     <div id="mainWraper" className="main-wrapper">
       <Modal open={modalContent.isVisible}>
@@ -53,7 +57,7 @@ export default function HotelInformation({ hotelId }) {
               hotelId={hotelDetails.id}
             />
           )}
-         
+
           {modalContent.value === MODAL_CONTENT.REPORT && <Report />}
 
           <Button
