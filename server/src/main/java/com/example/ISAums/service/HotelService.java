@@ -1,5 +1,6 @@
 package com.example.ISAums.service;
 
+import com.example.ISAums.dto.database.DBHotel;
 import com.example.ISAums.dto.request.CreateHotelRequest;
 import com.example.ISAums.dto.request.UpdateHotelRequest;
 import com.example.ISAums.exception.EntityAlreadyExistsException;
@@ -19,6 +20,7 @@ import org.springframework.transaction.annotation.Transactional;
 import javax.validation.Valid;
 import java.time.LocalDate;
 import java.util.*;
+import java.util.stream.Collectors;
 
 import static com.example.ISAums.converter.HotelConverter.toAddressFromRequest;
 import static com.example.ISAums.util.UtilService.copyNonNullProperties;
@@ -43,6 +45,7 @@ public class HotelService {
     @Transactional(readOnly = true)
     public List<Hotel> get(LocalDate startDate, LocalDate endDate, String name, String city, String state) {
         return hotelRepository.findAllByFilters(startDate, endDate, name, city, state);
+//        return hotels.stream().map(dbHotel -> Hotel.builder().build()).collect(Collectors.toList());
     }
 
     @Transactional(rollbackFor = Exception.class)
@@ -72,13 +75,14 @@ public class HotelService {
             throw new EntityWithIdDoesNotExist("Hotel", id);
         }
 
-        if (hotelRepository.existsByName(request.getName())) {
+        Hotel checkHotel = hotelRepository.findByName(request.getName());
+        if ((checkHotel != null && !checkHotel.getId().equals(id)) && hotelRepository.existsByName(request.getName())) {
             throw new EntityAlreadyExistsException(request.getName());
         }
 
         Optional<Address> optionalAddress = addressRepository.findById(request.getAddress().getId());
 
-        if (optionalAddress.isPresent()) {
+        if (!optionalAddress.isPresent()) {
             throw new EntityWithIdDoesNotExist("Address", request.getAddress().getId());
         }
 

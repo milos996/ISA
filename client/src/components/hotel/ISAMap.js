@@ -40,6 +40,7 @@ const ISAMap = ({ address, setStreet = () => {}, hasClick = true }) => {
       });
     }
   }, [address]);
+
   return (
     <Container
       classes={{

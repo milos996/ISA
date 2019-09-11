@@ -12,6 +12,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.validation.Valid;
+import java.math.BigInteger;
 import java.time.LocalDate;
 import java.util.Date;
 import java.util.List;
@@ -34,8 +35,9 @@ public class RoomService {
 
     @Transactional(readOnly = true)
     public List<Room> get(UUID hotelId, LocalDate startDate, Integer nights, Integer people, Double fromPrice, Double toPrice) {
-        LocalDate endDate = startDate.plusDays(nights);
-        return this.roomRepository.getRooms(hotelId, startDate, endDate, people, fromPrice, toPrice);
+        LocalDate endDate = startDate != null ? startDate.plusDays(nights) : null;
+        return this.roomRepository.getRooms(hotelId, people, fromPrice, toPrice);
+//        return this.roomRepository.getRooms(hotelId, startDate, endDate, people, fromPrice, toPrice);
     }
 
     @Transactional(readOnly = true)
@@ -64,24 +66,11 @@ public class RoomService {
     public Room updateRoom(@Valid UUID roomId, UpdateRoomRequest request) {
         Optional<Room> optionalRoom = roomRepository.findById(roomId);
 
-        if (optionalRoom.isPresent()) {
+        if (!optionalRoom.isPresent()) {
             throw new EntityWithIdDoesNotExist("Room", roomId);
         }
 
         Room room = optionalRoom.get();
-
-
-
-        UUID hotelId = room.getHotel().getId();
-        if ((request.getFloor() != null || request.getNumber() != null) && roomRepository.existsByFloorAndNumberAndHotelId(request.getFloor(), request.getNumber(), hotelId)) {
-            throw new CustomException("Room at this floor " + request.getFloor() + " and with this room number " + request.getNumber() + " already exist!");
-        }
-
-//        Integer floor = getValueIfNotNull(request.getFloor(), room.get().getFloor());
-//        Integer number = getValueIfNotNull(request.getNumber(), room.get().getNumber());
-//
-
-
 
         // TODO: Check this, may be problem because you have two different classes
         copyNonNullProperties(request, room, "hotel");
@@ -93,13 +82,10 @@ public class RoomService {
     @Transactional(rollbackFor = Exception.class)
     public Boolean deleteRoom(UUID roomId) {
         Optional<Room> room = roomRepository.findById(roomId);
-        if (room.isPresent()) {
+        if (!room.isPresent()) {
             throw new EntityWithIdDoesNotExist("Room", roomId);
         }
-
-        if (hotelReservationRepository.existsByRoomWhereEndDateIsAfterToday(roomId.toString())) {
-            return false;
-        }
+//        Room roomToDelete = hotelReservationRepository.existsByRoomWhereEndDateIsAfterToday(roomId.toString());
 
         roomRepository.delete(room.get());
 

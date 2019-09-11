@@ -130,3 +130,21 @@ a:link,
   border: 0px none;
   justify-content: flex-end;
 }
+
+.w-30 {
+  width: 30%;
+}
+
+.w-50 {
+  width: 50%;
+  flex: 1;
+}
+.selected-text {
+  color: #26a69a;
+  font-size: 18px;
+  font-style: italic;
+}
+
+.f-w {
+  flex-wrap: wrap;
+}

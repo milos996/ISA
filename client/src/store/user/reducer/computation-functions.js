@@ -31,3 +31,10 @@ export function putFoundUsersData(state, payload) {
     payload
   };
 }
+
+export function putUsers(state, users) {
+  return {
+    ...state,
+    users
+  };
+}

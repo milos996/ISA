@@ -2,6 +2,7 @@ package com.example.ISAums.model;
 
 import lombok.*;
 import org.hibernate.annotations.Where;
+import org.hibernate.validator.constraints.Range;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
@@ -24,4 +25,8 @@ public class HotelService extends BaseEntity {
     @NotNull
     @ManyToOne(fetch = FetchType.EAGER)
     private Service service;
+
+    @Range(min = 0)
+    @NotNull
+    private Double price;
 }

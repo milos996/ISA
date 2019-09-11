@@ -8,13 +8,15 @@ import {
   SAVE_NEW_PASSWORD,
   FETCH_USERS_BY_NAME,
   SEND_FRIENDSHIP_REQUEST,
-  REMOVE_FRIEND
+  REMOVE_FRIEND,
+  FETCH_USERS_THAT_DONT_HAVE_ENTITY
 } from "./constants";
 import {
   putUserData,
   putUserToken,
   putFriendsData,
-  putFoundUsersData
+  putFoundUsersData,
+  putUsers
 } from "./actions";
 import userService from "../../services/api/User";
 import authService from "../../services/api/Auth";
@@ -77,3 +79,38 @@ export function* removeFriend() {
   const { data } = yield call(userService.fetchFriends, payload.userId);
   yield put(putFriendsData({ data }));
 }
+
+export function* fetchUsersWithoutEntity() {
+  yield take(FETCH_USERS_THAT_DONT_HAVE_ENTITY);
+  // TODO zamjeni data za MOCK_USERS kada server bude radio
+  // const { data } = yield call(userService.fetchUsersWithoutEntity);
+
+  yield put(putUsers(MOCK_USERS));
+}
+
+const MOCK_USERS = [
+  {
+    id: 23,
+    name: "Milos",
+    email: "ivfv@gmail.com",
+    role: "USER"
+  },
+  {
+    id: 212,
+    name: "Nemanja",
+    email: "mmmfv@gmail.com",
+    role: "USER"
+  },
+  {
+    id: 255,
+    name: "Milica",
+    email: "nnnn@gmail.com",
+    role: "USER"
+  },
+  {
+    id: 1,
+    name: "Ljubica",
+    email: "aaa@gmail.com",
+    role: "USER"
+  }
+];

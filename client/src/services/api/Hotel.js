@@ -9,15 +9,17 @@ const ENDPOINTS = {
   HOTEL_ROOMS:
     "/rooms?id=%s&startDate=%s&nights=%d&people=%d&fromPrice=%d&toPrice=%d",
   ROOMS: "/rooms",
-  EDIT_ROOM: "/rooms/%s"
+  EDIT_ROOM: "/rooms/%s",
+  DELETE_ROOM: "/rooms/%s",
+  HOTELS_WITHOUT_ADMIN: "/hotels/no/admin"
 };
 class HotelService extends HttpBaseClient {
   fetchServices = hotelId => {
-    this.getApiClient().get(format(ENDPOINTS.HOTEL_SERVICES, hotelId));
+    return this.getApiClient().get(format(ENDPOINTS.HOTEL_SERVICES, hotelId));
   };
 
   saveServices = (hotelId, services) => {
-    this.getApiClient().put(
+    return this.getApiClient().put(
       format(ENDPOINTS.HOTEL_SERVICES, hotelId),
       services
     );
@@ -39,6 +41,8 @@ class HotelService extends HttpBaseClient {
   };
 
   saveHotel = (hotelId, newData) => {
+    console.log(hotelId, newData);
+
     return this.getApiClient().put(format(ENDPOINTS.HOTELS, hotelId), newData);
   };
 
@@ -63,16 +67,19 @@ class HotelService extends HttpBaseClient {
 
   fetchHotelRooms = ({
     hotelId,
-    date,
-    numberOfNights,
-    numberOfPeople,
-    price
+    date = null,
+    numberOfNights = 0,
+    numberOfPeople = 0,
+    price = {
+      min: 0.0,
+      max: 0.0
+    }
   }) => {
     return this.getApiClient().get(
       format(
         ENDPOINTS.HOTEL_ROOMS,
         hotelId,
-        date,
+        date && date.toISOString(),
         numberOfNights,
         numberOfPeople,
         price.min,
@@ -85,6 +92,10 @@ class HotelService extends HttpBaseClient {
     console.log(data);
 
     return this.getApiClient().post(ENDPOINTS.ROOMS, data);
+  };
+
+  fetchHotelsWithoutAdmin = () => {
+    return this.getApiClient().get(ENDPOINTS.HOTELS_WITHOUT_ADMIN);
   };
 }
 

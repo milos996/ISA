@@ -15,4 +15,6 @@ public class ServiceResponse {
     private UUID id;
 
     private String name;
+
+    private Double price;
 }

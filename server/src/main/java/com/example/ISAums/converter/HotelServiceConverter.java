@@ -15,11 +15,11 @@ public class HotelServiceConverter {
                     ServiceResponse.builder()
                         .id(hotelService.getId())
                         .name(hotelService.getService().getName())
+                        .price(hotelService.getPrice())
                         .build())
                 .collect(Collectors.toList());
 
         return GetHotelServiceResponse.builder()
-                .hotelId(hotelServiceList.get(0).getHotel().getId())
                 .services(servicesResponse)
                 .build();
     }

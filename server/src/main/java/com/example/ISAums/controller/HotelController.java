@@ -8,13 +8,14 @@ import com.example.ISAums.model.Hotel;
 import com.example.ISAums.model.HotelReservation;
 import com.example.ISAums.model.enumeration.ReportType;
 import com.example.ISAums.service.HotelService;
+import org.apache.tomcat.jni.Local;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.ResponseEntity;
 import org.springframework.lang.Nullable;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
-import java.time.LocalDate;
+import java.time.*;
 import java.util.Date;
 import java.util.List;
 import java.util.UUID;
@@ -38,12 +39,17 @@ public class HotelController {
 //    }
 
     @GetMapping
-    public ResponseEntity<List<GetHotelResponse>> get(@Valid @Nullable @RequestParam("startDate") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDate startDate,
-                                                                    @Valid @Nullable @RequestParam("endDate") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDate endDate,
-                                                                    @Valid @Nullable @RequestParam("name") String name,
-                                                                    @Valid @Nullable @RequestParam("city") String city,
-                                                                    @Valid @Nullable @RequestParam("state") String state) {
-        List<Hotel> hotels = hotelService.get(startDate, endDate, name, city, state);
+    public ResponseEntity<List<GetHotelResponse>> get( @RequestParam(name = "startDate", required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME ) String startDate,
+                                                                   @RequestParam(name = "endDate", required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) String endDate,
+                                                                     @RequestParam(name = "name", required = false) String name,
+                                                                     @RequestParam(name = "city", required = false) String city,
+                                                                    @RequestParam(name = "state", required = false) String state) {
+        Instant instant = startDate.equals("null") ? null : Instant.parse(startDate);
+        LocalDate start = startDate.equals("null") ? null : LocalDate.from(LocalDateTime.ofInstant(instant, ZoneId.of(ZoneOffset.UTC.getId())));
+        instant = endDate.equals("null") ? null : Instant.parse(endDate);
+        LocalDate end = endDate.equals("null") ? null :LocalDate.from(LocalDateTime.ofInstant(instant, ZoneId.of(ZoneOffset.UTC.getId())));
+
+        List<Hotel> hotels = hotelService.get(start, end, name, city, state);
         return ResponseEntity.ok(toGetHotelResponseFromHotels(hotels));
     }
 
@@ -54,7 +60,7 @@ public class HotelController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<UpdateHotelResponse> update(@Valid @PathVariable("id") UUID id, UpdateHotelRequest request) {
+    public ResponseEntity<UpdateHotelResponse> update(@Valid @PathVariable("id") UUID id, @RequestBody  UpdateHotelRequest request) {
         Hotel hotel = hotelService.updateHotel(id, request);
         return ResponseEntity.ok(toUpdateHotelResponseFromHotel(hotel));
     }
