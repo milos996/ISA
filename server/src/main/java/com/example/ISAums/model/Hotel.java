@@ -36,7 +36,7 @@ public class Hotel extends BaseEntity {
 
     @NotNull
     @JoinColumn(name = "address_id")
-    @OneToOne(fetch = FetchType.LAZY)
+    @OneToOne(fetch = FetchType.EAGER)
     private Address address;
 
 }

@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.*;
 import reactor.util.annotation.Nullable;
 
 import javax.validation.Valid;
-import java.time.LocalDate;
+import java.time.*;
 import java.util.List;
 import java.util.UUID;
 
@@ -26,21 +26,18 @@ public class RoomController {
         this.roomService = roomService;
     }
 
-//    @GetMapping
-//    public ResponseEntity<List<GetRoomResponse>> get() {
-//        List<Room> rooms = roomService.getRooms();
-//        return ResponseEntity.ok(toGetRoomsResponseFromListRooms(rooms));
-//    }
-
     @GetMapping
     public ResponseEntity<List<GetRoomResponse>> get(@Valid @RequestParam("id") UUID hotelId,
-                                                                   @Valid @Nullable @RequestParam("startDate") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDate startDate,
-                                                                   @Valid @Nullable @RequestParam("nights") Integer nights,
-                                                                   @Valid @Nullable @RequestParam("people") Integer people,
-                                                                   @Valid @Nullable @RequestParam("fromPrice") Double fromPrice,
-                                                                    @Valid @Nullable @RequestParam("toPrice") Double toPrice) {
+                                                                   @Valid @Nullable @RequestParam(value = "startDate", required = false) String startDate,
+                                                                   @Valid @Nullable @RequestParam(value = "nights", required = false) Integer nights,
+                                                                   @Valid @Nullable @RequestParam(value = "people", required = false) Integer people,
+                                                                   @Valid @Nullable @RequestParam(value = "fromPrice", required = false) Double fromPrice,
+                                                                    @Valid @Nullable @RequestParam(value = "toPrice", required = false) Double toPrice) {
 
-        List<Room> rooms = roomService.get(hotelId, startDate, nights, people, fromPrice, toPrice);
+        Instant instant = startDate.equals("null") ? null : Instant.parse(startDate);
+        LocalDate start = startDate.equals("null") ? null : LocalDate.from(LocalDateTime.ofInstant(instant, ZoneId.of(ZoneOffset.UTC.getId())));
+
+        List<Room> rooms = roomService.get(hotelId, start, nights, people, fromPrice, toPrice);
         return ResponseEntity.ok(toGetRoomsResponseFromListRooms(rooms));
     }
 
@@ -51,7 +48,7 @@ public class RoomController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<UpdateRoomResponse> update(@Valid @PathVariable("id") UUID roomId, UpdateRoomRequest request) {
+    public ResponseEntity<UpdateRoomResponse> update(@Valid @PathVariable("id") UUID roomId, @RequestBody  UpdateRoomRequest request) {
         Room room = roomService.updateRoom(roomId, request);
         return ResponseEntity.ok(toUpdateRoomResponseFromRoom(room));
     }

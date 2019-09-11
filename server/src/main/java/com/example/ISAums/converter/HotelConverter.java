@@ -60,6 +60,12 @@ public class HotelConverter {
     }
 
     public static GetHotelResponse toGetHotelResponseFromHotel(Hotel hotel) {
-        return GetHotelResponse.builder().build();
+        return GetHotelResponse.builder()
+                .id(hotel.getId())
+                .rating(hotel.getRating())
+                .name(hotel.getName())
+                .description(hotel.getDescription())
+                .address(hotel.getAddress())
+                .build();
     }
 }
