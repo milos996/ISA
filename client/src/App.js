@@ -1,22 +1,42 @@
 import React from "react";
 import { Route, Redirect, Switch } from "react-router-dom";
-import HomeComponent from "./pages/Home";
-import RegistrationComponent from "./pages/Registration";
-import LoginComponent from "./pages/Login";
-import HotelProfile from "./pages/HotelProfile";
+import HomePage from "./pages/Home";
+import LoginPage from "./pages/Login";
+import RegistrationPage from "./pages/Registration";
+import HotelProfilePage from "./pages/HotelProfile";
 import PrivateRoute from "./components/UI/PrivateRoute";
+import HotelsPage from "./pages/Hotels";
+import HotelRoomsPage from "./pages/HotelRooms";
 import UserProfile from "./pages/UserProfile";
+import RentACarPage from "./pages/RentACars";
+import RentACarProfilePage from "./pages/RentACarProfile";
 
 const App = () => {
   return (
     <Switch>
-      <Route exact path="/" component={HomeComponent} />
-      <Route exact path="/register" component={RegistrationComponent} />
-      <PrivateRoute exact path="/user/:id/hotel" component={HotelProfile} />
+      <Route exact path="/" component={HomePage} />
+      <Route exact path="/register" component={RegistrationPage} />
+      <Route exact path="/user/:id/hotel" component={HotelProfilePage} />
       <Route exact path="/airlines" component={() => <h1>Airlines</h1>} />
       <Route exact path="/hotels" component={() => <h1>Hotels</h1>} />
-      <Route exact path="/rent-a-cars" component={() => <h1>Rent a cars</h1>} />
-      <Route exact path="/login" component={LoginComponent} />
+      <Route exact path="/rent-a-cars" component={RentACarPage} />
+      <Route
+        exact
+        path="/rent-a-cars/:id/vehicles"
+        component={RentACarProfilePage}
+      />
+      <Route exact path="/login" component={LoginPage} />
+      <Route exact path="/hotel-reservation" component={HotelsPage} />
+      <Route
+        exact
+        path="/hotel-reservation/:id/rooms"
+        component={HotelRoomsPage}
+      />
+      <Route
+        exact
+        path="/hotel-reservation/:id/rooms"
+        component={HotelRoomsPage}
+      />
       <Route exact path="/user/:id" component={UserProfile} />
       <Route
         exact

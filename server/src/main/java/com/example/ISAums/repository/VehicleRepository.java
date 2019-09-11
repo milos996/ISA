@@ -20,13 +20,13 @@ public interface VehicleRepository extends JpaRepository<Vehicle, UUID> {
                    "(SELECT vr.vehicle_id FROM vehicle_reservation AS vr " +
                    "WHERE ((:pickUpDate is null and :dropOffDate is null) or vr.start_date <= :dropOffDate AND vr.end_date >= :pickUpDate) " +
                    "OR ((:pickUpDate is null and :dropOffDate is null) or vr.start_date >= :dropOffDate AND vr.end_date <= :pickUpDate)) " +
-                   "AND (:type is null OR v.type = :type) " +
+                   "AND (:type is null OR v.type LIKE %:type%) " +
                    "AND (:seats is null OR v.number_of_people <= :seats) " +
                    "AND ((:startRange is null and :endRange is null) OR v.price_per_day between :startRange and :endRange) " +
                    "AND al.city IN (:pickUpLocation, :dropOffLocation) " +
                    "GROUP BY v.id " +
                    "HAVING COUNT(DISTINCT al.city) = :cityCount", nativeQuery = true)
-    List<Vehicle> search(Date pickUpDate, Date dropOffDate, String pickUpLocation, String dropOffLocation,String type, Integer seats, Double startRange, Double endRange, int cityCount);
+    List<Vehicle> search(String pickUpDate, String dropOffDate, String pickUpLocation, String dropOffLocation, String type, int seats, double startRange, double endRange, int cityCount);
 
     @Query(value = "SELECT DISTINCT * " +
                    "FROM vehicle v " +
@@ -35,5 +35,7 @@ public interface VehicleRepository extends JpaRepository<Vehicle, UUID> {
                    "WHERE (vr.start_date <= ?2 AND vr.end_date >=  ?1) " +
                    "OR (vr.start_date >= ?2 AND vr.end_date <=  ?1))", nativeQuery = true)
     List<Vehicle> checkAvailability(Date pickUpDate, Date dropOffDate);
+
+    List<Vehicle> findByRentACar_Id(UUID rentUuid);
 
 }

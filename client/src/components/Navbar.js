@@ -37,7 +37,9 @@ export default function Navbar() {
       >
         <Toolbar>
           <Typography variant="h6" className={classes.title}>
-            UMS Ticket, reservations management
+            <Link className="button" to="">
+              UMS Ticket, reservations management
+            </Link>
           </Typography>
           {userToken ? (
             <Button color="inherit" onClick={handleLogout}>

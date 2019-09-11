@@ -53,7 +53,7 @@ export default function HotelInformation({ hotelId }) {
               hotelId={hotelDetails.id}
             />
           )}
-         
+
           {modalContent.value === MODAL_CONTENT.REPORT && <Report />}
 
           <Button

@@ -9,8 +9,8 @@ public class VehicleReservationConverter {
 
     public static VehicleReservation toVehicleReservationFromCreateRequest(CreateVehicleReservationRequest request){
         return VehicleReservation.builder()
-                .startDate(request.getPickUpDate())
-                .endDate(request.getDropOffDate())
+                .startDate(request.getInfo().getPickUpDate())
+                .endDate(request.getInfo().getDropOffDate())
                 .build();
     }
 

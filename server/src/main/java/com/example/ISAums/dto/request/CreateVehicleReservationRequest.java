@@ -20,16 +20,7 @@ public class CreateVehicleReservationRequest {
     private UUID vehicleId;
 
     @NotNull
-    private Date pickUpDate;
-
-    @NotNull
-    private Date dropOffDate;
-
-    @NotEmpty
-    private String pickUpLocation;
-
-    @NotEmpty
-    private String dropOffLocation;
+    private CreateReservationInfoRequest info;
 
     @NotNull
     private UUID airplaneTicketId;

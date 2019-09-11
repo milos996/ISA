@@ -6,7 +6,7 @@ import { makeStyles } from "@material-ui/core/styles";
 import { useDispatch } from "react-redux";
 import { getHotelLocationOnLatLng } from "../../store/hotel/actions";
 
-const ISAMap = ({ address, setStreet }) => {
+const ISAMap = ({ address, setStreet = () => {}, hasClick = true }) => {
   const mapRef = React.createRef();
 
   const classes = useStyles();
@@ -30,6 +30,16 @@ const ISAMap = ({ address, setStreet }) => {
     }
   }, []);
 
+  useEffect(() => {
+    if (!hasClick) {
+      setLocation({
+        latlng: {
+          lat: address.latitude,
+          lng: address.longitude
+        }
+      });
+    }
+  }, [address]);
   return (
     <Container
       classes={{
@@ -45,7 +55,7 @@ const ISAMap = ({ address, setStreet }) => {
           label="State"
           className={classes.textField}
           margin="normal"
-          value={address.country}
+          value={address.state}
           InputProps={{
             readOnly: true
           }}
@@ -65,13 +75,20 @@ const ISAMap = ({ address, setStreet }) => {
           margin="normal"
           defaultValue={address.street}
           onChange={({ currentTarget }) => setStreet(currentTarget.value)}
+          InputProps={{
+            readOnly: !hasClick
+          }}
         />
       </Container>
       <Map
         style={{ height: 500 }}
         center={location.latlng}
         length={4}
-        onClick={setLatLng}
+        onClick={e => {
+          if (hasClick) {
+            setLatLng(e);
+          }
+        }}
         ref={mapRef}
         zoom={10}
       >
@@ -90,7 +107,8 @@ const ISAMap = ({ address, setStreet }) => {
 const useStyles = makeStyles(theme => ({
   root: {
     display: "flex",
-    flexDirection: "column"
+    flexDirection: "column",
+    width: "70%"
   },
   textField: {
     marginLeft: theme.spacing(1),

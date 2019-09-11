@@ -29,13 +29,10 @@ public class RentACarConverter {
 
     public static GetRentACarResponse toGetRentACarResponseFromRentACar(RentACar rentACar) {
         return GetRentACarResponse.builder()
+                .id(rentACar.getId())
                 .name(rentACar.getName())
                 .description(rentACar.getDescription())
-                .street(rentACar.getAddress().getStreet())
-                .city(rentACar.getAddress().getCity())
-                .state(rentACar.getAddress().getState())
-                .latitude(rentACar.getAddress().getLatitude())
-                .longitude(rentACar.getAddress().getLongitude())
+                .address(toGetAddressResponseFromAddress(rentACar.getAddress()))
                 .build();
     }
 
@@ -55,7 +52,10 @@ public class RentACarConverter {
     public static SearchRentACarResponse toSearchRentACarResponseFromRentACar(RentACar rentACar) {
         return SearchRentACarResponse
                 .builder()
-                .rentACarName(rentACar.getName())
+                .id(rentACar.getId())
+                .name(rentACar.getName())
+                .description(rentACar.getDescription())
+                .address(AddressConverter.toGetAddressResponseFromAddress(rentACar.getAddress()))
 //                .rate(rentACar.getRate())
                 .build();
     }

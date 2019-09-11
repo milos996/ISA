@@ -13,11 +13,9 @@ import { useDispatch } from "react-redux";
 import { loginUser } from "../store/user/actions";
 import { history } from "../index";
 
-const LoginComponent = () => {
+const LoginPage = () => {
   const classes = useStyles();
-
   const dispatch = useDispatch();
-
   const [email, setEmail] = useState();
   const [password, setPassword] = useState();
 
@@ -119,4 +117,4 @@ const useStyles = makeStyles(theme => ({
   }
 }));
 
-export default LoginComponent;
+export default LoginPage;

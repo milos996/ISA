@@ -15,6 +15,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -43,14 +44,20 @@ public class RentACarService {
         return this.rentACarRepository.findAll();
     }
 
+    @Transactional(readOnly = true)
+    public RentACar findById(UUID id) {
+        return rentACarRepository.findById(id).orElse(null);
+    }
+
     @Transactional(rollbackFor = Exception.class)
-    public RentACar create(CreateRentACarRequest request) {
+    public List<RentACar> create(CreateRentACarRequest request) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 
         RentACarAdmin rentACarAdmin = null;
         if (!(authentication instanceof AnonymousAuthenticationToken)) {
             rentACarAdmin = rentACarAdminRepository.findByUser_Id(UUID.fromString(authentication.getName()));
         }
+        rentACarAdmin = rentACarAdminRepository.findByUser_Id(UUID.fromString("39d00866-4289-4066-9019-04530d04ee5e"));
 
         if (rentACarRepository.existsByName(request.getName()))
             throw new EntityAlreadyExistsException(request.getName());
@@ -67,11 +74,11 @@ public class RentACarService {
 
         rentACarRepository.save(rentACar);
 
-        return rentACar;
+        return rentACarRepository.findAll();
     }
 
     @Transactional(rollbackFor = Exception.class)
-    public RentACar update(UpdateRentACarRequest request) {
+    public List<RentACar> update(UpdateRentACarRequest request) {
         Optional<RentACar> rentACar = rentACarRepository.findById(request.getId());
 
         if(rentACar.isPresent() == false)
@@ -82,20 +89,20 @@ public class RentACarService {
 
         Optional<Address> address = addressRepository.findById(rentACar.get().getAddress().getId());
 
-        if (request.getStreet() != null)
-            rentACar.get().getAddress().setStreet(request.getStreet());
+        if (request.getAddress().getStreet() != null)
+            rentACar.get().getAddress().setStreet(request.getAddress().getStreet());
 
-        if (request.getCity() != null)
-            rentACar.get().getAddress().setCity(request.getCity());
+        if (request.getAddress().getCity() != null)
+            rentACar.get().getAddress().setCity(request.getAddress().getCity());
 
-        if (request.getState() != null)
-            rentACar.get().getAddress().setState(request.getState());
+        if (request.getAddress().getState() != null)
+            rentACar.get().getAddress().setState(request.getAddress().getState());
 
-        if (request.getLatitude() != null)
-            rentACar.get().getAddress().setLatitude(request.getLatitude());
+        if (request.getAddress().getLatitude() != null)
+            rentACar.get().getAddress().setLatitude(request.getAddress().getLatitude());
 
-        if (request.getLongitude() != null)
-            rentACar.get().getAddress().setLongitude(request.getLongitude());
+        if (request.getAddress().getLongitude() != null)
+            rentACar.get().getAddress().setLongitude(request.getAddress().getLongitude());
 
         if (request.getName() != null)
             rentACar.get().setName(request.getName());
@@ -111,23 +118,36 @@ public class RentACarService {
 
         rentACarRepository.save(rentACar.get());
 
-        return rentACar.get();
+        return rentACarRepository.findAll();
     }
 
     @Transactional(rollbackFor = Exception.class)
-    public void delete(UUID rentACarId) {
+    public List<RentACar> delete(UUID rentACarId) {
         Optional<RentACar> rentACar = rentACarRepository.findById(rentACarId);
 
         if(rentACar.get() == null)
             throw new EntityWithIdDoesNotExist("Rent a car", rentACarId);
 
         rentACarRepository.delete(rentACar.get());
+
+        return rentACarRepository.findAll();
     }
 
     @Transactional(readOnly = true)
     public List<RentACar> search(String city, String state, String name, String pickUpDate, String dropOffDate) {
-        if (pickUpDate.compareTo(dropOffDate) >= 0)
+        if (pickUpDate.compareTo(dropOffDate) > 0)
             throw new CustomException("Pick up date must be before drop off date!");
+
+        if (city.equals("null") || city.isEmpty())
+            city = null;
+        if (state.equals("null") || state.isEmpty())
+            state = null;
+        if (name.equals("null") || name.isEmpty())
+            name = null;
+        if (pickUpDate.equals("null") || pickUpDate.isEmpty())
+            pickUpDate = null;
+        if (dropOffDate.equals("null") || dropOffDate.isEmpty())
+            dropOffDate = null;
 
         return rentACarRepository.search(city, state, name, pickUpDate, dropOffDate);
     }

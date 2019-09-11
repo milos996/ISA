@@ -1,5 +1,4 @@
 export function putHotelDetails(state, payload) {
-  
   return {
     ...state,
     data: {
@@ -42,7 +41,6 @@ export function changeHotelServices(
 
 export function addNewService(state, id) {
   const { [id]: serviceWithId, ...restServices } = state.services;
-  console.log(serviceWithId);
 
   return {
     ...state,
@@ -88,5 +86,19 @@ export function deleteRoomWithId(state, roomId) {
   return {
     ...state,
     rooms: restRooms
+  };
+}
+
+export function putHotels(state, hotels) {
+  return {
+    ...state,
+    hotels
+  };
+}
+
+export function putHotelRooms(state, rooms) {
+  return {
+    ...state,
+    rooms
   };
 }
