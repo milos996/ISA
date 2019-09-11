@@ -19,7 +19,7 @@ public class AirplaneTicketController {
         this.airplaneTicketService = airplaneTicketService;
     }
 
-    @PostMapping
+    @PostMapping(value = "/quickBooking")
     public ResponseEntity<CreateQuickTicketBookingResponse> createQuickTicketBooking(@RequestBody CreateQuickTicketBookingRequest request){
 
          AirplaneTicket airplaneTicket = airplaneTicketService.createQuickTicketBooking(request);
