@@ -13,7 +13,7 @@ public class HotelServiceConverter {
         List<ServiceResponse> servicesResponse = hotelServiceList.stream()
                 .map(hotelService ->
                     ServiceResponse.builder()
-                        .id(hotelService.getService().getId())
+                        .id(hotelService.getId())
                         .name(hotelService.getService().getName())
                         .build())
                 .collect(Collectors.toList());

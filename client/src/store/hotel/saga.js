@@ -1,4 +1,4 @@
-import { take, put, call } from "redux-saga/effects";
+import { take, put, call } from 'redux-saga/effects';
 import {
   SAVE_SERVICES,
   FETCH_HOTEL_SERVICES,
@@ -11,7 +11,7 @@ import {
   FETCH_HOTEL_ROOMS,
   RESERVE_ROOMS,
   SEARCH_HOTEL_BASED_ON_FILTERS
-} from "./constants";
+} from './constants';
 import {
   putHotelServices,
   putHotelDetails,
@@ -19,9 +19,9 @@ import {
   putDeleteRoomWithId,
   putHotels,
   putHotelRooms
-} from "./actions";
-import hotelServices from "../../services/api/Hotel";
-import locationService from "../../services/LocationService";
+} from './actions';
+import hotelServices from '../../services/api/Hotel';
+import locationService from '../../services/LocationService';
 
 export function* fetchServices() {
   const { payload } = yield take(FETCH_HOTEL_SERVICES);
@@ -54,11 +54,9 @@ export function* fetchHotelDetails() {
 
 export function* saveRoomDetails() {
   const { payload } = yield take(SAVE_ROOM_DETAILS);
+  const { id, ...restData } = payload.roomDetails;
 
-  const { data } = yield call(
-    hotelServices.saveRoomDetails,
-    payload.roomDetails
-  );
+  const { data } = yield call(hotelServices.saveRoomDetails, id, restData);
 
   yield put(putHotelDetails({ data }));
 }
@@ -93,7 +91,8 @@ export function* getHotelLocationOnLatLng() {
 export function* saveHotelDetails() {
   const { payload } = yield take(SAVE_HOTEL_DETAILS);
 
-  yield call(hotelServices.saveHotel, payload);
+  const { id, ...data } = payload;
+  yield call(hotelServices.saveHotel, id, data);
 }
 
 export function* fetchHotels() {
@@ -197,28 +196,28 @@ const MOCK_ROOMS = [
 ];
 
 const MOCK_HOTEL_SERVICES = [
-  { id: 122, name: "air-conditioning", price: 0.56, selected: false },
+  { id: 122, name: 'air-conditioning', price: 0.56, selected: false },
   {
     id: 124,
-    name: "air-conditioning",
+    name: 'air-conditioning',
     price: 23,
     selected: true
   },
   {
     id: 125,
-    name: "air-conditioning",
+    name: 'air-conditioning',
     price: 12,
     selected: true
   },
   {
     id: 128,
-    name: "air-conditioning",
+    name: 'air-conditioning',
     price: 4,
     selected: true
   },
   {
     id: 123,
-    name: "wi-fi",
+    name: 'wi-fi',
     price: 0.9,
     selected: true
   }

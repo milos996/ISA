@@ -61,4 +61,12 @@ public class UtilService {
         dates.put("end", end);
         return dates;
     }
+
+    public static <T> T getValueIfNotNull(T valueIfNotNull, T substitudeValue) {
+        if (valueIfNotNull != null) {
+            return valueIfNotNull;
+        }
+
+        return  substitudeValue;
+    }
 }

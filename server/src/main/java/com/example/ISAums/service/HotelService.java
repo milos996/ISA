@@ -16,6 +16,8 @@ import com.example.ISAums.util.UtilService;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.validation.Valid;
+import java.time.LocalDate;
 import java.util.*;
 
 import static com.example.ISAums.converter.HotelConverter.toAddressFromRequest;
@@ -33,9 +35,14 @@ public class HotelService {
         this.hotelReservationRepository = hotelReservationRepository;
     }
 
+//    @Transactional(readOnly = true)
+//    public List<Hotel> getHotels() {
+//        return hotelRepository.findAll();
+//    }
+
     @Transactional(readOnly = true)
-    public List<Hotel> getHotels() {
-        return hotelRepository.findAll();
+    public List<Hotel> get(LocalDate startDate, LocalDate endDate, String name, String city, String state) {
+        return hotelRepository.findAllByFilters(startDate, endDate, name, city, state);
     }
 
     @Transactional(rollbackFor = Exception.class)
@@ -60,30 +67,34 @@ public class HotelService {
 
 
     @Transactional(rollbackFor = Exception.class)
-    public Hotel updateHotel(UpdateHotelRequest request) {
-        if (!hotelRepository.existsById(request.getId())) {
-            throw new EntityWithIdDoesNotExist("Hotel", request.getId());
+    public Hotel updateHotel(@Valid UUID id, UpdateHotelRequest request) {
+        if (!hotelRepository.existsById(id)) {
+            throw new EntityWithIdDoesNotExist("Hotel", id);
         }
 
         if (hotelRepository.existsByName(request.getName())) {
             throw new EntityAlreadyExistsException(request.getName());
         }
 
-        Optional<Address> address = addressRepository.findById(request.getAddress().getId());
+        Optional<Address> optionalAddress = addressRepository.findById(request.getAddress().getId());
 
-        if (address.get() == null) {
+        if (optionalAddress.isPresent()) {
             throw new EntityWithIdDoesNotExist("Address", request.getAddress().getId());
         }
 
+        Address address = optionalAddress.get();
+
         // TODO: Check this, may be problem because you have two different classes
-        copyNonNullProperties(request.getAddress(), address.get());
-        addressRepository.save(address.get());
+        copyNonNullProperties(request.getAddress(), address);
+        addressRepository.save(address);
 
-        Optional<Hotel> hotel = hotelRepository.findById(request.getId());
-        copyNonNullProperties(request, hotel.get(), "address");
-        hotelRepository.save(hotel.get());
+        Optional<Hotel> optionalHotel = hotelRepository.findById(id);
+        Hotel hotel = optionalHotel.get();
 
-        return hotel.get();
+        copyNonNullProperties(request, hotel, "address");
+        hotelRepository.save(hotel);
+
+        return hotel;
     }
 
     @Transactional(readOnly = true)
@@ -117,4 +128,15 @@ public class HotelService {
 
         hotelRepository.delete(hotel.get());
     }
+
+    public Hotel getHotel(UUID hotelId) {
+        Optional<Hotel> hotel = hotelRepository.findById(hotelId);
+
+        if (!hotel.isPresent()) {
+            throw new EntityWithIdDoesNotExist("Hotel", hotelId);
+        }
+
+        return hotel.get();
+    }
+
 }
