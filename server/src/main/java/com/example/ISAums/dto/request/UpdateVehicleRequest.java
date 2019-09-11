@@ -41,8 +41,4 @@ public class UpdateVehicleRequest {
     @Range(min = 0)
     private Double pricePerDay;
 
-    @NotBlank
-    @Size(max = NAME_SIZE)
-    private String rentACarName;
-
 }

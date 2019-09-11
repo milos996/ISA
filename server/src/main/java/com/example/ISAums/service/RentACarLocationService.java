@@ -1,7 +1,9 @@
 package com.example.ISAums.service;
 
+import com.example.ISAums.converter.RentACarLocationConverter;
 import com.example.ISAums.dto.request.CreateRentACarLocationRequest;
 import com.example.ISAums.dto.request.UpdateRentACarLocationRequest;
+import com.example.ISAums.dto.response.SearchRentACarLocationResponse;
 import com.example.ISAums.exception.CustomException;
 import com.example.ISAums.exception.EntityWithIdDoesNotExist;
 import com.example.ISAums.model.AgencyLocation;
@@ -15,9 +17,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.List;
-import java.util.Optional;
-import java.util.UUID;
+import java.util.*;
 
 import static com.example.ISAums.converter.AgencyLocationConverter.*;
 import static com.example.ISAums.converter.RentACarLocationConverter.*;
@@ -48,7 +48,7 @@ public class RentACarLocationService {
     }
 
     @Transactional(rollbackFor = Exception.class)
-    public RentACarLocation create(CreateRentACarLocationRequest request) {
+    public List<RentACarLocation> create(CreateRentACarLocationRequest request) {
         RentACar rentACar = rentACarRepository.findById(request.getRentACarId()).orElse(null);
         //TODO are you owner?
         //TODO add street to agency location
@@ -70,7 +70,7 @@ public class RentACarLocationService {
         rentACarLocation = toRentACarLocationFromCreateRequest(rentACar, agencyLocation);
         rentACarLocationRepository.save(rentACarLocation);
 
-        return rentACarLocation;
+        return rentACarLocationRepository.findByRentACar_Id(request.getRentACarId());
     }
 
     @Transactional(rollbackFor = Exception.class)
@@ -93,17 +93,43 @@ public class RentACarLocationService {
     }
 
     @Transactional(rollbackFor = Exception.class)
-    public void delete(UUID rentACarLocationId) {
+    public List<RentACarLocation>  delete(UUID rentACarLocationId) {
         Optional<RentACarLocation> rentACarLocation = rentACarLocationRepository.findById(rentACarLocationId);
 
+        UUID rentACarId = rentACarLocation.get().getRentACar().getId();
         if (rentACarLocation.get() == null)
             throw new EntityWithIdDoesNotExist("Rent a car location", rentACarLocationId);
 
         rentACarLocationRepository.delete(rentACarLocation.get());
+
+        return rentACarLocationRepository.findByRentACar_Id(rentACarId);
     }
 
     @Transactional(readOnly = true)
     public List<RentACarLocation> search(String city, String state, String name, String pickUpDate, String dropOffDate) {
+        if (city.equals("null"))
+            city = null;
+        if (state.equals("null"))
+            state = null;
+        if (name.equals("null"))
+            name = null;
+        if (pickUpDate.equals("null"))
+            pickUpDate = null;
+        if (dropOffDate.equals("null"))
+            dropOffDate = null;
+
+//        Map<RentACar, List<AgencyLocation>> offices = new HashMap<>();
+//        UUID current = rentACarLocations.get(0).getRentACar().getId();
+//        List<AgencyLocation> agencyLocations = new ArrayList<>();
+//        for (RentACarLocation racl : rentACarLocations) {
+//            if (racl.getRentACar().getId().equals(current)) {
+//                agencyLocations.add(racl.getAgencyLocation());
+//                offices.put(racl.getRentACar(), agencyLocations);
+//            } else {
+//                agencyLocations = new ArrayList<>();
+//            }
+//        }
+
         return rentACarLocationRepository.search(city, state, name, pickUpDate, dropOffDate);
     }
 }

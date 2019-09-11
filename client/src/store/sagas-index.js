@@ -2,12 +2,13 @@ import { all, spawn, call, put } from "redux-saga/effects";
 import flatten from "lodash.flatten";
 import * as userSaga from "./user/saga";
 import * as hotelSaga from "./hotel/saga";
+import * as rentACarSaga from "./rent-a-car/saga";
 import * as airlineSaga from "./airline/saga";
 import { putError } from "./common/actions";
 
 export default function* rootSaga() {
   let sagas = flatten(
-    [userSaga, hotelSaga, airlineSaga].map(saga =>
+    [userSaga, hotelSaga, airlineSaga, rentACarSaga].map(saga =>
       Object.keys(saga).map(sagaFunctionName => saga[sagaFunctionName])
     )
   );

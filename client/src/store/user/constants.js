@@ -1,3 +1,5 @@
+export const REGISTRATION = "registration";
+export const LOGIN = "login";
 export const LOGOUT = "logout";
 export const PUT_USER_DATA = "put_user_data";
 export const SAVE_USER_DATA = "save_user_data";

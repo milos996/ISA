@@ -2,6 +2,7 @@ package com.example.ISAums.converter;
 
 import com.example.ISAums.dto.request.CreateAddressRequest;
 import com.example.ISAums.dto.request.UpdateAddressRequest;
+import com.example.ISAums.dto.response.GetAddressResponse;
 import com.example.ISAums.model.Address;
 
 public class AddressConverter {
@@ -22,6 +23,16 @@ public class AddressConverter {
                 .street(request.getStreet())
                 .latitude(request.getLatitude())
                 .longitude(request.getLongitude())
+                .build();
+    }
+
+    public static GetAddressResponse toGetAddressResponseFromAddress(Address address) {
+        return GetAddressResponse.builder()
+                .city(address.getCity())
+                .state(address.getState())
+                .street(address.getStreet())
+                .latitude(address.getLatitude())
+                .longitude(address.getLongitude())
                 .build();
     }
 

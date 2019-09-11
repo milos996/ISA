@@ -32,7 +32,7 @@ const initialState = {
       email: "bojan@gmail.com"
     }
   ],
-  token: localStorage.getItem("token"),
+  token: window.localStorage.getItem("token"),
   service: null,
   hotel: {
     id: "123123",

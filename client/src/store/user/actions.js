@@ -1,4 +1,6 @@
 import {
+  REGISTRATION,
+  LOGIN,
   LOGOUT,
   PUT_USER_DATA,
   SAVE_USER_DATA,
@@ -13,6 +15,17 @@ import {
   FETCH_USERS_THAT_DONT_HAVE_ENTITY,
   PUT_USERS
 } from "./constants";
+import Password from "../../components/user/Password";
+
+export const registerUser = payload => ({
+  type: REGISTRATION,
+  payload
+});
+
+export const loginUser = payload => ({
+  type: LOGIN,
+  payload
+});
 
 export const logoutUser = payload => ({
   type: LOGOUT,

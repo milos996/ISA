@@ -1,5 +1,7 @@
 import { take, put, call } from "redux-saga/effects";
 import {
+  REGISTRATION,
+  LOGIN,
   LOGOUT,
   SAVE_USER_DATA,
   FETCH_USER_FRIENDS,
@@ -17,18 +19,26 @@ import {
   putUsers
 } from "./actions";
 import userService from "../../services/api/User";
+import authService from "../../services/api/Auth";
+
+export function* registration() {
+  const { payload } = yield take(REGISTRATION);
+  alert(yield call(authService.registration, payload));
+  payload.callback();
+}
+
+export function* login() {
+  const { payload } = yield take(LOGIN);
+  const { data } = yield call(authService.login, payload);
+  yield put(putUserToken(data.token));
+  payload.callback();
+}
 
 export function* logout() {
   const { payload } = yield take(LOGOUT);
-
-  // TODO Implement delete from window.storage
-  yield put(
-    putUserData({
-      data: null
-    }),
-    putUserToken(null)
-  );
-
+  window.localStorage.clear();
+  yield put(putUserToken(null));
+  yield put(putUserData(null));
   payload.callback();
 }
 
