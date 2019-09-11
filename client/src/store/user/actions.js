@@ -11,7 +11,9 @@ import {
   FETCH_USERS_BY_NAME,
   PUT_FOUND_USERS_DATA,
   SEND_FRIENDSHIP_REQUEST,
-  REMOVE_FRIEND
+  REMOVE_FRIEND,
+  FETCH_USERS_THAT_DONT_HAVE_ENTITY,
+  PUT_USERS
 } from "./constants";
 import Password from "../../components/user/Password";
 
@@ -77,5 +79,15 @@ export const sendFriendshipRequest = payload => ({
 
 export const removeFriend = payload => ({
   type: REMOVE_FRIEND,
+  payload
+});
+
+export const fetchUsersThatDontHaveEntity = payload => ({
+  type: FETCH_USERS_THAT_DONT_HAVE_ENTITY,
+  payload
+});
+
+export const putUsers = payload => ({
+  type: PUT_USERS,
   payload
 });

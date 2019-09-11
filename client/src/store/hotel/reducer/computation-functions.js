@@ -102,3 +102,14 @@ export function putHotelRooms(state, rooms) {
     rooms
   };
 }
+
+export function putRoomDetailsChange(state, { id, data }) {
+  return {
+    ...state,
+    rooms: [
+      ...state.rooms.slice(0, id),
+      { ...data, id },
+      ...state.rooms.slice(id + 1, state.rooms.length)
+    ]
+  };
+}

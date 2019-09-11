@@ -9,6 +9,7 @@ import AirlineProfile from "./pages/AirlineProfile";
 import HotelsPage from "./pages/Hotels";
 import HotelRoomsPage from "./pages/HotelRooms";
 import UserProfile from "./pages/UserProfile";
+import AdminPage from "./pages/AdminPage";
 import RentACarPage from "./pages/RentACars";
 import RentACarProfilePage from "./pages/RentACarProfile";
 
@@ -17,7 +18,7 @@ const App = () => {
     <Switch>
       <Route exact path="/" component={HomePage} />
       <Route exact path="/register" component={RegistrationPage} />
-      <Route exact path="/user/:id/hotel" component={HotelProfilePage} />
+      <PrivateRoute exact path="/user/:id/hotel" component={HotelProfilePage} />
       <Route exact path="/airlines" component={() => <h1>Airlines</h1>} />
       <Route exact path="/hotels" component={() => <h1>Hotels</h1>} />
       <Route exact path="/rent-a-cars" component={RentACarPage} />
@@ -34,12 +35,9 @@ const App = () => {
         path="/hotel-reservation/:id/rooms"
         component={HotelRoomsPage}
       />
-      <Route
-        exact
-        path="/hotel-reservation/:id/rooms"
-        component={HotelRoomsPage}
-      />
       <Route exact path="/user/:id" component={UserProfile} />
+
+      <Route exact path="/admin" component={AdminPage} />
 
       <Route
         exact
