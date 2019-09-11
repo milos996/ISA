@@ -1,5 +1,4 @@
 export function putHotelDetails(state, payload) {
-  
   return {
     ...state,
     data: {
@@ -101,5 +100,16 @@ export function putHotelRooms(state, rooms) {
   return {
     ...state,
     rooms
+  };
+}
+
+export function putRoomDetailsChange(state, { id, data }) {
+  return {
+    ...state,
+    rooms: [
+      ...state.rooms.slice(0, id),
+      { ...data, id },
+      ...state.rooms.slice(id + 1, state.rooms.length)
+    ]
   };
 }

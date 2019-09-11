@@ -32,8 +32,8 @@ public class RentACarLocationController {
     }
 
     @PostMapping
-    public ResponseEntity<CreateRentACarLocationResponse> create(@RequestBody CreateRentACarLocationRequest request) {
-        return ResponseEntity.ok(toCreateRentACarLocationResponseFromRentACarLocation((rentACarLocationService.create(request))));
+    public ResponseEntity<List<GetRentACarLocationResponse>> create(@RequestBody CreateRentACarLocationRequest request) {
+        return ResponseEntity.ok(toGetRentACarLocationsResponseFromRentALocations(rentACarLocationService.create(request)));
     }
 
     @PutMapping
@@ -42,11 +42,8 @@ public class RentACarLocationController {
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<DeleteRentACarLocationResponse> delete(@PathVariable("id") UUID rentACarLocationId) {
-        rentACarLocationService.delete(rentACarLocationId);
-        return ResponseEntity.ok(DeleteRentACarLocationResponse.builder()
-                .id(rentACarLocationId)
-                .build());
+    public ResponseEntity<List<GetRentACarLocationResponse>> delete(@PathVariable("id") UUID rentACarLocationId) {
+        return ResponseEntity.ok(toGetRentACarLocationsResponseFromRentALocations(rentACarLocationService.delete(rentACarLocationId)));
     }
 
     @GetMapping

@@ -29,18 +29,5 @@ public class UpdateRentACarRequest {
     @Size(max = DESCRIPTION_SIZE)
     private String description;
 
-    @Size(max = STREET_SIZE)
-    private String street;
-
-    @Size(max = CITY_SIZE)
-    private String city;
-
-    @Size(max = STATE_SIZE)
-    private String state;
-
-    @Range(min=0, max=LONGITUDE_MAX)
-    private Double longitude;
-
-    @Range(min=0 , max=LATITUDE_MAX)
-    private Double latitude;
+    private CreateAddressRequest address;
 }

@@ -10,16 +10,20 @@ import java.util.UUID;
 @NoArgsConstructor
 @AllArgsConstructor
 public class GetVehicleResponse {
-    private UUID id;
-
-    private String model;
+    private  UUID id;
 
     private String brand;
 
-    private Double pricePerDay;
+    private String model;
+
+    private Integer yearOfProduction;
+
+    private int numberOfSeats;
+
+    private String type;
 
     private Double rating;
 
-    private int seats;
+    private Double pricePerDay;
 
 }
