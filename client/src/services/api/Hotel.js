@@ -1,15 +1,15 @@
-import HttpBaseClient from '../HttpBaseClient';
-import { format } from 'util';
+import HttpBaseClient from "../HttpBaseClient";
+import { format } from "util";
 
 const ENDPOINTS = {
-  HOTEL_SERVICES: '/hotel-services/%s',
-  HOTEL_DETAILS: '/hotels/%s',
-  HOTELS: '/hotels/%s',
-  FETCH_HOTELS: '/hotels?startDate=%s&endDate=%s&name=%s&city=%s&state=%s',
+  HOTEL_SERVICES: "/hotel-services/%s",
+  HOTEL_DETAILS: "/hotels/%s",
+  HOTELS: "/hotels/%s",
+  FETCH_HOTELS: "/hotels?startDate=%s&endDate=%s&name=%s&city=%s&state=%s",
   HOTEL_ROOMS:
-    '/rooms?id=%s&startDate=%s&nights=%d&people=%d&fromPrice=%d&toPrice=%d',
-  ROOMS: '/rooms',
-  EDIT_ROOM: '/rooms/%s'
+    "/rooms?id=%s&startDate=%s&nights=%d&people=%d&fromPrice=%d&toPrice=%d",
+  ROOMS: "/rooms",
+  EDIT_ROOM: "/rooms/%s"
 };
 class HotelService extends HttpBaseClient {
   fetchServices = hotelId => {
@@ -29,7 +29,7 @@ class HotelService extends HttpBaseClient {
 
   saveRoomDetails = (roomId, newData) => {
     return this.getApiClient().put(
-      fromat(ENDPOINTS.EDIT_ROOM, roomId),
+      format(ENDPOINTS.EDIT_ROOM, roomId),
       newData
     );
   };
@@ -39,7 +39,7 @@ class HotelService extends HttpBaseClient {
   };
 
   saveHotel = (hotelId, newData) => {
-    return this.getApiClient().put(fromat(ENDPOINTS.HOTELS, hotelId), newData);
+    return this.getApiClient().put(format(ENDPOINTS.HOTELS, hotelId), newData);
   };
 
   fetchHotels = ({
