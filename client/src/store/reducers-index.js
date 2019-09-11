@@ -3,12 +3,14 @@ import userReducer from "./user/reducer/";
 import hotelReducer from "./hotel/reducer";
 import commonReducer from "./common/reducer";
 import rentACarReducer from "./rent-a-car/reducer";
+import airlineReducer from "./airline/reducer";
 
 const rootReducer = combineReducers({
   userReducer,
   hotelReducer,
   rentACarReducer,
-  commonReducer
+  commonReducer,
+  airlineReducer
 });
 
 export default (state, action) => {

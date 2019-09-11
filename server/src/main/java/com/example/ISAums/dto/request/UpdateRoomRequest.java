@@ -5,6 +5,7 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.hibernate.validator.constraints.Range;
+import org.springframework.lang.Nullable;
 
 import javax.validation.constraints.NotNull;
 import java.util.UUID;
@@ -16,11 +17,10 @@ import java.util.UUID;
 @AllArgsConstructor
 public class UpdateRoomRequest {
 
-    @NotNull
-    private UUID id;
-
+    @Nullable
     private Integer number;
 
+    @Nullable
     private Integer floor;
 
     @Range(min = 0)

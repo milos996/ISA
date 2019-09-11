@@ -98,6 +98,12 @@
 			<version>5.1.2.RELEASE</version>
 			<scope>compile</scope>
 		</dependency>
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-context-support</artifactId>
+            <version>5.1.5.RELEASE</version>
+        </dependency>
+
 
 	</dependencies>
 
@@ -108,7 +114,7 @@
 				<filtering>false</filtering>
 			</resource>
 			<resource>
-				<directory>src/main/config/${user.name}</directory>
+				<directory>src/main/config/milos</directory>
 				<filtering>false</filtering>
 			</resource>
 		</resources>

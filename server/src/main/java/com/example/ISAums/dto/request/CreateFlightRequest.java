@@ -7,6 +7,7 @@ import lombok.NoArgsConstructor;
 import javax.validation.constraints.NotNull;
 import java.sql.Time;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.UUID;
 
 @Data
@@ -16,10 +17,10 @@ import java.util.UUID;
 public class CreateFlightRequest {
 
     @NotNull
-    private LocalDate departureTime;
+    private LocalDateTime departureTime;
 
     @NotNull
-    private LocalDate arrivalTime;
+    private LocalDateTime arrivalTime;
 
     @NotNull
     private Time duration;

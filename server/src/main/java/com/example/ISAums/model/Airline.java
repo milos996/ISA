@@ -40,5 +40,4 @@ public class Airline extends BaseEntity {
     @OneToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "address_id")
     private Address address;
-
 }

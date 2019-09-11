@@ -14,8 +14,6 @@ import java.util.UUID;
 @AllArgsConstructor
 @NoArgsConstructor
 public class CreateHotelServiceRequest {
-    @NotNull
-    private UUID hotelID;
 
     @NotNull
     private List<ServiceRequest> serviceList;

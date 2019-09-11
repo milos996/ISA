@@ -1,6 +1,6 @@
 spring:
   datasource:
-    url: jdbc:mysql://localhost:3306/isa_database
+    url: jdbc:mysql://localhost:3306/isa_database?useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=UTC
     username: root
     password: secret
     driver-class-name: com.mysql.cj.jdbc.Driver

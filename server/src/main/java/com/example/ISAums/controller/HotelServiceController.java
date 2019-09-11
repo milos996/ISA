@@ -26,14 +26,14 @@ public class HotelServiceController {
 
     @GetMapping
     @RequestMapping("/{id}")
-    public ResponseEntity<GetHotelServiceResponse> get(@PathVariable(value = "hotelID") UUID hotelId) {
+    public ResponseEntity<GetHotelServiceResponse> get(@PathVariable(value = "id") UUID hotelId) {
         List<HotelService> hotelServices = hotelServiceService.getServices(hotelId);
         return ResponseEntity.ok(toGetHotelServiceResponseListFromModel(hotelServices));
     }
 
-    @PostMapping
-    public ResponseEntity<CreateHotelServiceResponse> create(CreateHotelServiceRequest request) {
-        List<HotelService> hotelServiceList = hotelServiceService.createHotelServices(request);
+    @PutMapping("/{id}")
+    public ResponseEntity<CreateHotelServiceResponse> create(@PathVariable(value = "id") UUID hotelId, CreateHotelServiceRequest request) {
+        List<HotelService> hotelServiceList = hotelServiceService.createHotelServices(hotelId, request);
         return ResponseEntity.ok(toCreateHotelServiceListResponseFromModel(hotelServiceList));
     }
 }
