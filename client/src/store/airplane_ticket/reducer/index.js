@@ -1,9 +1,9 @@
-import { PUT_AIRLINES } from "../constants";
+import { PUT_AIRLINES, PUT_SEARCH_RESULTS } from "../constants";
 import * as computationFunctions from "./computation-functions";
 
 const initialState = {
   data: {},
-  airlines: [
+  airlines: [] /*[
     {
       id: "123",
       name: "AirSerbia",
@@ -11,7 +11,7 @@ const initialState = {
         "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Duis congue fringilla nisi ac viverra. Sed risus enimerdiet. Quisque vulputate pulvinar ante eget sagittis.",
       address: {
         city: "Beograd",
-        country: "Srbija",
+        state: "Srbija",
         street: "Nemanjina",
         longitude: 44.27,
         latitude: 20.29
@@ -26,7 +26,7 @@ const initialState = {
         "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Duis congue fringilla nisi ac viverra. Sed risus enimerdiet. Quisque vulputate pulvinar ante eget sagittis.",
       address: {
         city: "Tivat",
-        country: "Montenegro",
+        state: "Montenegro",
         street: "Nemanjina",
         longitude: 44.27,
         latitude: 20.29
@@ -34,9 +34,8 @@ const initialState = {
       checkingInSuitcasePrice: 150.2,
       handLuggagePrice: 50.3
     }
-  ],
-
-  searchResults: [
+  ],*/,
+  searchResults: [] /*[
     {
       id: "009",
       departureTime: "02/05/2019",
@@ -65,7 +64,7 @@ const initialState = {
             "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Duis congue fringilla nisi ac viverra. Sed risus enim, bibendum vel vulputate gravida, aliquet sit amet arcu. Nullam elementum ullamcorper facilisis. Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos. Mauris dignissim id purus vel gravida. Proin fringilla aliquam nunc, non iaculis risus pulvinar vel. Morbi finibus at velit rutrum fringilla. Etiam volutpat ac ante sed imperdiet. Quisque vulputate pulvinar ante eget sagittis.",
           address: {
             city: "Beograd",
-            country: "Srbija",
+            state: "Srbija",
             street: "Nemanjina",
             longitude: 44.27,
             latitude: 20.29
@@ -75,7 +74,7 @@ const initialState = {
         }
       }
     }
-  ]
+  ]*/
 };
 
 const airplaneTicketReducer = (state = initialState, { type, payload }) => {
@@ -87,7 +86,8 @@ const airplaneTicketReducer = (state = initialState, { type, payload }) => {
 };
 
 const actionHandler = {
-  [PUT_AIRLINES]: computationFunctions.putAirlines
+  [PUT_AIRLINES]: computationFunctions.putAirlines,
+  [PUT_SEARCH_RESULTS]: computationFunctions.putSearchResults
 };
 
 export default airplaneTicketReducer;

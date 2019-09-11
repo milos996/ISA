@@ -4,11 +4,9 @@ import com.example.ISAums.dto.request.UpdateAirplaneRequest;
 import com.example.ISAums.model.Airplane;
 import com.example.ISAums.repository.AirplaneRepository;
 import org.springframework.stereotype.Service;
-
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
-
 import static com.example.ISAums.util.UtilService.copyNonNullProperties;
 
 @Service

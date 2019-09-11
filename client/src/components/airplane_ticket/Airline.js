@@ -1,29 +1,33 @@
 import React, { useState, useEffect } from "react";
-import { useDispatch, useSelector } from "react-redux";
 import { makeStyles } from "@material-ui/core/styles";
 import Card from "@material-ui/core/Card";
 import CardActions from "@material-ui/core/CardActions";
 import CardContent from "@material-ui/core/CardContent";
-import Button from "@material-ui/core/Button";
 import Typography from "@material-ui/core/Typography";
 
 export default function Airline({ airline }) {
   const classes = useStyles();
-  
+
   return (
     <Card className={classes.card}>
       <CardContent>
         <Typography variant="h5" component="h2">
-          Airline: {airline.name}
+          {airline.name}
         </Typography>
         <Typography className={classes.pos} color="textSecondary">
-          Country:{airline.address.country}
+          Country:{airline.address.state}
         </Typography>
         <Typography className={classes.pos} color="textSecondary">
           City:{airline.address.city}
         </Typography>
         <Typography className={classes.pos} color="textSecondary">
           Description:{airline.description}
+        </Typography>
+        <Typography className={classes.pos} color="textSecondary">
+          Suitcase price:{airline.checkingInSuitcasePrice}€
+        </Typography>
+        <Typography className={classes.pos} color="textSecondary">
+          Hand luggage price:{airline.handLuggagePrice}€
         </Typography>
       </CardContent>
       <CardActions></CardActions>

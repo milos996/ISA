@@ -81,7 +81,7 @@ public class FlightController {
     }
 
     @GetMapping(value = "/destinations/{airlineId}")
-    public ResponseEntity<List<GetAirlineDestinationResponse>> getDestinations(@PathVariable(name = "id") UUID airlineId){
+    public ResponseEntity<List<GetAirlineDestinationResponse>> getDestinations(@PathVariable(name = "airlineId") UUID airlineId){
 
         List<AirlineDestination> destinations = flightService.getDestinations(airlineId);
         return ResponseEntity.ok(toGetAirlineDestinationResponseFromDestinations(destinations));

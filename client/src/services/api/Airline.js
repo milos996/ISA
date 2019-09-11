@@ -4,7 +4,7 @@ import { format } from "util";
 const ENDPOINTS = {
   SAVE_AIRLINE: "/airlines",
   FETCH_AIRLINE: "/airlines/%s",
-  FETCH_RATING: "/airlines/averageRating/%s",
+  FETCH_RATING: "/airlines/airline/%s/average-rating",
   FETCH_AIRLINES: "/airlines/all"
 };
 
@@ -21,7 +21,6 @@ class AirlineService extends HttpBaseClient {
     return this.getApiClient().get(format(ENDPOINTS.FETCH_RATING, airlineId));
   };
 
-  //not exist on backend yet
   fetchAirlines = () => {
     return this.getApiClient().get(ENDPOINTS.FETCH_AIRLINES);
   };

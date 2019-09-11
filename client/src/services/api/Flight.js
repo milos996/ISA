@@ -8,7 +8,7 @@ const ENDPOINTS = {
   FETCH_DESTINATIONS: "/flights/destinations/%s",
   SAVE_FLIGHT: "/flights",
   SEARCH:
-    "/flights/search?fromDestination=%s&toDestination=%s&departureDate=%s&arrivalDate=%s"
+    "/flights/search/fromDestinationCity=%s&toDestinationCity=%s&departureDate=%s&arrivalDate=%s"
 };
 
 class FlightService extends HttpBaseClient {
@@ -29,7 +29,7 @@ class FlightService extends HttpBaseClient {
   };
 
   save = flight => {
-    this.getApiClient().post(ENDPOINTS.SAVE_FLIGHT, flight);
+    return this.getApiClient().post(ENDPOINTS.SAVE_FLIGHT, flight);
   };
 
   search = data => {

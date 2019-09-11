@@ -2,6 +2,8 @@ package com.example.ISAums.converter;
 
 import com.example.ISAums.dto.response.*;
 import com.example.ISAums.model.Flight;
+
+import java.time.LocalTime;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -39,12 +41,15 @@ public class FlightConverter {
         return flights.stream()
                 .map(flight -> SearchFlightsResponse.builder()
                                 .id(flight.getId())
-                                .arrivalTime(flight.getArrivalTime())
-                                .departureTime(flight.getDepartureTime())
+                                .arrivalTime(flight.getArrivalTime().toLocalTime().toString())
+                                .departureTime(flight.getDepartureTime().toLocalTime().toString())
                                 .duration(flight.getDuration())
                                 .length(flight.getLength())
                                 .price(flight.getPrice())
+                                .airlineDestination(flight.getAirlineDestination())
+                                .airplane(flight.getAirplane())
                                 .build()
+
                 ).collect(Collectors.toList());
     }
 
@@ -53,11 +58,13 @@ public class FlightConverter {
         return flights.stream()
                 .map(flight -> FlightForQuickBookingResponse.builder()
                                 .id(flight.getId())
-                                .arrivalTime(flight.getArrivalTime())
-                                .departureTime(flight.getDepartureTime())
+                                .arrivalTime(flight.getArrivalTime().toLocalDate().toString())
+                                .departureTime(flight.getDepartureTime().toLocalDate().toString())
                                 .duration(flight.getDuration())
                                 .length(flight.getLength())
                                 .price(flight.getPrice())
+                                .airlineDestination(flight.getAirlineDestination())
+                                .airplane(flight.getAirplane())
                                 .build()
                 ).collect(Collectors.toList());
     }
@@ -74,8 +81,8 @@ public class FlightConverter {
         return flights.stream()
                 .map(flight -> GetFlightOfAirlineResponse.builder()
                         .id(flight.getId())
-                        .arrivalTime(flight.getArrivalTime())
-                        .departureTime(flight.getDepartureTime())
+                        .arrivalTime(flight.getArrivalTime().toLocalDate().toString())
+                        .departureTime(flight.getDepartureTime().toLocalDate().toString())
                         .duration(flight.getDuration())
                         .length(flight.getLength())
                         .price(flight.getPrice())

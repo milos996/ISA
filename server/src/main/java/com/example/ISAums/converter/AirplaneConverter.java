@@ -11,6 +11,7 @@ public class AirplaneConverter {
     public static List<GetAirplaneResponse> toGetAirplaneResponseFromAirplanes(List<Airplane> airplanes){
         return airplanes.stream()
                 .map(airplane -> GetAirplaneResponse.builder()
+                        .id(airplane.getId())
                         .airline(airplane.getAirline())
                         .mark(airplane.getMark())
                         .numberOfColumnsPerSegment(airplane.getNumberOfColumnsPerSegment())

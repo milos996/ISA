@@ -30,7 +30,7 @@ const App = () => {
       <Route exact path="/ticket-reservation" component={TicketReservation} />
       <Route
         exact
-        path="/ticket-reservation/choose-seat"
+        path="/ticket-reservation/:id/choose-seat"
         component={ChooseSeats}
       />
       <Route
@@ -44,7 +44,7 @@ const App = () => {
         component={HotelRoomsPage}
       />
       <Route exact path="/user/:id" component={UserProfile} />
-                
+
       <Route
         exact
         path="/page-not-found"

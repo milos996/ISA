@@ -8,6 +8,6 @@ export function putAirlines(state, payload) {
 export function putSearchResults(state, payload) {
   return {
     ...state,
-    putSearchResults: payload
+    searchResults: payload
   };
 }

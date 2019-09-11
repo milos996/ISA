@@ -5,7 +5,7 @@ import TextField from "@material-ui/core/TextField";
 import Container from "@material-ui/core/Container";
 import Button from "@material-ui/core/Button";
 
-export default function ChooseSeats() {
+export default function ChooseSeats({ match }) {
   const classes = useStyles();
   const dispatch = useDispatch();
 

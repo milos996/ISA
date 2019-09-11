@@ -19,7 +19,7 @@ export default function SearchFlights() {
     departureDate: "",
     arrivalDate: ""
   });
-  function handleSaveButton() {
+  function handleSearchButton() {
     dispatch(doSearch(search));
   }
 
@@ -46,67 +46,69 @@ export default function SearchFlights() {
   }
 
   return (
-    <form className={classes.container} noValidate autoComplete="off">
-      <TextField
-        id="outlined-name"
-        label="From"
-        className={classes.textField}
-        margin="normal"
-        variant="outlined"
-        onChange={handleChange}
-        inputProps={{
-          name: "fromDestination",
-          id: "from-destination"
-        }}
-      />
-      <TextField
-        id="outlined-name"
-        label="To"
-        className={classes.textField}
-        margin="normal"
-        variant="outlined"
-        onChange={handleChange}
-        inputProps={{
-          name: "toDestination",
-          id: "to-destination"
-        }}
-      />
+    <div>
+      <form className={classes.container} noValidate autoComplete="off">
+        <TextField
+          id="outlined-name"
+          label="From"
+          className={classes.textField}
+          margin="normal"
+          variant="outlined"
+          onChange={handleChange}
+          inputProps={{
+            name: "fromDestination",
+            id: "from-destination"
+          }}
+        />
+        <TextField
+          id="outlined-name"
+          label="To"
+          className={classes.textField}
+          margin="normal"
+          variant="outlined"
+          onChange={handleChange}
+          inputProps={{
+            name: "toDestination",
+            id: "to-destination"
+          }}
+        />
 
-      <TextField
-        id="date"
-        label="Departure date"
-        type="date"
-        onChange={({ currentTarget }) =>
-          handleChangeDepartureDate(currentTarget.value)
-        }
-        className={classes.textField}
-        InputLabelProps={{
-          shrink: true
-        }}
-      />
+        <TextField
+          id="date"
+          label="Depart"
+          type="date"
+          onChange={({ currentTarget }) =>
+            handleChangeDepartureDate(currentTarget.value)
+          }
+          className={classes.textField}
+          InputLabelProps={{
+            shrink: true
+          }}
+        />
 
-      <TextField
-        id="date"
-        label="Arrival date"
-        type="date"
-        onChange={({ currentTarget }) =>
-          handleChangeArrivalDate(currentTarget.value)
-        }
-        className={classes.textField}
-        InputLabelProps={{
-          shrink: true
-        }}
-      />
-      <Button
-        variant="contained"
-        color="primary"
-        className={classes.button}
-        onClick={handleSaveButton}
-      >
-        Search
-      </Button>
-      {searchResults != null && <SearchResults searchResults={searchResults}/>}
-    </form>
+        <TextField
+          id="date"
+          label="Return"
+          type="date"
+          onChange={({ currentTarget }) =>
+            handleChangeArrivalDate(currentTarget.value)
+          }
+          className={classes.textField}
+          InputLabelProps={{
+            shrink: true
+          }}
+        />
+        <Button
+          variant="contained"
+          color="primary"
+          className={classes.button}
+          onClick={handleSearchButton}
+        >
+          Search
+        </Button>
+      </form>
+      {searchResults && <SearchResults searchResults={searchResults} />}
+    </div>
   );
 }
 

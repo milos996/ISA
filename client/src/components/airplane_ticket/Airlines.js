@@ -10,10 +10,10 @@ export default function Airlines() {
   const classes = useStyles();
   const dispatch = useDispatch();
   const airlines = useSelector(selectAirlines);
-
+  const fetchOneTime = true;
   useEffect(() => {
     dispatch(fetchAirlines());
-  });
+  }, [fetchOneTime]);
   return (
     <Container
       classes={{

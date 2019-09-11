@@ -5,7 +5,10 @@ import {
   selectAirlineRating
 } from "../../store/airline/selectors";
 import { makeStyles } from "@material-ui/core/styles";
-import { fetchAirlineRating } from "../../store/airline/actions";
+import {
+  fetchAirlineRating,
+  fetchAirlineFlights
+} from "../../store/airline/actions";
 import Container from "@material-ui/core/Container";
 import TextField from "@material-ui/core/TextField";
 import { TableCell } from "@material-ui/core";
@@ -32,6 +35,10 @@ export default function BuisinessReport({ airlineId }) {
     dispatch(fetchAirlineRating(airlineId));
   }, [airlineId]);
 
+  useEffect(() => {
+    dispatch(fetchAirlineFlights({ airlineId }));
+  }, [airlineId]);
+
   return (
     <Container
       classes={{
@@ -42,9 +49,8 @@ export default function BuisinessReport({ airlineId }) {
 
       <TextField
         label="Airline rating"
-        className={classes.textField}
         margin="normal"
-        value={airlineRating}
+        value={airlineRating.avgRating}
       />
 
       <h2>Flights</h2>
@@ -59,23 +65,17 @@ export default function BuisinessReport({ airlineId }) {
           </TableRow>
         </TableHead>
         <TableBody>
-          {flights.map(flight_rating => (
-            <TableRow key={flight_rating.flight.id}>
+          {flights.map(flight => (
+            <TableRow key={flight.id}>
+              <TableCell align="left">{flight.departureTime}</TableCell>
+              <TableCell align="left">{flight.arrivalTime}</TableCell>
+              <TableCell align="left">{flight.duration}</TableCell>
+              <TableCell align="left">{flight.length}</TableCell>
+              <TableCell align="left">{flight.price}</TableCell>
               <TableCell align="left">
-                {flight_rating.flight.departureTime}
+                {flight.airlineDestination.destination.city}
               </TableCell>
-              <TableCell align="left">
-                {flight_rating.flight.arrivalTime}
-              </TableCell>
-              <TableCell align="left">
-                {flight_rating.flight.duration}
-              </TableCell>
-              <TableCell align="left">{flight_rating.flight.length}</TableCell>
-              <TableCell align="left">{flight_rating.flight.price}</TableCell>
-              <TableCell align="left">
-                {flight_rating.flight.airlineDestination.destination.city}
-              </TableCell>
-              <TableCell align="left">{flight_rating.rating}</TableCell>
+              <TableCell align="left">{flight.avgRating}</TableCell>
             </TableRow>
           ))}
         </TableBody>
@@ -98,7 +98,7 @@ const useStyles = makeStyles(theme => ({
     margin: theme.spacing(1)
   },
   table: {
-    minWidth: 650
-  },
-  textField: {}
+    minWidth: 650,
+    margin: "20px 20px 50px 20px"
+  }
 }));
