@@ -85,7 +85,10 @@ export function deleteRoomWithId(state, roomId) {
 
   return {
     ...state,
-    rooms: restRooms
+    rooms: [
+      ...state.rooms.slice(0, roomId),
+      ...state.rooms.slice(roomId + 1, state.rooms.length)
+    ]
   };
 }
 

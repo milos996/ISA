@@ -20,7 +20,8 @@ import {
   SEARCH_HOTEL_BASED_ON_FILTERS,
   POST_ADMIN_FOR_HOTEL,
   FETCH_HOTELS_WITHOUT_ADMIN,
-  PUT_ROOM_DETAILS_CHANGE
+  PUT_ROOM_DETAILS_CHANGE,
+  FETCH_HOTEL_SERVICE_AND_SERVICES
 } from "./constants";
 
 export const putHotelDetails = payload => ({
@@ -129,5 +130,10 @@ export const fetchHotelsThatDontHaveAdmin = payload => ({
 
 export const putRoomDetailsChange = payload => ({
   type: PUT_ROOM_DETAILS_CHANGE,
+  payload
+});
+
+export const fetchHotelServiceAndService = payload => ({
+  type: FETCH_HOTEL_SERVICE_AND_SERVICES,
   payload
 });

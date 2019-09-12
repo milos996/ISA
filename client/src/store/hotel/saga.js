@@ -11,7 +11,8 @@ import {
   FETCH_HOTEL_ROOMS,
   RESERVE_ROOMS,
   SEARCH_HOTEL_BASED_ON_FILTERS,
-  FETCH_HOTELS_WITHOUT_ADMIN
+  FETCH_HOTELS_WITHOUT_ADMIN,
+  FETCH_HOTEL_SERVICE_AND_SERVICES
 } from "./constants";
 import {
   putHotelServices,
@@ -34,6 +35,7 @@ export function* fetchServices() {
 }
 
 export function* saveServices() {
+  // to be checked
   const { payload } = yield take(SAVE_SERVICES);
 
   const services = Object.keys(payload.services).map(
@@ -54,6 +56,7 @@ export function* fetchHotelDetails() {
 }
 
 export function* saveRoomDetails() {
+  // to be checked
   const { payload } = yield take(SAVE_ROOM_DETAILS);
   const { id, ...restData } = payload.roomDetails;
 
@@ -63,8 +66,8 @@ export function* saveRoomDetails() {
 }
 
 export function* deleteRoom() {
+  // to be checked
   const { payload } = yield take(DELETE_ROOM);
-  console.log(payload.roomId);
 
   yield call(hotelServices.deleteRoom, payload.roomId);
 
@@ -96,6 +99,7 @@ export function* saveHotelDetails() {
   const { payload } = yield take(SAVE_HOTEL_DETAILS);
 
   const { id, ...data } = payload;
+
   yield call(hotelServices.saveHotel, id, data);
 }
 
@@ -109,14 +113,15 @@ export function* fetchHotels() {
 
 export function* fetchHotelRooms() {
   const { payload } = yield take(FETCH_HOTEL_ROOMS);
-  console.log(payload);
 
   const { data } = yield call(hotelServices.fetchHotelRooms, payload);
-
   yield put(putHotelRooms(data));
+
+  yield put(putHotelRooms(MOCK_ROOMS));
 }
 
 export function* reserveRooms() {
+  // to be checked
   const { payload } = yield take(RESERVE_ROOMS);
 
   yield call(hotelServices.reserve, payload);
@@ -131,6 +136,7 @@ export function* searchHotelsBasedOnFilters() {
 }
 
 export function* fetchHotelsWithoutAdmin() {
+  //to be checked
   yield take(FETCH_HOTELS_WITHOUT_ADMIN);
 
   const { data } = yield call(hotelServices.fetchHotelsWithoutAdmin);
@@ -138,12 +144,22 @@ export function* fetchHotelsWithoutAdmin() {
   yield put(putHotels(data));
 }
 
+export function* fetchHotelServiceAndServices() {
+  const { payload } = yield take(FETCH_HOTEL_SERVICE_AND_SERVICES);
+
+  const { data } = yield call(
+    hotelServices.fetchHotelServiceAndServices,
+    payload.hotelId
+  );
+
+  yield put(putHotelServices(data));
+}
+
 const MOCK_ROOMS = [
   {
     id: 0,
     number: 2,
     floor: 1,
-    price: 12,
     priceSummer: 12.4,
     priceWinter: 123.2,
     priceAutumn: 59.12,
@@ -154,7 +170,6 @@ const MOCK_ROOMS = [
     id: 2,
     number: 3,
     floor: 1,
-    price: 1,
     priceSummer: 12.4,
     priceWinter: 123.2,
     priceAutumn: 59.12,
@@ -165,7 +180,6 @@ const MOCK_ROOMS = [
     id: 3,
     number: 4,
     floor: 1,
-    price: 12,
     priceSummer: 12.4,
     priceWinter: 123.2,
     priceAutumn: 59.12,
@@ -176,7 +190,6 @@ const MOCK_ROOMS = [
     id: 4,
     number: 2,
     floor: 2,
-    price: 1,
     priceSummer: 12.4,
     priceWinter: 123.2,
     priceAutumn: 59.12,
@@ -187,7 +200,6 @@ const MOCK_ROOMS = [
     id: 5,
     number: 3,
     floor: 2,
-    price: 4,
     priceSummer: 12.4,
     priceWinter: 123.2,
     priceAutumn: 59.12,
@@ -198,7 +210,6 @@ const MOCK_ROOMS = [
     id: 123,
     number: 10,
     floor: 2,
-    price: 1,
     priceSummer: 12.4,
     priceWinter: 123.2,
     priceAutumn: 59.12,
@@ -244,9 +255,9 @@ const MOCK_HOTELS = [
     address: {
       street: "Ulica",
       city: "Wien",
-      country: "Austria",
-      long: 119.0,
-      lat: 40
+      state: "Austria",
+      longitude: 119.0,
+      latitude: 40
     },
     mark: 6.7
   },
@@ -258,9 +269,9 @@ const MOCK_HOTELS = [
     address: {
       street: "Ulica",
       city: "Nis",
-      country: "Srbija",
-      long: 119.0,
-      lat: 40
+      state: "Srbija",
+      longitude: 119.0,
+      latitude: 40
     },
     mark: 6.7
   },
@@ -271,9 +282,9 @@ const MOCK_HOTELS = [
     address: {
       street: "Ulica",
       city: "Novi Sad",
-      country: "Srbija",
-      long: 19.8335,
-      lat: 45.2671
+      state: "Srbija",
+      longitude: 19.8335,
+      latitude: 45.2671
     },
     mark: 6.7
   },
@@ -285,9 +296,9 @@ const MOCK_HOTELS = [
     address: {
       street: "Ulica",
       city: "Beograd",
-      country: "Srbija",
-      long: 20.48,
-      lat: 44.7866
+      state: "Srbija",
+      longitude: 20.48,
+      latitude: 44.7866
     },
     mark: 6.7
   },
@@ -299,9 +310,9 @@ const MOCK_HOTELS = [
     address: {
       street: "Ulica",
       city: "Nis",
-      country: "Srbija",
-      long: 21.8958,
-      lat: 43.3209
+      state: "Srbija",
+      longitude: 21.8958,
+      latitude: 43.3209
     },
     mark: 6.7
   },
@@ -312,9 +323,9 @@ const MOCK_HOTELS = [
     address: {
       street: "Ulica",
       city: "Novi Sad",
-      country: "Srbija",
-      long: 19.8335,
-      lat: 45.2671
+      state: "Srbija",
+      longitude: 19.8335,
+      latitude: 45.2671
     },
     mark: 6.7
   },
@@ -326,9 +337,9 @@ const MOCK_HOTELS = [
     address: {
       street: "Ulica",
       city: "Beograd",
-      country: "Srbija",
-      long: 19.8335,
-      lat: 45.2671
+      state: "Srbija",
+      longitude: 19.8335,
+      latitude: 45.2671
     },
     mark: 6.7
   }
