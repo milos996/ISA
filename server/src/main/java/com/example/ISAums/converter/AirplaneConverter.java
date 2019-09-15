@@ -20,4 +20,15 @@ public class AirplaneConverter {
                         .build()
                 ).collect(Collectors.toList());
     }
+
+    public static GetAirplaneResponse toGetAirplaneReponseFromAirplane(Airplane airplane){
+        return GetAirplaneResponse.builder()
+                .id(airplane.getId())
+                .airline(airplane.getAirline())
+                .mark(airplane.getMark())
+                .numberOfColumnsPerSegment(airplane.getNumberOfColumnsPerSegment())
+                .numberOfRows(airplane.getNumberOfRows())
+                .numberOfSegments(airplane.getNumberOfSegments())
+                .build();
+    }
 }

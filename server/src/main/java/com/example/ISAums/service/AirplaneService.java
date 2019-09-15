@@ -18,11 +18,13 @@ public class AirplaneService {
         this.airplaneRepository = airplaneRepository;
     }
 
-    public void update(UpdateAirplaneRequest request) {
+    public Airplane update(UpdateAirplaneRequest request) {
 
         Optional<Airplane> airplane = airplaneRepository.findById(request.getId());
         copyNonNullProperties(request, airplane.get());
         airplaneRepository.save(airplane.get());
+
+        return airplane.get();
     }
 
     public List<Airplane> getAirplanesByAirline(UUID airlineId) {

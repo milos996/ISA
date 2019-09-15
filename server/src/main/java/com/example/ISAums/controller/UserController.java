@@ -57,9 +57,9 @@ public class UserController {
 		return ResponseEntity.ok().build();
 	}
 
-	@GetMapping(value = "/find/{name}")
+	@GetMapping(value = "/search/{name}")
 	public ResponseEntity<List<GetUserResponse>> find(@PathVariable(name = "name") String name){
-		List<User> users = userService.find(name);
+		List<User> users = userService.search(name);
 		return ResponseEntity.ok(toGetUserResponseFromUsers(users));
 	}
 

@@ -21,7 +21,8 @@ import {
   putAirlineFlights,
   putTicketsForFastReservation,
   putAirlineAirplanes,
-  putAirlineRating
+  putAirlineRating,
+  putAirplaneDetails
 } from "./actions";
 
 export function* saveAirline() {
@@ -72,7 +73,8 @@ export function* createFastTicketReservation() {
 
 export function* saveAirplane() {
   const { payload } = yield take(SAVE_AIRPLANE_DETAILS);
-  yield call(airplaneService.save, payload);
+  const { data } = yield call(airplaneService.save, payload);
+  yield put(putAirplaneDetails(data));
 }
 
 export function* fetchAirlineAirplanes() {

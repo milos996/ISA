@@ -27,7 +27,7 @@ public class AirplaneTicketController {
          return ResponseEntity.ok(toCreateQuickTicketBookingResponseFromAirplaneTicket(airplaneTicket));
     }
 
-    @PostMapping(value = "/createReservation")
+    @PostMapping(value = "/reservation")
     public void ticketReservation(@RequestBody CreateAirplaneTicketReservationRequest request){
 
         airplaneTicketService.reservation(request);

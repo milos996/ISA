@@ -6,7 +6,7 @@ import { makeStyles } from "@material-ui/core/styles";
 import { doSearch } from "../../store/airplane_ticket/actions";
 import Button from "@material-ui/core/Button";
 import { selectSearchResults } from "../../store/airplane_ticket/selectors";
-import SearchResults from "./SearchResults";
+import SearchResults from "./SearchFlightsResults";
 
 export default function SearchFlights() {
   const classes = useStyles();

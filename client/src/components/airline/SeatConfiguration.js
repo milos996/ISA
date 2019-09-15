@@ -2,18 +2,27 @@ import React, { useState } from "react";
 import { makeStyles } from "@material-ui/core/styles";
 import { useDispatch } from "react-redux";
 import TextField from "@material-ui/core/TextField";
-import { putAirplaneDetails, saveAirplaneDetails } from "../../store/airline/actions";
+import {
+  putAirplaneDetails,
+  saveAirplaneDetails
+} from "../../store/airline/actions";
 import Container from "@material-ui/core/Container";
 import Button from "@material-ui/core/Button";
 
 export default function SeatConfiguration({ airplane, closeModal }) {
-
   const classes = useStyles();
   const dispatch = useDispatch();
-  const [airplaneDetails, setAirplaneDetails] = useState(airplane);
+  const [airplaneDetails, setAirplaneDetails] = useState({
+    id: airplane.id,
+    mark: airplane.mark,
+    numberOfRows: airplane.numberOfRows,
+    numberOfColumnsPerSegment: airplane.numberOfColumnsPerSegment,
+    numberOfSegments: airplane.numberOfSegments,
+    airline: airplane.airline
+  });
 
   function handleSaveButton() {
-    dispatch(saveAirplaneDetails({ airplane }));
+    dispatch(saveAirplaneDetails(airplaneDetails));
     closeModal();
   }
 
@@ -23,7 +32,6 @@ export default function SeatConfiguration({ airplane, closeModal }) {
         root: classes.root
       }}
     >
-      
       <TextField
         label="Number of segments"
         margin="normal"
@@ -31,11 +39,10 @@ export default function SeatConfiguration({ airplane, closeModal }) {
         defaultValue={airplane.numberOfSegments}
         onChange={({ currentTarget }) => {
           setAirplaneDetails(currState => ({
-              ...currState,
-              numberOfSegments:  Number(currentTarget.value)
-          }));        
-        }
-      }
+            ...currState,
+            numberOfSegments: Number(currentTarget.value)
+          }));
+        }}
       />
 
       <TextField
@@ -45,11 +52,10 @@ export default function SeatConfiguration({ airplane, closeModal }) {
         defaultValue={airplane.numberOfColumnsPerSegment}
         onChange={({ currentTarget }) => {
           setAirplaneDetails(currState => ({
-              ...currState,
-              numberOfColumnsPerSegment:  Number(currentTarget.value)
-          }));        
-        }
-      }
+            ...currState,
+            numberOfColumnsPerSegment: Number(currentTarget.value)
+          }));
+        }}
       />
 
       <TextField
@@ -59,13 +65,12 @@ export default function SeatConfiguration({ airplane, closeModal }) {
         defaultValue={airplane.numberOfRows}
         onChange={({ currentTarget }) => {
           setAirplaneDetails(currState => ({
-              ...currState,
-              numberOfRows:  Number(currentTarget.value)
-          }));        
-        }
-      }
+            ...currState,
+            numberOfRows: Number(currentTarget.value)
+          }));
+        }}
       />
-      
+
       <Button
         variant="contained"
         color="primary"

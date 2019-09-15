@@ -1,52 +1,59 @@
 import React, { useState } from "react";
 import { makeStyles } from "@material-ui/core/styles";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import TextField from "@material-ui/core/TextField";
 import Container from "@material-ui/core/Container";
 import Button from "@material-ui/core/Button";
+import { makeTicketReservation } from "../../store/airplane_ticket/actions";
+import { selectSeats } from "../../store/airplane_ticket/selectors";
+import { putSelectedSeats } from "../../store/airplane_ticket/actions";
+import { Link } from "react-router-dom";
+import { REQUEST_TYPE } from "../../constants/user";
 
 export default function ChooseSeats({ match }) {
   const classes = useStyles();
   const dispatch = useDispatch();
+  const selectedSeats = useSelector(selectSeats);
 
   const [choosenSeatCoordinates, setChoosenSeatCoordinates] = useState({
-    segmentNum: 0,
-    rowNum: 0,
-    columnNum: 0
+    segmentNumber: 0,
+    rowNumber: 0,
+    columnNumber: 0
   });
-  /*
-  const [choosenSeats, setChoosenSeats] = useState([
-    {
-      segmentNum: 0,
-      rowNum: 0,
-      columnNum: 0
-    }
-  ]);*/
-  const choosenSeats = [];
+
+  const [ticket, setTicket] = useState({
+    userID: "96ab944e-7089-4af8-bc54-4301a58684fe",
+    seats: [],
+    flightID: match.params.id,
+    invitedUsers: null
+  });
+
   function handleChooseButton() {
-    /*
-    setChoosenSeats(oldValues => ({
-      ...oldValues,
-      choosenSeatCoordinates
-    }));*/
-    choosenSeats.push(choosenSeatCoordinates);
-    console.log(choosenSeatCoordinates);
-    console.log({ choosenSeats });
+    dispatch(putSelectedSeats(choosenSeatCoordinates));
   }
+
   function handleChangeSeatCoordinates(event) {
     event.persist();
+
     setChoosenSeatCoordinates(oldValues => ({
       ...oldValues,
       [event.target.name]: Number(event.target.value)
     }));
   }
+
+  function handleReserveButton() {
+    ticket.seats = selectedSeats;
+    dispatch(makeTicketReservation(ticket));
+  }
+
   return (
     <Container
       classes={{
         root: classes.root
       }}
     >
-      <h2>Choose seat</h2>
+      <h2>Choose one or more seat ({selectedSeats.length})</h2>
+
       <TextField
         label="Segment number"
         margin="normal"
@@ -54,7 +61,7 @@ export default function ChooseSeats({ match }) {
         className={classes.textField}
         onChange={handleChangeSeatCoordinates}
         inputProps={{
-          name: "segmentNum",
+          name: "segmentNumber",
           id: "segment-num"
         }}
       />
@@ -66,7 +73,7 @@ export default function ChooseSeats({ match }) {
         className={classes.textField}
         onChange={handleChangeSeatCoordinates}
         inputProps={{
-          name: "columnNum",
+          name: "columnNumber",
           id: "column-num"
         }}
       />
@@ -78,7 +85,7 @@ export default function ChooseSeats({ match }) {
         className={classes.textField}
         onChange={handleChangeSeatCoordinates}
         inputProps={{
-          name: "rowNum",
+          name: "rowNumber",
           id: "row-num"
         }}
       />
@@ -91,14 +98,36 @@ export default function ChooseSeats({ match }) {
       >
         Choose
       </Button>
-      <Button
-        variant="contained"
-        color="primary"
-        className={classes.button}
-        onClick={handleChooseButton}
-      >
-        Choose one more seat
-      </Button>
+      {selectedSeats.length === 1 && (
+        <Button
+          variant="contained"
+          color="primary"
+          className={classes.button}
+          onClick={handleReserveButton}
+        >
+          Reserve
+        </Button>
+      )}
+
+      {selectedSeats.length > 1 && (
+        <Link
+          to={
+            "/ticket-reservation/" +
+            match.params.id +
+            "/choose-seat" +
+            "/search/" +
+            REQUEST_TYPE.GROUP_TRIP
+          }
+        >
+          <Button
+            variant="contained"
+            color="primary"
+            className={classes.button}
+          >
+            Next
+          </Button>
+        </Link>
+      )}
     </Container>
   );
 }

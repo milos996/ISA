@@ -10,6 +10,8 @@ import HotelRoomsPage from "./pages/HotelRooms";
 import UserProfile from "./pages/UserProfile";
 import TicketReservation from "./components/airplane_ticket/TicketReservation";
 import ChooseSeats from "./components/airplane_ticket/ChooseSeats";
+import Search from "./components/user/Search";
+import GroupTripConfirmation from "./components/airplane_ticket/GroupTripConfirmation";
 
 const App = () => {
   return (
@@ -30,8 +32,18 @@ const App = () => {
       <Route exact path="/ticket-reservation" component={TicketReservation} />
       <Route
         exact
+        path="/group-trip-confirmation-page"
+        component={GroupTripConfirmation}
+      />
+      <Route
+        exact
         path="/ticket-reservation/:id/choose-seat"
         component={ChooseSeats}
+      />
+      <Route
+        exact
+        path="/ticket-reservation/:id/choose-seat/search/:requestType"
+        component={Search}
       />
       <Route
         exact
@@ -44,7 +56,6 @@ const App = () => {
         component={HotelRoomsPage}
       />
       <Route exact path="/user/:id" component={UserProfile} />
-
       <Route
         exact
         path="/page-not-found"

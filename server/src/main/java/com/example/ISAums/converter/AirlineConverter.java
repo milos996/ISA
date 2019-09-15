@@ -31,6 +31,7 @@ public class AirlineConverter {
     public static GetAirlineResponse toGetAirlineResponseFromAirline(Airline airline){
 
         GetAddressResponse getAddressResponse = GetAddressResponse.builder()
+                .id(airline.getAddress().getId())
                 .city(airline.getAddress().getCity())
                 .latitude(airline.getAddress().getLatitude())
                 .longitude(airline.getAddress().getLongitude())
@@ -57,6 +58,7 @@ public class AirlineConverter {
                                 .checkingInSuitcasePrice(airline.getCheckingInSuitcasePrice())
                                 .address(
                                         GetAddressResponse.builder()
+                                                .id(airline.getAddress().getId())
                                                 .city(airline.getAddress().getCity())
                                                 .latitude(airline.getAddress().getLatitude())
                                                 .longitude(airline.getAddress().getLongitude())

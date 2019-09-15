@@ -66,13 +66,11 @@ public class AirlineService {
         copyNonNullProperties(request.getAddress(), address.get());
         addressRepository.save(address.get());
 
-        updateSeatConfiguration(request.getSeatConfiguration(), request.getId());
-
         Optional<Airline> airline = airlineRepository.findById(request.getId());
-        airline.get().setCheckingInSuitcasePrice(request.getPricesRequest().getCheckingInSuitcasePrice());
-        airline.get().setHandLuggagePrice(request.getPricesRequest().getHandLuggagePrice());
+        airline.get().setCheckingInSuitcasePrice(request.getCheckingInSuitcasePrice());
+        airline.get().setHandLuggagePrice(request.getHandLuggagePrice());
 
-        copyNonNullProperties(request, airline.get(), "address", "seatConfiguration", "pricesRequest");
+        copyNonNullProperties(request, airline.get(), "address");
 
         airlineRepository.save(airline.get());
     }

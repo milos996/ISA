@@ -14,6 +14,7 @@ const initialState = {
     name: "",
     description: "",
     address: {
+      id: "",
       city: "",
       country: "",
       street: "",

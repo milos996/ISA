@@ -1,4 +1,4 @@
-import { 
+import {
   LOGOUT,
   PUT_USER_DATA,
   SAVE_USER_DATA,
@@ -6,10 +6,10 @@ import {
   FETCH_USER_FRIENDS,
   PUT_FRIENDS_DATA,
   SAVE_NEW_PASSWORD,
-  FETCH_USERS_BY_NAME,
   PUT_FOUND_USERS_DATA,
   SEND_FRIENDSHIP_REQUEST,
-  REMOVE_FRIEND
+  REMOVE_FRIEND,
+  SEARCH_USERS
 } from "./constants";
 
 export const logoutUser = payload => ({
@@ -47,11 +47,6 @@ export const putFriendsData = payload => ({
   payload
 });
 
-export const fetchUsersByName = payload => ({
-  type: FETCH_USERS_BY_NAME,
-  payload
-});
-
 export const putFoundUsersData = payload => ({
   type: PUT_FOUND_USERS_DATA,
   payload
@@ -64,5 +59,10 @@ export const sendFriendshipRequest = payload => ({
 
 export const removeFriend = payload => ({
   type: REMOVE_FRIEND,
+  payload
+});
+
+export const searchUsers = payload => ({
+  type: SEARCH_USERS,
   payload
 });

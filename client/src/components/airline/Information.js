@@ -26,6 +26,7 @@ export default function AirlineInformation({ airlineId }) {
   const dispatch = useDispatch();
   const classes = useStyles();
   const airlineDetails = useSelector(selectAirlineDetails);
+  const airlineName = airlineDetails.name;
 
   const [modalContent, setModalContent] = useState({
     isVisible: false,
@@ -71,13 +72,17 @@ export default function AirlineInformation({ airlineId }) {
         </div>
       </Modal>
 
-      <Container className="vertical-items left-align mr-t-120-l-80">
+      <Container
+        className="vertical-items left-align mr-t-120-l-80"
+        classes={{ root: classes.root }}
+      >
         <Container
           classes={{
             root: classes.root
           }}
         >
           <Container>
+            <h1>Airline {airlineName}</h1>
             <Button
               onClick={() =>
                 setModalContent({
@@ -109,14 +114,18 @@ export default function AirlineInformation({ airlineId }) {
               Tickets for fast reservation
             </Button>
           </Container>
-          <h1>Airline {airlineDetails.name}</h1>
           <TextField
             label="Name"
             className={classes.textField}
             margin="normal"
             value={airlineDetails.name}
             onChange={({ currentTarget }) => {
-              dispatch(putAirlineDetails({ name: currentTarget.value }));
+              dispatch(
+                putAirlineDetails({
+                  ...airlineDetails,
+                  name: currentTarget.value
+                })
+              );
             }}
           />
 
@@ -128,7 +137,12 @@ export default function AirlineInformation({ airlineId }) {
             rowsMax="8"
             value={airlineDetails.description}
             onChange={({ currentTarget }) => {
-              dispatch(putAirlineDetails({ description: currentTarget.value }));
+              dispatch(
+                putAirlineDetails({
+                  ...airlineDetails,
+                  description: currentTarget.value
+                })
+              );
             }}
           />
           <TextField
@@ -139,6 +153,7 @@ export default function AirlineInformation({ airlineId }) {
             onChange={({ currentTarget }) => {
               dispatch(
                 putAirlineDetails({
+                  ...airlineDetails,
                   checkingInSuitcasePrice: currentTarget.value
                 })
               );
@@ -151,7 +166,10 @@ export default function AirlineInformation({ airlineId }) {
             value={airlineDetails.handLuggagePrice}
             onChange={({ currentTarget }) => {
               dispatch(
-                putAirlineDetails({ handLuggagePrice: currentTarget.value })
+                putAirlineDetails({
+                  ...airlineDetails,
+                  handLuggagePrice: currentTarget.value
+                })
               );
             }}
           />
@@ -174,7 +192,8 @@ export default function AirlineInformation({ airlineId }) {
 const useStyles = makeStyles(theme => ({
   root: {
     display: "flex",
-    flexDirection: "column"
+    flexDirection: "column",
+    margin: "auto"
   },
   inputs: {
     display: "flex",

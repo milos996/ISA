@@ -10,7 +10,7 @@ import Typography from "@material-ui/core/Typography";
 import Container from "@material-ui/core/Container";
 import { Link } from "react-router-dom";
 
-export default function SearchResults({ searchResults }) {
+export default function SearchFlightsResults({ searchResults }) {
   const classes = useStyles();
   const dispatch = useDispatch();
 

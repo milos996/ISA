@@ -8,7 +8,7 @@ const ENDPOINTS = {
 
 class AirplaneService extends HttpBaseClient {
   save = airplane => {
-    this.getApiClient().put(ENDPOINTS.SAVE, airplane);
+    return this.getApiClient().put(ENDPOINTS.SAVE, airplane);
   };
 
   fetchAirplanes = airlineId => {
