@@ -6,7 +6,6 @@ import {
   SAVE_USER_DATA,
   FETCH_USER_FRIENDS,
   SAVE_NEW_PASSWORD,
-  FETCH_USERS_BY_NAME,
   SEND_FRIENDSHIP_REQUEST,
   REMOVE_FRIEND,
   FETCH_USERS_THAT_DONT_HAVE_ENTITY
@@ -56,12 +55,6 @@ export function* fetchListOfFriends() {
 export function* savePassword() {
   const { payload } = yield take(SAVE_NEW_PASSWORD);
   yield call(userService.savePassword, payload.password, payload.userId);
-}
-
-export function* findByName() {
-  const { payload } = yield take(FETCH_USERS_BY_NAME);
-  const { data } = yield call(userService.fetchByName, payload);
-  yield put(putFoundUsersData({ data }));
 }
 
 export function* sendFriendshipRequest() {

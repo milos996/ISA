@@ -25,7 +25,7 @@ public class UpdateAddressRequest {
     private String city;
 
     @Size(max = STATE_SIZE)
-    private String country;
+    private String state;
 
     @Size(max = STREET_SIZE)
     private String street;

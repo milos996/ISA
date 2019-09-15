@@ -35,7 +35,7 @@ public class AirlineConverter {
                 .city(airline.getAddress().getCity())
                 .latitude(airline.getAddress().getLatitude())
                 .longitude(airline.getAddress().getLongitude())
-                .country(airline.getAddress().getState())
+                .state(airline.getAddress().getState())
                 .street(airline.getAddress().getStreet())
                 .build();
 
@@ -62,7 +62,7 @@ public class AirlineConverter {
                                                 .city(airline.getAddress().getCity())
                                                 .latitude(airline.getAddress().getLatitude())
                                                 .longitude(airline.getAddress().getLongitude())
-                                                .country(airline.getAddress().getState())
+                                                .state(airline.getAddress().getState())
                                                 .street(airline.getAddress().getStreet())
                                                 .build()
                                 )
