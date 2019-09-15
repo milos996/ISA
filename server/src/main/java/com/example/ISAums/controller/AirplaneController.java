@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 import java.util.UUID;
 
+import static com.example.ISAums.converter.AirplaneConverter.toGetAirplaneReponseFromAirplane;
 import static com.example.ISAums.converter.AirplaneConverter.toGetAirplaneResponseFromAirplanes;
 
 @RestController
@@ -23,10 +24,10 @@ public class AirplaneController {
     }
 
     @PutMapping
-    public ResponseEntity update(@RequestBody UpdateAirplaneRequest request){
+    public ResponseEntity<GetAirplaneResponse> update(@RequestBody UpdateAirplaneRequest request){
 
-        airplaneService.update(request);
-        return (ResponseEntity) ResponseEntity.noContent();
+        Airplane airplane = airplaneService.update(request);
+        return ResponseEntity.ok(toGetAirplaneReponseFromAirplane(airplane));
     }
 
     @GetMapping(value = "/{airlineId}")

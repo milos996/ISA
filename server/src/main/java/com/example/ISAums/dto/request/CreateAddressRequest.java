@@ -26,7 +26,7 @@ public class CreateAddressRequest {
 
     @NotBlank
     @Size(max = STATE_SIZE)
-    private String state;
+    private String country;
 
     @NotNull
     @Range(min=0, max=LONGITUDE_MAX)

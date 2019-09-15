@@ -6,7 +6,6 @@ import org.hibernate.validator.constraints.Range;
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import java.sql.Time;
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 @Data
@@ -48,7 +47,5 @@ public class Flight extends BaseEntity {
   @JoinColumn(name = "airplane_id")
   @NotNull
   private Airplane airplane;
-
-
 }
 

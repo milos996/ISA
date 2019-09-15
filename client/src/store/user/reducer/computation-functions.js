@@ -28,7 +28,7 @@ export function putFriendsData(state, payload) {
 export function putFoundUsersData(state, payload) {
   return {
     ...state,
-    payload
+    foundUsers: payload
   };
 }
 

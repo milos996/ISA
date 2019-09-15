@@ -12,14 +12,14 @@ public class AddressConverter {
                 .latitude(request.getLatitude())
                 .street(request.getStreet())
                 .city(request.getCity())
-                .state(request.getState())
+                .state(request.getCountry())
                 .build();
     }
 
     public static Address toAddressFromCreateRequest(CreateAddressRequest request) {
         return Address.builder()
                 .city(request.getCity())
-                .state(request.getState())
+                .state(request.getCountry())
                 .street(request.getStreet())
                 .latitude(request.getLatitude())
                 .longitude(request.getLongitude())

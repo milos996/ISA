@@ -99,7 +99,7 @@ public class UserService {
 		friendshipRepository.removeFriendship(String.valueOf(mine_id), String.valueOf(friend_id));
     }
 
-    public List<User> find(String name) {
+    public List<User> search(String name) {
 		return userRepository.findAllByFirstName(name);
     }
 

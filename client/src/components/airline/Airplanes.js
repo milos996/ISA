@@ -8,8 +8,8 @@ import Airplane from "./Airplane";
 
 export default function Airplanes({ airlineId }) {
   const classes = useStyles();
-  const dispatch = useDispatch();
   const airplanes = useSelector(selectAirlineAirplanes);
+  const dispatch = useDispatch();
 
   useEffect(() => {
     dispatch(fetchAirlineAirplanes({ airlineId }));

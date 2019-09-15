@@ -15,6 +15,8 @@ import {
 import { MODAL_CONTENT } from "../../constants/user";
 import Password from "./Password";
 import Search from "./Search";
+import { Link } from "react-router-dom";
+import { REQUEST_TYPE } from "../../constants/user";
 
 export default function UserInformation({ userId }) {
   const dispatch = useDispatch();
@@ -38,7 +40,10 @@ export default function UserInformation({ userId }) {
             <Friends userId={userId} />
           )}
           {modalContent.value === MODAL_CONTENT.SEARCH_USERS && (
-            <Search senderUserId={userId} />
+            <Search
+              senderUserId={userId}
+              requestType={REQUEST_TYPE.FRIENDSHIP}
+            />
           )}
 
           {modalContent.value === MODAL_CONTENT.CHANGE_PASSWORD && (
@@ -168,7 +173,6 @@ export default function UserInformation({ userId }) {
           </Button>
         </Container>
       </Container>
-      )}
     </div>
   );
 }

@@ -2,6 +2,7 @@ package com.example.ISAums.service;
 
 import com.example.ISAums.dto.request.UpdateAirlineRequest;
 import com.example.ISAums.dto.request.UpdateSeatConfigurationRequest;
+import com.example.ISAums.dto.response.GetAirlineResponse;
 import com.example.ISAums.exception.EntityAlreadyExistsException;
 import com.example.ISAums.exception.EntityWithIdDoesNotExist;
 import com.example.ISAums.model.Address;
@@ -9,6 +10,7 @@ import com.example.ISAums.model.Airline;
 import com.example.ISAums.model.Airplane;
 import com.example.ISAums.model.enumeration.RatingType;
 import com.example.ISAums.repository.*;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
@@ -38,7 +40,7 @@ public class AirlineService {
     public Double getAverageRating(UUID airlineId) {
 
         double sum = 0;
-        List<Integer> marks = ratingRepository.getMarksByEntityId(String.valueOf(airlineId), RatingType.AIRLINE);
+        List<Integer> marks = ratingRepository.getMarksByEntityId(String.valueOf(airlineId), RatingType.AIRLINE.name());
 
         for(int i : marks)
             sum += i;
@@ -64,13 +66,11 @@ public class AirlineService {
         copyNonNullProperties(request.getAddress(), address.get());
         addressRepository.save(address.get());
 
-        updateSeatConfiguration(request.getSeatConfiguration(), request.getId());
-
         Optional<Airline> airline = airlineRepository.findById(request.getId());
-        airline.get().setCheckingInSuitcasePrice(request.getPricesRequest().getCheckingInSuitcasePrice());
-        airline.get().setHandLuggagePrice(request.getPricesRequest().getHandLuggagePrice());
+        airline.get().setCheckingInSuitcasePrice(request.getCheckingInSuitcasePrice());
+        airline.get().setHandLuggagePrice(request.getHandLuggagePrice());
 
-        copyNonNullProperties(request, airline.get(), "address", "seatConfiguration", "pricesRequest");
+        copyNonNullProperties(request, airline.get(), "address");
 
         airlineRepository.save(airline.get());
     }
@@ -89,5 +89,9 @@ public class AirlineService {
 
     public Airline getAirline(String airlineId) {
         return airlineRepository.findById(UUID.fromString(airlineId)).get();
+    }
+
+    public List<Airline> getAll() {
+        return airlineRepository.findAll();
     }
 }

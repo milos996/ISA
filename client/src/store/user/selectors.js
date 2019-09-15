@@ -1,5 +1,3 @@
-import { createSelector } from "reselect";
-
 const reducer = "userReducer";
 
 export const userDataSelector = state => state[reducer].data;

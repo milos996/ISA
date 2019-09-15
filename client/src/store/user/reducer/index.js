@@ -142,20 +142,7 @@ const initialState = {
       }
     }
   },
-  foundUsers: [
-    {
-      id: "1",
-      firstname: "Dejan",
-      lastname: "Dejanovic",
-      email: "dejan@gmail.com"
-    },
-    {
-      id: "2",
-      firstname: "Dejan",
-      lastname: "Bojanovic",
-      email: "bojan@gmail.com"
-    }
-  ],
+  foundUsers: [],
   users: []
 };
 
