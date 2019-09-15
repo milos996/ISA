@@ -11,12 +11,17 @@ import com.example.ISAums.repository.RoomRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.validation.Valid;
+import java.math.BigInteger;
+import java.time.LocalDate;
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
 import static com.example.ISAums.converter.RoomConverter.toRoomFromRequest;
 import static com.example.ISAums.util.UtilService.copyNonNullProperties;
+import static com.example.ISAums.util.UtilService.getValueIfNotNull;
 
 @Service
 public class RoomService {
@@ -26,6 +31,13 @@ public class RoomService {
     public RoomService(RoomRepository roomRepository, HotelReservationRepository hotelReservationRepository) {
         this.roomRepository = roomRepository;
         this.hotelReservationRepository = hotelReservationRepository;
+    }
+
+    @Transactional(readOnly = true)
+    public List<Room> get(UUID hotelId, LocalDate startDate, Integer nights, Integer people, Double fromPrice, Double toPrice) {
+        LocalDate endDate = startDate != null ? startDate.plusDays(nights) : null;
+        return this.roomRepository.getRooms(hotelId, people, fromPrice, toPrice);
+//        return this.roomRepository.getRooms(hotelId, startDate, endDate, people, fromPrice, toPrice);
     }
 
     @Transactional(readOnly = true)
@@ -51,39 +63,34 @@ public class RoomService {
     }
 
     @Transactional(rollbackFor = Exception.class)
-    public Room updateRoom(UpdateRoomRequest request) {
-        Optional<Room> room = roomRepository.findById(request.getId());
-        if (room.get() == null) {
-            throw new EntityWithIdDoesNotExist("Room", request.getId());
+    public Room updateRoom(@Valid UUID roomId, UpdateRoomRequest request) {
+        Optional<Room> optionalRoom = roomRepository.findById(roomId);
+
+        if (!optionalRoom.isPresent()) {
+            throw new EntityWithIdDoesNotExist("Room", roomId);
         }
 
-        Integer floor = request.getFloor() != null ? request.getFloor() : room.get().getFloor();
-        Integer number = request.getNumber() != null ? request.getNumber() : room.get().getNumber();
-
-        if ((request.getFloor() != null || request.getNumber() != null) && roomRepository.existsByFloorAndNumberAndHotelId(request.getFloor(), request.getNumber(), room.get().getHotel().getId())) {
-            throw new CustomException("Room at this floor " + floor + " and with this room number " + number + " already exist!");
-        }
+        Room room = optionalRoom.get();
 
         // TODO: Check this, may be problem because you have two different classes
-        copyNonNullProperties(request, room.get(), "hotel");
-        roomRepository.save(room.get());
+        copyNonNullProperties(request, room, "hotel");
+        roomRepository.save(room);
 
-        return room.get();
+        return room;
     }
 
     @Transactional(rollbackFor = Exception.class)
     public Boolean deleteRoom(UUID roomId) {
         Optional<Room> room = roomRepository.findById(roomId);
-        if (room.get() == null) {
+        if (!room.isPresent()) {
             throw new EntityWithIdDoesNotExist("Room", roomId);
         }
-
-        if (hotelReservationRepository.existsByRoomWhereEndDateIsAfterToday(roomId.toString())) {
-            return false;
-        }
+//        Room roomToDelete = hotelReservationRepository.existsByRoomWhereEndDateIsAfterToday(roomId.toString());
 
         roomRepository.delete(room.get());
 
         return true;
     }
+
+
 }

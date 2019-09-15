@@ -4,20 +4,23 @@ import { format } from "util";
 const ENDPOINTS = {
   HOTEL_SERVICES: "/hotel-services/%s",
   HOTEL_DETAILS: "/hotels/%s",
-  HOTELS: "/hotels",
+  HOTELS: "/hotels/%s",
   FETCH_HOTELS: "/hotels?startDate=%s&endDate=%s&name=%s&city=%s&state=%s",
   HOTEL_ROOMS:
-    "/hotels/%s/rooms?date=%s&numberOfNights=%d&numberOfPeople=%d&fromPrice=%d&toPrice=%d",
+    "/rooms?id=%s&startDate=%s&nights=%d&people=%d&fromPrice=%d&toPrice=%d",
   ROOMS: "/rooms",
-  DELETE_ROOM: "/rooms/%s"
+  EDIT_ROOM: "/rooms/%s",
+  DELETE_ROOM: "/rooms/%s",
+  HOTELS_WITHOUT_ADMIN: "/hotels/no/admin",
+  FETCH_HOTEL_SERVICES_AND_SERVICES: "/hotel/$s/hotel-services/unselected"
 };
 class HotelService extends HttpBaseClient {
   fetchServices = hotelId => {
-    this.getApiClient().get(format(ENDPOINTS.HOTEL_SERVICES, hotelId));
+    return this.getApiClient().get(format(ENDPOINTS.HOTEL_SERVICES, hotelId));
   };
 
   saveServices = (hotelId, services) => {
-    this.getApiClient().put(
+    return this.getApiClient().put(
       format(ENDPOINTS.HOTEL_SERVICES, hotelId),
       services
     );
@@ -27,16 +30,21 @@ class HotelService extends HttpBaseClient {
     return this.getApiClient().get(format(ENDPOINTS.HOTEL_DETAILS, hotelId));
   };
 
-  saveRoomDetails = roomDetails => {
-    return this.getApiClient().put(ENDPOINTS.ROOMS, roomDetails);
+  saveRoomDetails = (roomId, newData) => {
+    return this.getApiClient().put(
+      format(ENDPOINTS.EDIT_ROOM, roomId),
+      newData
+    );
   };
 
   deleteRoom = roomId => {
-    return this.getApiClient().delete(format(ENDPOINTS.DELETE_ROOM, roomId));
+    return this.getApiClient().delete(format(ENDPOINTS.EDIT_ROOM, roomId));
   };
 
-  saveHotel = hotelDetails => {
-    return this.getApiClient().put(ENDPOINTS.HOTELS, hotelDetails);
+  saveHotel = (hotelId, newData) => {
+    console.log(hotelId, newData);
+
+    return this.getApiClient().put(format(ENDPOINTS.HOTELS, hotelId), newData);
   };
 
   fetchHotels = ({
@@ -60,16 +68,19 @@ class HotelService extends HttpBaseClient {
 
   fetchHotelRooms = ({
     hotelId,
-    date,
-    numberOfNights,
-    numberOfPeople,
-    price
+    date = null,
+    numberOfNights = 0,
+    numberOfPeople = 0,
+    price = {
+      min: 0.0,
+      max: 0.0
+    }
   }) => {
     return this.getApiClient().get(
       format(
         ENDPOINTS.HOTEL_ROOMS,
         hotelId,
-        date,
+        date && date.toISOString(),
         numberOfNights,
         numberOfPeople,
         price.min,
@@ -79,7 +90,19 @@ class HotelService extends HttpBaseClient {
   };
 
   reserve = data => {
+    console.log(data);
+
     return this.getApiClient().post(ENDPOINTS.ROOMS, data);
+  };
+
+  fetchHotelsWithoutAdmin = () => {
+    return this.getApiClient().get(ENDPOINTS.HOTELS_WITHOUT_ADMIN);
+  };
+
+  fetchHotelServiceAndServices = hotelId => {
+    return this.getApiClient().get(
+      format(ENDPOINTS.FETCH_HOTEL_SERVICES_AND_SERVICES, hotelId)
+    );
   };
 }
 

@@ -8,7 +8,8 @@ const ENDPOINTS = {
   FETCH_BY_NAME: "/users/find/%s",
   REMOVE_FRIEND: "/users/friendship",
   FRIENDSHIP: "/users/friedship/%s",
-  SEARCH: "/users/search/%s"
+  SEARCH: "/users/search/%s",
+  USERS_WITHOUT_ENTITY: "/users/no/entity"
 };
 
 class UserService extends HttpBaseClient {
@@ -40,6 +41,9 @@ class UserService extends HttpBaseClient {
 
   searchByName = userName => {
     return this.getApiClient().get(format(ENDPOINTS.SEARCH, userName));
+  };
+  fetchUsersWithoutEntity = () => {
+    return this.getApiClient().get(ENDPOINTS.USERS_WITHOUT_ENTITY);
   };
 }
 export default new UserService();

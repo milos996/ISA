@@ -1,5 +1,6 @@
 package com.example.ISAums.dto.response;
 
+import com.example.ISAums.model.Address;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -10,6 +11,8 @@ import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
+import java.util.UUID;
+
 import static com.example.ISAums.util.ValidationConstraints.*;
 
 @Builder
@@ -18,19 +21,12 @@ import static com.example.ISAums.util.ValidationConstraints.*;
 @AllArgsConstructor
 public class GetRentACarResponse {
 
+    private UUID id;
+
     private String name;
 
     private String description;
 
-    private String street;
-
-    private String city;
-
-    private String state;
-
-    private Double longitude;
-
-    private Double latitude;
-
+    private GetAddressResponse address;
 
 }

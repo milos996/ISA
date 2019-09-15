@@ -6,6 +6,7 @@ import org.hibernate.validator.constraints.Range;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
+import java.time.LocalDate;
 import java.util.Date;
 import java.util.List;
 
@@ -30,11 +31,11 @@ public class HotelReservation extends BaseEntity {
 
     @Column(name = "start_date")
     @NotNull
-    private Date startDate;
+    private LocalDate startDate;
 
     @Column(name = "end_date")
     @NotNull
-    private Date endDate;
+    private LocalDate endDate;
 
     @NotNull
     @OneToOne(fetch = FetchType.LAZY)

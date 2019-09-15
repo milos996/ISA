@@ -6,6 +6,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.util.List;
+import java.util.UUID;
 
 @Builder
 @Data
@@ -13,9 +14,13 @@ import java.util.List;
 @AllArgsConstructor
 public class SearchRentACarResponse {
 
-    private String rentACarName;
+    private UUID id;
 
-    private List<SearchRentACarLocationResponse> rentACarOffices;
+    private String name;
 
-    private double rating;
+    private String description;
+
+    private Double rating;
+
+    private GetAddressResponse address;
 }

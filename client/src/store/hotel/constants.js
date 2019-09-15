@@ -18,3 +18,8 @@ export const FETCH_HOTEL_ROOMS = "fetch_hotel_rooms";
 export const PUT_HOTEL_ROOMS = "put_hotel_rooms";
 export const RESERVE_ROOMS = "reserve_rooms";
 export const SEARCH_HOTEL_BASED_ON_FILTERS = "search_hotel_based_on_filters";
+export const POST_ADMIN_FOR_HOTEL = "post_admin_for_hotel";
+export const FETCH_HOTELS_WITHOUT_ADMIN = "fetch_hotels_without_admin";
+export const PUT_ROOM_DETAILS_CHANGE = "put_room_details_change";
+export const FETCH_HOTEL_SERVICE_AND_SERVICES =
+  "fetch_hotel_service_and_services";

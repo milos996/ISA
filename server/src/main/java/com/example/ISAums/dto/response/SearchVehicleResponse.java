@@ -5,11 +5,14 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.UUID;
+
 @Builder
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
 public class SearchVehicleResponse {
+    private UUID id;
 
     private String brand;
 
@@ -21,7 +24,7 @@ public class SearchVehicleResponse {
 
     private String type;
 
-    private double rating;
+    private Double rating;
 
-    private double price;
+    private Double pricePerDay;
 }

@@ -13,13 +13,13 @@ public class HotelServiceConverter {
         List<ServiceResponse> servicesResponse = hotelServiceList.stream()
                 .map(hotelService ->
                     ServiceResponse.builder()
-                        .id(hotelService.getService().getId())
+                        .id(hotelService.getId())
                         .name(hotelService.getService().getName())
+                        .price(hotelService.getPrice())
                         .build())
                 .collect(Collectors.toList());
 
         return GetHotelServiceResponse.builder()
-                .hotelId(hotelServiceList.get(0).getHotel().getId())
                 .services(servicesResponse)
                 .build();
     }

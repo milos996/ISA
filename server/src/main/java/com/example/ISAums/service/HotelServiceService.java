@@ -35,24 +35,29 @@ public class HotelServiceService {
     }
 
     @Transactional(rollbackFor = Exception.class)
-    public List<HotelService> createHotelServices(CreateHotelServiceRequest request) {
-        Optional<Hotel> hotel = hotelRepository.findById(request.getHotelID());
+    public List<HotelService> createHotelServices(UUID hotelId, CreateHotelServiceRequest request) {
+        Optional<Hotel> hotel = hotelRepository.findById(hotelId);
 
-        if (hotel.get() == null) {
-            throw new EntityWithIdDoesNotExist("Hotel", request.getHotelID());
+        if (!hotel.isPresent()) {
+            throw new EntityWithIdDoesNotExist("Hotel", hotelId);
         }
 
-        List<HotelService> hotelServices = hotelServiceRepository.findAllByHotelId(request.getHotelID());
+        List<HotelService> hotelServices = hotelServiceRepository.findAllByHotelId(hotelId);
 
 
         hotelServiceRepository.deleteInBatch(hotelServices.stream()
                 .filter(hotelService -> {
                     Predicate<ServiceRequest> predictService = e -> e.getId() == hotelService.getService().getId();
-                    return !request.getServiceList().stream().anyMatch(predictService);
+                    return request.getServiceList().stream().noneMatch(predictService);
                 })
                 .collect(Collectors.toList())
         );
 
+        return saveNonExistedHotelServices(request, hotelServices, hotel);
+
+    }
+
+    private List<HotelService> saveNonExistedHotelServices(CreateHotelServiceRequest request, List<HotelService> hotelServices, Optional<Hotel> hotel) {
         return hotelServiceRepository.saveAll(request.getServiceList().stream()
                 .filter(serviceRequest -> {
                     Predicate<HotelService> predictHotelService = e -> e.getService().getId() == serviceRequest.getId();
@@ -62,7 +67,7 @@ public class HotelServiceService {
 
                     Optional<com.example.ISAums.model.Service> service = serviceRepository.findById(filteredService.getId());
 
-                    if (service.get() == null) {
+                    if (!service.isPresent()) {
                         throw new EntityWithIdDoesNotExist("Service", filteredService.getId());
                     }
 

@@ -19,6 +19,10 @@ export default function HotelRooms({ hotelId }) {
     );
   }, [hotelId]);
 
+  if (rooms.length == 0) {
+    return <div></div>;
+  }
+
   return (
     <Container
       classes={{

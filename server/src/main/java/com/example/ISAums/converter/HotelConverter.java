@@ -58,4 +58,14 @@ public class HotelConverter {
                 .longitude(request.getLongitude())
                 .build();
     }
+
+    public static GetHotelResponse toGetHotelResponseFromHotel(Hotel hotel) {
+        return GetHotelResponse.builder()
+                .id(hotel.getId())
+                .rating(hotel.getRating())
+                .name(hotel.getName())
+                .description(hotel.getDescription())
+                .address(hotel.getAddress())
+                .build();
+    }
 }

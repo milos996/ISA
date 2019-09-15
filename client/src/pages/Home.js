@@ -23,7 +23,7 @@ export default function HomePage({ history }) {
         title="Hotels"
         description="Check hotels information and their rooms and prices."
         cardClick={() => {
-          history.push("/hotels");
+          history.push("/hotel-reservation");
         }}
       />
       <NavigationCards
