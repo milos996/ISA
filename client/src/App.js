@@ -57,8 +57,6 @@ const App = () => {
         component={RentACarProfilePage}
       />
       <Route exact path="/airline/:id" component={AirlineProfile} />
-      <Route exact path="/login" component={LoginPage} />
-      <Route exact path="/hotel-reservation" component={HotelsPage} />
       <Route
         exact
         path="/hotel-reservation/:id/rooms"
@@ -66,7 +64,6 @@ const App = () => {
       />
       <Route exact path="/user/:id" component={UserProfile} />
       <Route exact path="/admin" component={AdminPage} />
-
 
       <Route
         exact
