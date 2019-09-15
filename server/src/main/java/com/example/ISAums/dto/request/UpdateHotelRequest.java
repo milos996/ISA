@@ -17,10 +17,6 @@ import static com.example.ISAums.util.ValidationConstraints.*;
 @NoArgsConstructor
 @AllArgsConstructor
 public class UpdateHotelRequest {
-
-    @NotNull
-    private UUID id;
-
     @Size(max = NAME_SIZE)
     private String name;
 

@@ -19,8 +19,14 @@ public interface RentACarLocationRepository extends JpaRepository<RentACarLocati
     @Query(value = "SELECT * FROM rent_a_car_location racl " +
                    "JOIN agency_location al ON al.id = racl.agency_location_id " +
                    "WHERE racl.rent_a_car_id = ?1 " +
-                   "AND al.city = ?2 AND al.state = ?3;", nativeQuery = true)
+                   "AND al.city = ?2 AND al.state = ?3 ", nativeQuery = true)
     List<RentACarLocation> checkLocation(UUID rentACarId, String city, String state);
+
+    @Query(value = "SELECT * FROM rent_a_car_location racl " +
+                   "JOIN agency_location al ON al.id = racl.agency_location_id " +
+                   "WHERE racl.rent_a_car_id = ?1 " +
+                   "AND al.city = ?2 ", nativeQuery = true)
+    List<RentACarLocation> checkLocationCity(UUID rentACarId, String city);
 
     @Query(value = "SELECT * FROM rent_a_car_location racl " +
                    "LEFT JOIN rent_a_car rac ON rac.id = racl.rent_a_car_id " +

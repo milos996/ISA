@@ -34,12 +34,13 @@ const ISAMap = ({ address, setStreet = () => {}, hasClick = true }) => {
     if (!hasClick) {
       setLocation({
         latlng: {
-          lat: address.lat,
-          lng: address.long
+          lat: address.latitude,
+          lng: address.longitude
         }
       });
     }
   }, [address]);
+
   return (
     <Container
       classes={{
@@ -55,7 +56,7 @@ const ISAMap = ({ address, setStreet = () => {}, hasClick = true }) => {
           label="State"
           className={classes.textField}
           margin="normal"
-          value={address.country}
+          value={address.state}
           InputProps={{
             readOnly: true
           }}

@@ -13,6 +13,7 @@ import NavigationCards from "../components/UI/NavigationCards";
 import { makeStyles } from "@material-ui/core/styles";
 import { fetchHotelRooms } from "../store/hotel/actions";
 import { selectHotelRooms } from "../store/hotel/selectors";
+import { userTokenSelector } from "../store/user/selectors";
 import room from "../assets/room.png";
 import { formatRoomDetails } from "../util/format";
 import { fetchHotelService, reserveRooms } from "../store/hotel/actions";
@@ -24,6 +25,7 @@ export default function HotelRoomsPage({ match, history, location }) {
   const classes = useStyles();
   const dispatch = useDispatch();
   const rooms = useSelector(selectHotelRooms);
+  const userToken = useSelector(userTokenSelector);
   const [date, setDate] = useState(
     location.state.startDate && location.state.startDate
   );
@@ -85,9 +87,10 @@ export default function HotelRoomsPage({ match, history, location }) {
     dispatch(
       reserveRooms({
         rooms: selectedRooms,
-        additionalService: selectedAdditionalServices,
+        additionalServices: selectedAdditionalServices,
         date,
-        numberOfNights
+        numberOfNights,
+        airplaneTicketId: "airplain"
       })
     );
   }
@@ -199,7 +202,7 @@ export default function HotelRoomsPage({ match, history, location }) {
       >
         AdditionalServices
       </Button>
-      {!!selectedRooms.length && (
+      {!!userToken && !!selectedRooms.length && (
         <Button
           variant="contained"
           color="primary"
@@ -222,9 +225,11 @@ export default function HotelRoomsPage({ match, history, location }) {
             title={`${val.floor} - ${val.number}`}
             description={formatRoomDetails(val, numberOfNights)}
             cardClick={() => {
-              setSelectedRooms(currState =>
-                addRemoveItemFromList(currState, val)
-              );
+              if (!!userToken) {
+                setSelectedRooms(currState =>
+                  addRemoveItemFromList(currState, val)
+                );
+              }
             }}
           />
         ))}

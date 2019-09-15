@@ -1,5 +1,4 @@
 export function putHotelDetails(state, payload) {
-  
   return {
     ...state,
     data: {
@@ -86,7 +85,10 @@ export function deleteRoomWithId(state, roomId) {
 
   return {
     ...state,
-    rooms: restRooms
+    rooms: [
+      ...state.rooms.slice(0, roomId),
+      ...state.rooms.slice(roomId + 1, state.rooms.length)
+    ]
   };
 }
 
@@ -101,5 +103,16 @@ export function putHotelRooms(state, rooms) {
   return {
     ...state,
     rooms
+  };
+}
+
+export function putRoomDetailsChange(state, { id, data }) {
+  return {
+    ...state,
+    rooms: [
+      ...state.rooms.slice(0, id),
+      { ...data, id },
+      ...state.rooms.slice(id + 1, state.rooms.length)
+    ]
   };
 }

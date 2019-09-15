@@ -1,4 +1,6 @@
 import {
+  REGISTRATION,
+  LOGIN,
   LOGOUT,
   PUT_USER_DATA,
   SAVE_USER_DATA,
@@ -10,8 +12,21 @@ import {
   SEND_FRIENDSHIP_REQUEST,
   REMOVE_FRIEND,
   SEARCH_USERS,
-  FETCH_USER_DATA
+  FETCH_USER_DATA,
+  FETCH_USERS_THAT_DONT_HAVE_ENTITY,
+  PUT_USERS
 } from "./constants";
+import Password from "../../components/user/Password";
+
+export const registerUser = payload => ({
+  type: REGISTRATION,
+  payload
+});
+
+export const loginUser = payload => ({
+  type: LOGIN,
+  payload
+});
 
 export const logoutUser = payload => ({
   type: LOGOUT,
@@ -70,5 +85,15 @@ export const searchUsers = payload => ({
 
 export const fetchUserData = payload => ({
   type: FETCH_USER_DATA,
+  payload
+});
+
+export const fetchUsersThatDontHaveEntity = payload => ({
+  type: FETCH_USERS_THAT_DONT_HAVE_ENTITY,
+  payload
+});
+
+export const putUsers = payload => ({
+  type: PUT_USERS,
   payload
 });

@@ -15,7 +15,8 @@ import {
   putChangeHotelServices,
   putAddNewService,
   saveServices,
-  fetchHotelService
+  fetchHotelService,
+  fetchHotelServiceAndService
 } from "../../store/hotel/actions";
 
 export default function Services({ closeModal, hotelId }) {
@@ -29,7 +30,7 @@ export default function Services({ closeModal, hotelId }) {
 
   useEffect(() => {
     dispatch(
-      fetchHotelService({
+      fetchHotelServiceAndService({
         hotelId
       })
     );

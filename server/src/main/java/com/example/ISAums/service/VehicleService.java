@@ -1,5 +1,6 @@
 package com.example.ISAums.service;
 
+import com.example.ISAums.dto.request.CreateRentACarVehicleRequest;
 import com.example.ISAums.dto.request.CreateVehicleRequest;
 import com.example.ISAums.dto.request.UpdateVehicleRequest;
 import com.example.ISAums.exception.CustomException;
@@ -32,18 +33,18 @@ public class VehicleService {
     }
 
     @Transactional(rollbackFor = Exception.class)
-    public Vehicle create(CreateVehicleRequest request) {
-        Vehicle vehicle = toVehicleFromCreateVehicleRequest(request);
+    public List<Vehicle> create(CreateRentACarVehicleRequest request) {
+        Vehicle vehicle = toVehicleFromCreateVehicleRequest(request.getVehicle());
 
-        RentACar rentACar = rentACarRepository.findByName(request.getRentACarName());
+        RentACar rentACar = rentACarRepository.findById(request.getRentACarId()).orElse(null);
         if (rentACar == null)
-            throw new CustomException("Rent a car with name " + request.getRentACarName() + " does not exist");
+            throw new EntityWithIdDoesNotExist("rent a car ", request.getRentACarId());
 
         vehicle.setRentACar(rentACar);
 
         vehicleRepository.save(vehicle);
 
-        return vehicle;
+        return vehicleRepository.findByRentACar_Id(request.getRentACarId());
     }
 
     @Transactional(readOnly = true)
@@ -76,13 +77,7 @@ public class VehicleService {
         if (request.getType() != null)
             vehicle.setType(request.getType());
 
-        if (request.getRentACarName() != null) {
-            RentACar rentACar = rentACarRepository.findByName(request.getRentACarName());
-            if (rentACar == null)
-                throw new CustomException("Rent a car with name " + request.getRentACarName() + " does not exist");
 
-            vehicle.setRentACar(rentACar);
-        }
 
         //copyNonNullProperties(request, vehicle.get());
 
@@ -92,32 +87,55 @@ public class VehicleService {
     }
 
     @Transactional(rollbackFor = Exception.class)
-    public void delete(UUID vehicleId) {
+    public List<Vehicle> delete(UUID vehicleId) {
         Vehicle vehicle = vehicleRepository.findById(vehicleId).orElse(null);
 
+        UUID rentACarId = vehicle.getRentACar().getId();
         if(vehicle == null)
             throw new EntityWithIdDoesNotExist("Vehicle", vehicleId);
 
         vehicleRepository.delete(vehicle);
+
+        return vehicleRepository.findByRentACar_Id(rentACarId);
     }
 
     @Transactional(readOnly = true)
-    public List<Vehicle> search(Date pickUpDate, Date dropOffDate, String pickUpLocation, String dropOffLocation, String type, Integer seats, Double startRange, Double endRange) {
+    public List<Vehicle> search(String pickUpDate, String dropOffDate, String pickUpLocation, String dropOffLocation, String type, int seats, double startRange, double endRange, String rentACarId) {
         int cityCount = 2;
 
-        if (pickUpLocation != null && dropOffLocation != null) {
+        if (pickUpLocation.equals("") && dropOffLocation.equals("")) {
+            throw new CustomException("Please select pick up or drop off location!");
+        }
+
+        if (!pickUpLocation.equals("") && !dropOffLocation.equals("")) {
             if(pickUpLocation.toLowerCase().equals(dropOffLocation.toLowerCase()))
                 cityCount = 1;
         }
 
-        if (pickUpLocation == null || dropOffLocation == null)
+        if (pickUpLocation.equals("") && !dropOffLocation.equals("")) {
+            pickUpLocation  = dropOffLocation;
             cityCount = 1;
+        }
 
-        if (startRange == null)
-            startRange = 0.0;
+        if (dropOffLocation.equals("") && !pickUpLocation.equals("")) {
+            dropOffLocation  = pickUpLocation;
+            cityCount = 1;
+        }
 
-        if (endRange == null)
-            endRange = Double.MAX_VALUE;
+        if (type.equals(""))
+            type="";
+
+        if (seats == 0)
+            seats = 1000;
+
+        if (endRange == 0)
+            endRange = 1000000;
+
+        if (pickUpDate.equals("null"))
+            pickUpDate = null;
+
+        if (dropOffDate.equals("null"))
+            dropOffDate = null;
 
         return vehicleRepository.search(pickUpDate, dropOffDate, pickUpLocation, dropOffLocation, type, seats, startRange, endRange, cityCount);
     }
