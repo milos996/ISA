@@ -9,3 +9,4 @@ export const PUT_FOUND_USERS_DATA = "put_found_users_data";
 export const SEND_FRIENDSHIP_REQUEST = "send_friendship_request";
 export const REMOVE_FRIEND = "remove_friend";
 export const SEARCH_USERS = "search_users";
+export const FETCH_USER_DATA = "fetch_user_data";

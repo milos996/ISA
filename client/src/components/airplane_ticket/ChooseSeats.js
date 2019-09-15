@@ -149,16 +149,6 @@ const useStyles = makeStyles(theme => ({
   inputContainer: {
     padding: "0px 0px 0px 0px"
   },
-  modalContainer: {
-    width: "60%",
-    height: "80%",
-    display: "flex",
-    flexDirection: "column",
-    background: "#cce8ff",
-    padding: "0px 0px 0px 0px",
-    border: "0px none",
-    justifyContent: "flex-end"
-  },
   button: {
     margin: theme.spacing(1),
     width: "30%"

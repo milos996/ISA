@@ -107,4 +107,7 @@ public class UserService {
 		//...
 	}
 
+	public User findById(UUID user_id) {
+		return userRepository.findById(user_id).get();
+	}
 }

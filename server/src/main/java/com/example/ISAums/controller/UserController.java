@@ -16,8 +16,7 @@ import com.example.ISAums.service.UserService;
 import java.util.List;
 import java.util.UUID;
 import static com.example.ISAums.converter.FriendshipRequestConverter.toSendFriendshipRequestResponseFromFriendship;
-import static com.example.ISAums.converter.UserConverter.toGetUserResponseFromUsers;
-import static com.example.ISAums.converter.UserConverter.toUpdateUserProfileResponseFromUser;
+import static com.example.ISAums.converter.UserConverter.*;
 
 
 @RestController
@@ -27,6 +26,12 @@ public class UserController {
 
 	public UserController(UserService userService){
 		this.userService = userService;
+	}
+
+	@GetMapping(value="/{id}")
+	public ResponseEntity<GetUserResponse> getUserById(@PathVariable(name = "id") UUID user_id){
+		User user = userService.findById(user_id);
+		return ResponseEntity.ok(toGetUserResponseFromUser(user));
 	}
 
 	@PutMapping

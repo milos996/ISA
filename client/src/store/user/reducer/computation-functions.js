@@ -1,10 +1,11 @@
 export function putUserData(state, payload) {
+  console.log({
+    ...state,
+    data: payload
+  });
   return {
     ...state,
-    data: {
-      ...state.data,
-      ...payload
-    }
+    data: payload
   };
 }
 

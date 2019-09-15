@@ -15,7 +15,6 @@ export default function Search({ match, senderUserId, requestType }) {
   const [search, setSearch] = useState({
     name: ""
   });
-  alert(match.params.ticket.userID);
   function handleSearchButton() {
     dispatch(searchUsers(search));
   }

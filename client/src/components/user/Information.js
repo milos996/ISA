@@ -15,7 +15,6 @@ import {
 import { MODAL_CONTENT } from "../../constants/user";
 import Password from "./Password";
 import Search from "./Search";
-import { Link } from "react-router-dom";
 import { REQUEST_TYPE } from "../../constants/user";
 
 export default function UserInformation({ userId }) {
@@ -31,6 +30,10 @@ export default function UserInformation({ userId }) {
   function handleSaveButton() {
     dispatch(saveUserData(userDetails));
   }
+
+  useEffect(() => {
+    dispatch(fetchUserData(userId));
+  }, [userId]);
 
   return (
     <div id="mainWrapper" className="main-wrapper">
@@ -113,25 +116,25 @@ export default function UserInformation({ userId }) {
             label="Firstname"
             className={classes.textField}
             margin="normal"
-            defaultValue={userDetails.firstname}
+            value={userDetails.firstName}
             onChange={({ currentTarget }) => {
-              dispatch(putUserData({ firstname: currentTarget.value }));
+              dispatch(putUserData({ firstName: currentTarget.value }));
             }}
           />
           <TextField
             label="Lastname"
             className={classes.textField}
             margin="normal"
-            defaultValue={userDetails.lastname}
+            value={userDetails.lastName}
             onChange={({ currentTarget }) => {
-              dispatch(putUserData({ lastname: currentTarget.value }));
+              dispatch(putUserData({ lastName: currentTarget.value }));
             }}
           />
           <TextField
             label="Email"
             className={classes.textField}
             margin="normal"
-            defaultValue={userDetails.email}
+            value={userDetails.email}
             onChange={({ currentTarget }) => {
               dispatch(putUserData({ email: currentTarget.value }));
             }}
@@ -140,16 +143,16 @@ export default function UserInformation({ userId }) {
             label="Phone number"
             className={classes.textField}
             margin="normal"
-            defaultValue={userDetails.phone}
+            value={userDetails.phoneNumber}
             onChange={({ currentTarget }) => {
-              dispatch(putUserData({ phone: currentTarget.value }));
+              dispatch(putUserData({ phoneNumber: currentTarget.value }));
             }}
           />
           <TextField
             label="City"
             className={classes.textField}
             margin="normal"
-            defaultValue={userDetails.city}
+            value={userDetails.city}
             onChange={({ currentTarget }) => {
               dispatch(putUserData({ city: currentTarget.value }));
             }}
@@ -158,7 +161,7 @@ export default function UserInformation({ userId }) {
             label="State"
             className={classes.textField}
             margin="normal"
-            defaultValue={userDetails.state}
+            value={userDetails.state}
             onChange={({ currentTarget }) => {
               dispatch(putUserData({ state: currentTarget.value }));
             }}

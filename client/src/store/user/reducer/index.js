@@ -8,14 +8,14 @@ import * as computationFunctions from "./computation-functions";
 
 const initialState = {
   data: {
-    id: "123",
-    firstname: "Uros",
-    lastname: "Kojovic",
-    email: "uros@gmail.com",
-    password: "123",
-    state: "Serbia",
-    city: "Cacak",
-    phone: "060000111"
+    id: "",
+    firstName: "",
+    lastName: "",
+    email: "",
+    password: "",
+    state: "",
+    city: "",
+    phoneNumber: ""
   },
   friends: [
     {

@@ -5,7 +5,8 @@ import {
   FETCH_USER_FRIENDS,
   SAVE_NEW_PASSWORD,
   SEND_FRIENDSHIP_REQUEST,
-  REMOVE_FRIEND
+  REMOVE_FRIEND,
+  FETCH_USER_DATA
 } from "./constants";
 import {
   putUserData,
@@ -59,4 +60,10 @@ export function* removeFriend() {
   yield call(userService.removeFriend, payload.friendsId);
   const { data } = yield call(userService.fetchFriends, payload.userId);
   yield put(putFriendsData({ data }));
+}
+
+export function* fetchUserData() {
+  const { payload } = yield take(FETCH_USER_DATA);
+  const { data } = yield call(userService.fetchUser, payload);
+  yield put(putUserData(data));
 }

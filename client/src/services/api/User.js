@@ -5,10 +5,10 @@ const ENDPOINTS = {
   SAVE_USER: "/users",
   FETCH_FRIENDS: "/users/listOfFriends/%s",
   SAVE_PASSWORD: "/users/password/update/",
-  FETCH_BY_NAME: "/users/find/%s",
   REMOVE_FRIEND: "/users/friendship",
   FRIENDSHIP: "/users/friedship/%s",
-  SEARCH: "/users/search/%s"
+  SEARCH: "/users/search/%s",
+  FETCH: "/users/%s"
 };
 
 class UserService extends HttpBaseClient {
@@ -24,10 +24,6 @@ class UserService extends HttpBaseClient {
     return this.getApiClient().put(ENDPOINTS.SAVE_PASSWORD, { password });
   };
 
-  fetchByName = name => {
-    return this.getApiClient().get(format(ENDPOINTS.FETCH_BY_NAME), name);
-  };
-
   sendFriendshipRequest = invitedUserId => {
     return this.getApiClient().post(
       format(ENDPOINTS.FRIENDSHIP, invitedUserId)
@@ -40,6 +36,10 @@ class UserService extends HttpBaseClient {
 
   searchByName = userName => {
     return this.getApiClient().get(format(ENDPOINTS.SEARCH, userName));
+  };
+
+  fetchUser = userId => {
+    return this.getApiClient().get(format(ENDPOINTS.FETCH, userId));
   };
 }
 export default new UserService();

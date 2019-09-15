@@ -9,7 +9,8 @@ import {
   PUT_FOUND_USERS_DATA,
   SEND_FRIENDSHIP_REQUEST,
   REMOVE_FRIEND,
-  SEARCH_USERS
+  SEARCH_USERS,
+  FETCH_USER_DATA
 } from "./constants";
 
 export const logoutUser = payload => ({
@@ -64,5 +65,10 @@ export const removeFriend = payload => ({
 
 export const searchUsers = payload => ({
   type: SEARCH_USERS,
+  payload
+});
+
+export const fetchUserData = payload => ({
+  type: FETCH_USER_DATA,
   payload
 });
