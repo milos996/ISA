@@ -1,6 +1,7 @@
 package com.example.ISAums.repository;
 
 import com.example.ISAums.model.Friendship;
+import com.example.ISAums.model.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
@@ -16,4 +17,10 @@ public interface FriendshipRepository extends JpaRepository<Friendship, UUID> {
     @Modifying
     @Query(value = "delete from friendship where friendship.user_sender_id = ?1 and friendship.user_invited_id = ?2 or friendship.user_sender_id = ?2 and friendship.user_invited_id = ?1", nativeQuery = true)
     void removeFriendship(String mine_id, String friend_id);
+
+    @Query(value = "select * from isa_database.friendship f where f.user_sender_id = ?1 and f.user_invited_id = ?2 or f.user_sender_id = ?2 and f.user_invited_id = ?1 and f.invitation_status != \"REJECTED\"", nativeQuery = true)
+    Friendship isItFriendOfMine(String mineId, String userId);
+
+    @Query(value = "select * from isa_database.friendship f where f.user_invited_id = ?1 and f.invitation_status = 'PENDING'", nativeQuery = true)
+    List<Friendship> getFriendshipRequestsOfMine(String mine_id);
 }

@@ -12,10 +12,11 @@ export default function Search({ match, senderUserId, requestType }) {
   const dispatch = useDispatch();
   const classes = useStyles();
   const foundUsers = useSelector(foundFriendsSelector);
+  
   const [search, setSearch] = useState({
+    mineId: senderUserId,
     name: ""
   });
-  alert(match.params.ticket.userID);
   function handleSearchButton() {
     dispatch(searchUsers(search));
   }
@@ -26,7 +27,14 @@ export default function Search({ match, senderUserId, requestType }) {
       name: value
     }));
   }
-
+  function handleSendFriendshipButton(invitedUserId) {
+    dispatch(
+      sendFriendshipRequest({
+        senderUserId: senderUserId,
+        invitedUserId: invitedUserId
+      })
+    );
+  }
   function handleSendInvitationButton() {}
 
   return (
@@ -57,14 +65,7 @@ export default function Search({ match, senderUserId, requestType }) {
                   {requestType != undefined &&
                     requestType === REQUEST_TYPE.FRIENDSHIP && (
                       <Button
-                        onClick={() =>
-                          dispatch(
-                            sendFriendshipRequest({
-                              senderUserId: senderUserId,
-                              invitedUserId: user.id
-                            })
-                          )
-                        }
+                        onClick={() => handleSendFriendshipButton(user.id)}
                       >
                         Send friendship request
                       </Button>

@@ -4,7 +4,6 @@ export const LOGOUT = "logout";
 export const PUT_USER_DATA = "put_user_data";
 export const SAVE_USER_DATA = "save_user_data";
 export const PUT_USER_TOKEN = "put_user_token";
-export const FETCH_USER_FRIENDS = "fetch_user_friends";
 export const PUT_FRIENDS_DATA = "put_friends_data";
 export const SAVE_NEW_PASSWORD = "save_new_password";
 export const PUT_FOUND_USERS_DATA = "put_found_users_data";
@@ -14,3 +13,8 @@ export const SEARCH_USERS = "search_users";
 export const FETCH_USERS_THAT_DONT_HAVE_ENTITY =
   "fetch_users_that_dont_have_entity";
 export const PUT_USERS = "put_users";
+export const FETCH_USER_DATA = "fetch_user_data";
+export const FETCH_FRIENDS_DATA = "fetch_friends_data";
+export const FETCH_FRIENDSHIP_REQUESTS = "fetch_friendship_requests";
+export const PUT_FRIENDSHIP_REQUESTS = "put_friendship_requests";
+export const UPDATE_FRIENDSHIP_REQUEST = "update_friendship_request";

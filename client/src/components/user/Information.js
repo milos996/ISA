@@ -6,26 +6,51 @@ import Container from "@material-ui/core/Container";
 import Button from "@material-ui/core/Button";
 import Modal from "@material-ui/core/Modal";
 import Friends from "./Friends";
-import { userDataSelector } from "../../store/user/selectors";
+import {
+  userDataSelector,
+  selectFriendshipRequests
+} from "../../store/user/selectors";
 import {
   saveUserData,
   putUserData,
-  fetchUserData
+  fetchUserData,
+  putFoundUsersData,
+  fetchFriendshipRequests
 } from "../../store/user/actions";
 import { MODAL_CONTENT } from "../../constants/user";
 import Password from "./Password";
 import Search from "./Search";
 import { Link } from "react-router-dom";
 import { REQUEST_TYPE } from "../../constants/user";
+import FriendshipRequest from "../user/FriendshipRequest";
 
 export default function UserInformation({ userId }) {
   const dispatch = useDispatch();
   const classes = useStyles();
   const userDetails = useSelector(userDataSelector);
+  const requests = useSelector(selectFriendshipRequests);
 
   const [modalContent, setModalContent] = useState({
     isVisible: false,
     value: ""
+  });
+
+  function handleCloseButton() {
+    setModalContent({
+      isVisible: false
+    });
+    resetView();
+  }
+  function resetView() {
+    dispatch(putFoundUsersData([]));
+  }
+
+  useEffect(() => {
+    dispatch(fetchUserData(userId));
+  }, [userId]);
+
+  useEffect(() => {
+    dispatch(fetchFriendshipRequests(userId));
   });
 
   function handleSaveButton() {
@@ -58,11 +83,9 @@ export default function UserInformation({ userId }) {
           )}
 
           <Button
-            onClick={e =>
-              setModalContent({
-                isVisible: false
-              })
-            }
+            onClick={() => {
+              handleCloseButton();
+            }}
           >
             Close
           </Button>
@@ -113,54 +136,72 @@ export default function UserInformation({ userId }) {
             label="Firstname"
             className={classes.textField}
             margin="normal"
-            defaultValue={userDetails.firstname}
+            value={userDetails.firstName}
             onChange={({ currentTarget }) => {
-              dispatch(putUserData({ firstname: currentTarget.value }));
+              dispatch(
+                putUserData({
+                  ...userDetails,
+                  firstName: currentTarget.value
+                })
+              );
             }}
           />
           <TextField
             label="Lastname"
             className={classes.textField}
             margin="normal"
-            defaultValue={userDetails.lastname}
+            value={userDetails.lastName}
             onChange={({ currentTarget }) => {
-              dispatch(putUserData({ lastname: currentTarget.value }));
+              dispatch(
+                putUserData({ ...userDetails, lastName: currentTarget.value })
+              );
             }}
           />
           <TextField
             label="Email"
             className={classes.textField}
             margin="normal"
-            defaultValue={userDetails.email}
+            value={userDetails.email}
             onChange={({ currentTarget }) => {
-              dispatch(putUserData({ email: currentTarget.value }));
+              dispatch(
+                putUserData({ ...userDetails, email: currentTarget.value })
+              );
             }}
           />
           <TextField
             label="Phone number"
             className={classes.textField}
             margin="normal"
-            defaultValue={userDetails.phone}
+            value={userDetails.phoneNumber}
             onChange={({ currentTarget }) => {
-              dispatch(putUserData({ phone: currentTarget.value }));
+              dispatch(
+                putUserData({
+                  ...userDetails,
+                  phoneNumber: currentTarget.value
+                })
+              );
             }}
           />
           <TextField
             label="City"
             className={classes.textField}
             margin="normal"
-            defaultValue={userDetails.city}
+            value={userDetails.city}
             onChange={({ currentTarget }) => {
-              dispatch(putUserData({ city: currentTarget.value }));
+              dispatch(
+                putUserData({ ...userDetails, city: currentTarget.value })
+              );
             }}
           />
           <TextField
             label="State"
             className={classes.textField}
             margin="normal"
-            defaultValue={userDetails.state}
+            value={userDetails.state}
             onChange={({ currentTarget }) => {
-              dispatch(putUserData({ state: currentTarget.value }));
+              dispatch(
+                putUserData({ ...userDetails, state: currentTarget.value })
+              );
             }}
           />
           <Button
@@ -172,6 +213,14 @@ export default function UserInformation({ userId }) {
             Save
           </Button>
         </Container>
+        {requests.length != 0 && (
+          <Container>
+            <h2>Friendship requests</h2>
+            {requests.map(request => (
+              <FriendshipRequest friendship={request} key={request.id} />
+            ))}
+          </Container>
+        )}
       </Container>
     </div>
   );

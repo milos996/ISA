@@ -6,6 +6,7 @@ import com.example.ISAums.email_service.EmailServiceImpl;
 import com.example.ISAums.model.*;
 import com.example.ISAums.model.enumeration.GroupTripStatus;
 import com.example.ISAums.repository.*;
+import lombok.Synchronized;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -31,6 +32,7 @@ public class AirplaneTicketService {
         this.emailService = emailService;
     }
 
+    @Synchronized
     @Transactional(rollbackFor = Exception.class)
       public void reservation(CreateAirplaneTicketReservationRequest request){
 
@@ -59,6 +61,7 @@ public class AirplaneTicketService {
 
             else
             {  //throw error on front because you can't reserve seat that is already reserved
+                break;
             }
         }
 

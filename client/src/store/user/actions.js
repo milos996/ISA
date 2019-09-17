@@ -5,7 +5,6 @@ import {
   PUT_USER_DATA,
   SAVE_USER_DATA,
   PUT_USER_TOKEN,
-  FETCH_USER_FRIENDS,
   PUT_FRIENDS_DATA,
   SAVE_NEW_PASSWORD,
   PUT_FOUND_USERS_DATA,
@@ -13,9 +12,13 @@ import {
   REMOVE_FRIEND,
   SEARCH_USERS,
   FETCH_USERS_THAT_DONT_HAVE_ENTITY,
-  PUT_USERS
+  PUT_USERS,
+  FETCH_USER_DATA,
+  FETCH_FRIENDS_DATA,
+  FETCH_FRIENDSHIP_REQUESTS,
+  PUT_FRIENDSHIP_REQUESTS,
+  UPDATE_FRIENDSHIP_REQUEST
 } from "./constants";
-import Password from "../../components/user/Password";
 
 export const registerUser = payload => ({
   type: REGISTRATION,
@@ -52,11 +55,6 @@ export const saveNewPassword = payload => ({
   payload
 });
 
-export const fetchUserFriends = payload => ({
-  type: FETCH_USER_FRIENDS,
-  payload
-});
-
 export const putFriendsData = payload => ({
   type: PUT_FRIENDS_DATA,
   payload
@@ -82,12 +80,37 @@ export const searchUsers = payload => ({
   payload
 });
 
-  export const fetchUsersThatDontHaveEntity = payload => ({
+export const fetchUsersThatDontHaveEntity = payload => ({
   type: FETCH_USERS_THAT_DONT_HAVE_ENTITY,
   payload
 });
 
 export const putUsers = payload => ({
   type: PUT_USERS,
+  payload
+});
+
+export const fetchUserData = payload => ({
+  type: FETCH_USER_DATA,
+  payload
+});
+
+export const fetchFriendsData = payload => ({
+  type: FETCH_FRIENDS_DATA,
+  payload
+});
+
+export const fetchFriendshipRequests = payload => ({
+  type: FETCH_FRIENDSHIP_REQUESTS,
+  payload
+});
+
+export const putFriendshipRequests = payload => ({
+  type: PUT_FRIENDSHIP_REQUESTS,
+  payload
+});
+
+export const updateFriendshipRequest = payload => ({
+  type: UPDATE_FRIENDSHIP_REQUEST,
   payload
 });

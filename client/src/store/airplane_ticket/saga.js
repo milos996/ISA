@@ -37,6 +37,10 @@ export function* putSelectedSeats() {
 
 export function* searchUsers() {
   const { payload } = yield take(SEARCH_USERS);
-  const { data } = yield call(userService.searchByName, payload.name);
+  const { data } = yield call(
+    userService.searchByName,
+    payload.mineId,
+    payload.name
+  );
   yield put(putFoundUsersData(data));
 }

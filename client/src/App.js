@@ -12,7 +12,6 @@ import UserProfile from "./pages/UserProfile";
 import TicketReservation from "./components/airplane_ticket/TicketReservation";
 import ChooseSeats from "./components/airplane_ticket/ChooseSeats";
 import Search from "./components/user/Search";
-import GroupTripConfirmation from "./components/airplane_ticket/GroupTripConfirmation";
 import AdminPage from "./pages/AdminPage";
 import RentACarPage from "./pages/RentACars";
 import RentACarProfilePage from "./pages/RentACarProfile";
@@ -35,11 +34,7 @@ const App = () => {
       <Route exact path="/login" component={LoginPage} />
       <Route exact path="/hotel-reservation" component={HotelsPage} />
       <Route exact path="/ticket-reservation" component={TicketReservation} />
-      <Route
-        exact
-        path="/group-trip-confirmation-page"
-        component={GroupTripConfirmation}
-      />
+
       <Route
         exact
         path="/ticket-reservation/:id/choose-seat"

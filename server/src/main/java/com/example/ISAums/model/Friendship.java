@@ -16,18 +16,17 @@ import javax.validation.constraints.NotNull;
 @Where(clause = "is_deleted='false'")
 public class Friendship extends BaseEntity {
 
-	@ManyToOne(fetch = FetchType.LAZY)
+	@ManyToOne(fetch = FetchType.EAGER)
 	@JoinColumn(name = "user_sender_id")
 	@NotNull
 	private User sender;
 
-	@ManyToOne(fetch = FetchType.LAZY)
+	@ManyToOne(fetch = FetchType.EAGER)
 	@JoinColumn(name = "user_invited_id")
 	@NotNull
 	private User invitedUser;
 
 	@Column(name = "invitation_status")
-	@NotBlank
 	@Enumerated(EnumType.STRING)
 	private InvitationStatus invitationStatus;
 

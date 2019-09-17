@@ -62,5 +62,17 @@ public class UserConverter {
                 .collect(Collectors.toList());
     }
 
+    public static GetUserResponse toGetUserResponseFromUser(User user){
+        return  GetUserResponse.builder()
+                .id(user.getId())
+                .firstName(user.getFirstName())
+                .lastName(user.getLastName())
+                .email(user.getEmail())
+                .password(user.getPassword())
+                .phoneNumber(user.getPhoneNumber())
+                .city(user.getCity())
+                .state(user.getState())
+                .build();
+    }
 }
 
