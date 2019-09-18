@@ -14,8 +14,8 @@ const ISAMap = ({ address, setStreet = () => {}, hasClick = true }) => {
 
   const [location, setLocation] = useState({
     latlng: {
-      lat: 45.275,
-      lng: 19.841
+      lat: address.latitude,
+      lng: address.longitude
     }
   });
 

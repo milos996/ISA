@@ -12,9 +12,9 @@ class AuthService extends HttpBaseClient {
       credentials
     );
 
-    await localStorage.setItem("token", data.token);
-    await localStorage.setItem("role", data.role);
-    await localStorage.setItem("email", data.email);
+    await window.localStorage.setItem("token", data.token);
+    await window.localStorage.setItem("role", data.role);
+    await window.localStorage.setItem("email", data.email);
 
     this.attachHeaders({
       Authorization: `Bearer ${data.token}`

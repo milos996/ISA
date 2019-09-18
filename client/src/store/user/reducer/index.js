@@ -17,7 +17,8 @@ const initialState = {
     password: "",
     state: "",
     city: "",
-    phoneNumber: ""
+    phoneNumber: "",
+    role: window.localStorage.getItem("role")
   },
   friendshipRequests: [
     {

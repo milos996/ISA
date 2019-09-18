@@ -6,6 +6,7 @@ import com.example.ISAums.dto.response.GetHotelServiceResponse;
 import com.example.ISAums.model.HotelService;
 import com.example.ISAums.service.HotelServiceService;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -32,7 +33,8 @@ public class HotelServiceController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<CreateHotelServiceResponse> create(@PathVariable(value = "id") UUID hotelId, CreateHotelServiceRequest request) {
+    @PreAuthorize("hasAnyAuthority('HOTEL_ADMIN')")
+    public ResponseEntity<CreateHotelServiceResponse> create(@PathVariable(value = "id") UUID hotelId,@RequestBody CreateHotelServiceRequest request) {
         List<HotelService> hotelServiceList = hotelServiceService.createHotelServices(hotelId, request);
         return ResponseEntity.ok(toCreateHotelServiceListResponseFromModel(hotelServiceList));
     }
