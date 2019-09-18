@@ -9,6 +9,7 @@ import com.example.ISAums.dto.response.UpdateServiceResponse;
 import com.example.ISAums.model.Service;
 import com.example.ISAums.service.ServiceService;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -27,24 +28,28 @@ public class ServiceController {
     }
 
     @GetMapping
+    @PreAuthorize("hasAnyAuthority('ADMIN', 'HOTEL_ADMIN')")
     public ResponseEntity<List<GetServiceResponse>> get() {
         List<Service> services = serviceService.getServices();
         return ResponseEntity.ok(toGetServicesResponseFromListServices(services));
     }
 
     @PostMapping
+    @PreAuthorize("hasAnyAuthority('ADMIN')")
     public ResponseEntity<CreateServiceResponse> create(CreateServiceRequest request) {
         Service service = serviceService.createService(request);
         return ResponseEntity.ok(toCreateServiceResponseFromService(service));
     }
 
     @PutMapping
+    @PreAuthorize("hasAnyAuthority('ADMIN')")
     public ResponseEntity<UpdateServiceResponse> update(UpdateServiceRequest request) {
         Service Service = serviceService.updateService(request);
         return ResponseEntity.ok(toUpdateServiceResponseFromService(Service));
     }
 
     @DeleteMapping("/{id}")
+    @PreAuthorize("hasAnyAuthority('ADMIN')")
     public ResponseEntity<DeleteServiceResponse> delete(@PathVariable(name = "id") UUID serviceId) {
         Boolean isDeleted = serviceService.deleteService(serviceId);
         return  ResponseEntity.ok(toDeleteServiceResponseFromDeleteServiceRequest(serviceId, isDeleted));

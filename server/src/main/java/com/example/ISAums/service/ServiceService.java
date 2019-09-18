@@ -70,4 +70,9 @@ public class ServiceService {
     public List<com.example.ISAums.model.Service> getServices() {
         return serviceRepository.findAll();
     }
+
+    @Transactional(readOnly = true)
+    public List<com.example.ISAums.model.Service> getAllServicesThatHotelDontHave(UUID hotelId) {
+        return this.serviceRepository.findAllWhereHotelServiceDontHave(hotelId);
+    }
 }

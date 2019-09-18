@@ -7,6 +7,7 @@ import com.example.ISAums.model.Room;
 import com.example.ISAums.service.RoomService;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import reactor.util.annotation.Nullable;
 
@@ -42,18 +43,21 @@ public class RoomController {
     }
 
     @PostMapping
+    @PreAuthorize("hasAnyAuthority('HOTEL_ADMIN')")
     public ResponseEntity<CreateRoomResponse> create(CreateRoomRequest request) {
         Room room = roomService.createRoom(request);
         return ResponseEntity.ok(toCreateRoomResponseFromRoom(room));
     }
 
     @PutMapping("/{id}")
+    @PreAuthorize("hasAnyAuthority('HOTEL_ADMIN')")
     public ResponseEntity<UpdateRoomResponse> update(@Valid @PathVariable("id") UUID roomId, @RequestBody  UpdateRoomRequest request) {
         Room room = roomService.updateRoom(roomId, request);
         return ResponseEntity.ok(toUpdateRoomResponseFromRoom(room));
     }
 
     @DeleteMapping("/{id}")
+    @PreAuthorize("hasAnyAuthority('HOTEL_ADMIN')")
     public ResponseEntity<DeleteRoomResponse> delete(@PathVariable(name = "id") UUID roomId) {
         Boolean isDeleted = roomService.deleteRoom(roomId);
         return ResponseEntity.ok(toDeleteRoomResponseFromDeleteRoomRequest(roomId, isDeleted));

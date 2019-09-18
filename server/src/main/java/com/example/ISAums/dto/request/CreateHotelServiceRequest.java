@@ -16,5 +16,5 @@ import java.util.UUID;
 public class CreateHotelServiceRequest {
 
     @NotNull
-    private List<ServiceRequest> serviceList;
+    private List<ServiceRequest> services;
 }

@@ -2,6 +2,8 @@ package com.example.ISAums.repository;
 
 import com.example.ISAums.model.RentACar;
 import com.example.ISAums.model.Vehicle;
+import com.example.ISAums.repository.RentACarRepository;
+import com.example.ISAums.repository.VehicleRepository;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;

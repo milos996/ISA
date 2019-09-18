@@ -47,21 +47,21 @@ public class HotelServiceService {
 
         hotelServiceRepository.deleteInBatch(hotelServices.stream()
                 .filter(hotelService -> {
-                    Predicate<ServiceRequest> predictService = e -> e.getId() == hotelService.getService().getId();
-                    return request.getServiceList().stream().noneMatch(predictService);
+                    Predicate<ServiceRequest> predictService = e -> e.getId().equals(hotelService.getId());
+                    return request.getServices().stream().noneMatch(predictService);
                 })
                 .collect(Collectors.toList())
         );
 
-        return saveNonExistedHotelServices(request, hotelServices, hotel);
+        return saveNonExistedHotelServices(request, hotelServices, hotel.get());
 
     }
 
-    private List<HotelService> saveNonExistedHotelServices(CreateHotelServiceRequest request, List<HotelService> hotelServices, Optional<Hotel> hotel) {
-        return hotelServiceRepository.saveAll(request.getServiceList().stream()
+    private List<HotelService> saveNonExistedHotelServices(CreateHotelServiceRequest request, List<HotelService> hotelServices, Hotel hotel) {
+      List<HotelService> hotelServiceList = request.getServices().stream()
                 .filter(serviceRequest -> {
-                    Predicate<HotelService> predictHotelService = e -> e.getService().getId() == serviceRequest.getId();
-                    return !hotelServices.stream().anyMatch(predictHotelService);
+                    Predicate<HotelService> predictHotelService = e -> e.getId().equals(serviceRequest.getId());
+                    return hotelServices.stream().noneMatch(predictHotelService);
                 })
                 .map(filteredService -> {
 
@@ -72,13 +72,19 @@ public class HotelServiceService {
                     }
 
                     HotelService hotelService = HotelService.builder()
-                            .hotel(hotel.get())
+                            .hotel(hotel)
                             .service(service.get())
+                            .price(filteredService.getPrice())
                             .build();
 
                     return hotelService;
                 })
-                .collect(Collectors.toList())
-        );
+                .collect(Collectors.toList());
+
+        if (hotelServiceList.isEmpty()) {
+            return hotelServices;
+        }
+
+        return hotelServiceRepository.saveAll(hotelServiceList);
     }
 }
