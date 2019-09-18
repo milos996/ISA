@@ -10,6 +10,8 @@ import com.example.ISAums.service.AirlineService;
 import com.example.ISAums.service.AirplaneTicketService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 import java.util.UUID;
 import static com.example.ISAums.converter.AirlineConverter.*;
 
@@ -26,11 +28,15 @@ public class AirlineController {
         this.airlineService = airlineService;
     }
 
+    @GetMapping(value = "/all")
+    public ResponseEntity<List<GetAirlineResponse>> getAll(){
+        List<Airline> airlines = airlineService.getAll();
+        return ResponseEntity.ok(toGetAirlineResponseFromAirlines(airlines));
+    }
     @PutMapping
     public ResponseEntity update(@RequestBody UpdateAirlineRequest request){
 
         airlineService.update(request);
-
         return ResponseEntity.ok().build();
     }
 
@@ -52,7 +58,6 @@ public class AirlineController {
     public ResponseEntity<GetAirlineAverageRatingResponse> getAverageRating(@PathVariable(name = "id") UUID airlineId){
 
         Double averageRating = airlineService.getAverageRating(airlineId);
-
         return ResponseEntity.ok(toGetAirlineRatingResponseFromRating(averageRating, airlineId));
     }
 

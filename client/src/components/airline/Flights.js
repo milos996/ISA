@@ -69,23 +69,15 @@ export default function Flights({ airlineId }) {
             </TableRow>
           </TableHead>
           <TableBody>
-            {flights.map(flight_rating => (
-              <TableRow key={flight_rating.flight.id}>
+            {flights.map(flight => (
+              <TableRow key={flight.id}>
+                <TableCell align="left">{flight.departureTime}</TableCell>
+                <TableCell align="left">{flight.arrivalTime}</TableCell>
+                <TableCell align="left">{flight.duration}</TableCell>
+                <TableCell align="left">{flight.length}</TableCell>
+                <TableCell align="left">{flight.price}</TableCell>
                 <TableCell align="left">
-                  {flight_rating.flight.departureTime}
-                </TableCell>
-                <TableCell align="left">
-                  {flight_rating.flight.arrivalTime}
-                </TableCell>
-                <TableCell align="left">
-                  {flight_rating.flight.duration}
-                </TableCell>
-                <TableCell align="left">
-                  {flight_rating.flight.length}
-                </TableCell>
-                <TableCell align="left">{flight_rating.flight.price}</TableCell>
-                <TableCell align="left">
-                  {flight_rating.flight.airlineDestination.destination.city}
+                  {flight.airlineDestination.destination.city}
                 </TableCell>
               </TableRow>
             ))}

@@ -1,6 +1,6 @@
 package com.example.ISAums.service;
 
-import com.example.ISAums.exception.CustomException;
+import com.example.ISAums.dto.request.UpdateFriendshipRequestRequest;
 import com.example.ISAums.dto.request.SendFriendshipRequestRequest;
 import com.example.ISAums.dto.request.UpdateUserProfileRequest;
 import com.example.ISAums.exception.EntityWithIdDoesNotExist;
@@ -15,7 +15,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
-
 import static com.example.ISAums.util.UtilService.copyNonNullProperties;
 
 @Service
@@ -53,10 +52,6 @@ public class UserService {
 
 		if(!userRepository.existsById(request.getId())){
 			throw new EntityWithIdDoesNotExist("User", request.getId());
-		}
-
-		if(userRepository.findByEmail(request.getEmail()) != null){
-			throw new CustomException("Email " + request.getEmail() + " already exist.");
 		}
 
 		Optional<User> user = userRepository.findById(request.getId());
@@ -99,12 +94,35 @@ public class UserService {
 		friendshipRepository.removeFriendship(String.valueOf(mine_id), String.valueOf(friend_id));
     }
 
-    public List<User> find(String name) {
-		return userRepository.findAllByFirstName(name);
+    public List<User> search(UUID mine_id, String name) {
+		List<User> allUsers = userRepository.findAllByFirstName(name);
+		List<User> usersWhichAreNotFriends = new ArrayList<>();
+
+		for (User u:allUsers) {
+			Friendship friendship = friendshipRepository.isItFriendOfMine(String.valueOf(mine_id), String.valueOf(u.getId()));
+			if(friendship == null)
+				usersWhichAreNotFriends.add(u);
+			else
+				continue;
+		}
+		return usersWhichAreNotFriends;
     }
 
 	public void updatePassword(String newPassword) {
 		//...
 	}
 
+	public User findById(UUID user_id) {
+		return userRepository.findById(user_id).get();
+	}
+
+	public List<Friendship> getFriendshipRequests(UUID mine_id) {
+		return friendshipRepository.getFriendshipRequestsOfMine(String.valueOf(mine_id));
+	}
+
+	public void updateFriendshipRequest(UpdateFriendshipRequestRequest request) {
+		Optional<Friendship> friendship = friendshipRepository.findById(request.getId());
+		copyNonNullProperties(request, friendship.get());
+		friendshipRepository.save(friendship.get());
+	}
 }

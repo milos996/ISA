@@ -1,11 +1,8 @@
 package com.example.ISAums.controller;
 
+import com.example.ISAums.dto.request.*;
+import com.example.ISAums.dto.response.GetFriendshipRequestsResponse;
 import org.springframework.web.bind.annotation.*;
-
-import com.example.ISAums.dto.request.RemoveFriendshipRequest;
-import com.example.ISAums.dto.request.SendFriendshipRequestRequest;
-import com.example.ISAums.dto.request.UpdatePasswordRequest;
-import com.example.ISAums.dto.request.UpdateUserProfileRequest;
 import com.example.ISAums.dto.response.GetUserResponse;
 import com.example.ISAums.dto.response.SendFriendshipRequestResponse;
 import com.example.ISAums.dto.response.UpdateUserProfileResponse;
@@ -15,9 +12,9 @@ import org.springframework.http.ResponseEntity;
 import com.example.ISAums.service.UserService;
 import java.util.List;
 import java.util.UUID;
+import static com.example.ISAums.converter.FriendshipRequestConverter.toGetFriendshipRequestsResponseFromRequests;
 import static com.example.ISAums.converter.FriendshipRequestConverter.toSendFriendshipRequestResponseFromFriendship;
-import static com.example.ISAums.converter.UserConverter.toGetUserResponseFromUsers;
-import static com.example.ISAums.converter.UserConverter.toUpdateUserProfileResponseFromUser;
+import static com.example.ISAums.converter.UserConverter.*;
 
 
 @RestController
@@ -50,16 +47,28 @@ public class UserController {
 		return ResponseEntity.ok(toGetUserResponseFromUsers(friends));
 	}
 
-	@DeleteMapping(value = "/friendship/")
-	public ResponseEntity removeFriendFromListOfFriends(@RequestBody RemoveFriendshipRequest request){
+	@DeleteMapping(value = "/friendship/mineId={mineId}&friendsId={friendsId}")
+	public ResponseEntity removeFriendFromListOfFriends(@PathVariable(name = "mineId") UUID mineId, @PathVariable(name = "friendsId") UUID friendsId){
 
-        userService.removeFriend(request.getMineId(), request.getFriendsId());
+        userService.removeFriend(mineId, friendsId);
 		return ResponseEntity.ok().build();
 	}
 
-	@GetMapping(value = "/find/{name}")
-	public ResponseEntity<List<GetUserResponse>> find(@PathVariable(name = "name") String name){
-		List<User> users = userService.find(name);
+	@PutMapping(value = "/friendship/update")
+	public ResponseEntity updateFriendshipRequest(@RequestBody UpdateFriendshipRequestRequest request){
+		userService.updateFriendshipRequest(request);
+		return ResponseEntity.ok().build();
+	}
+
+	@GetMapping(value = "/friendship/requests/{id}")
+	public ResponseEntity<List<GetFriendshipRequestsResponse>> getRequests(@PathVariable(name = "id") UUID user_id){
+		List<Friendship> requests = userService.getFriendshipRequests(user_id);
+		return ResponseEntity.ok(toGetFriendshipRequestsResponseFromRequests(requests));
+	}
+
+	@GetMapping(value = "/search/mineId={mine_id}&userName={name}")
+	public ResponseEntity<List<GetUserResponse>> find(@PathVariable(name = "mine_id") UUID mine_id, @PathVariable(name = "name") String name){
+		List<User> users = userService.search(mine_id,name);
 		return ResponseEntity.ok(toGetUserResponseFromUsers(users));
 	}
 
@@ -68,5 +77,9 @@ public class UserController {
 		userService.updatePassword(request.getNewPassword());
 		return ResponseEntity.ok().build();
 	}
-
+	@GetMapping(value = "/{id}")
+	public ResponseEntity<GetUserResponse> getUserById(@PathVariable(name = "id") UUID user_id){
+		User user = userService.findById(user_id);
+		return  ResponseEntity.ok(toGetUserResponseFromUser(user));
+	}
 }

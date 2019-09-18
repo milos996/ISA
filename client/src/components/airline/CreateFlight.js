@@ -30,10 +30,13 @@ export default function CreateFlight({ closeModal, airlineId }) {
     length: 0,
     price: 0,
     airlineDestination: {
+      id: "",
       destination: {},
       airline: {}
     },
-    airplane: {}
+    airplane: {
+      id: ""
+    }
   });
 
   const [
@@ -62,7 +65,7 @@ export default function CreateFlight({ closeModal, airlineId }) {
   }, [airlineId]);
 
   function handleSaveButton() {
-    dispatch(saveFlight({ newFlight }));
+    dispatch(saveFlight(newFlight));
     closeModal();
   }
 

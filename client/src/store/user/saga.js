@@ -4,19 +4,21 @@ import {
   LOGIN,
   LOGOUT,
   SAVE_USER_DATA,
-  FETCH_USER_FRIENDS,
   SAVE_NEW_PASSWORD,
-  FETCH_USERS_BY_NAME,
   SEND_FRIENDSHIP_REQUEST,
   REMOVE_FRIEND,
-  FETCH_USERS_THAT_DONT_HAVE_ENTITY
+  FETCH_USERS_THAT_DONT_HAVE_ENTITY,
+  FETCH_USER_DATA,
+  FETCH_FRIENDS_DATA,
+  FETCH_FRIENDSHIP_REQUESTS,
+  UPDATE_FRIENDSHIP_REQUEST
 } from "./constants";
 import {
   putUserData,
   putUserToken,
   putFriendsData,
-  putFoundUsersData,
-  putUsers
+  putUsers,
+  putFriendshipRequests
 } from "./actions";
 import userService from "../../services/api/User";
 import authService from "../../services/api/Auth";
@@ -48,21 +50,9 @@ export function* saveUserData() {
   yield call(userService.saveUser, payload);
 }
 
-export function* fetchListOfFriends() {
-  const { payload } = yield take(FETCH_USER_FRIENDS);
-  const { data } = yield call(userService.fetchFriends, payload.userId);
-  yield put(putFriendsData({ data }));
-}
-
 export function* savePassword() {
   const { payload } = yield take(SAVE_NEW_PASSWORD);
   yield call(userService.savePassword, payload.password, payload.userId);
-}
-
-export function* findByName() {
-  const { payload } = yield take(FETCH_USERS_BY_NAME);
-  const { data } = yield call(userService.fetchByName, payload);
-  yield put(putFoundUsersData({ data }));
 }
 
 export function* sendFriendshipRequest() {
@@ -76,9 +66,7 @@ export function* sendFriendshipRequest() {
 
 export function* removeFriend() {
   const { payload } = yield take(REMOVE_FRIEND);
-  yield call(userService.removeFriend, payload.friendsId);
-  const { data } = yield call(userService.fetchFriends, payload.userId);
-  yield put(putFriendsData({ data }));
+  yield call(userService.removeFriend, payload.userId, payload.friendsId);
 }
 
 export function* fetchUsersWithoutEntity() {
@@ -87,6 +75,29 @@ export function* fetchUsersWithoutEntity() {
   // const { data } = yield call(userService.fetchUsersWithoutEntity);
 
   yield put(putUsers(MOCK_USERS));
+}
+
+export function* fetchUserData() {
+  const { payload } = yield take(FETCH_USER_DATA);
+  const { data } = yield call(userService.fetchUser, payload);
+  yield put(putUserData(data));
+}
+
+export function* fetchFriendsData() {
+  const { payload } = yield take(FETCH_FRIENDS_DATA);
+  const { data } = yield call(userService.fetchFriends, payload);
+  yield put(putFriendsData(data));
+}
+
+export function* fetchFriendshipRequests() {
+  const { payload } = yield take(FETCH_FRIENDSHIP_REQUESTS);
+  const { data } = yield call(userService.fetchFriendshipRequests, payload);
+  yield put(putFriendshipRequests(data));
+}
+
+export function* updateFriendshipRequest() {
+  const { payload } = yield take(UPDATE_FRIENDSHIP_REQUEST);
+  yield call(userService.updateFriendshipRequest, payload);
 }
 
 const MOCK_USERS = [
