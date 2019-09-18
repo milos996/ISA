@@ -27,7 +27,8 @@ import {
 
 export function* saveAirline() {
   const { payload } = yield take(SAVE_AIRLINE_DETAILS);
-  yield call(airlineService.saveAirline, payload);
+  const { data } = yield call(airlineService.saveAirline, payload);
+  yield put(putAirlineDetails(data));
 }
 
 export function* fetchAirlineDetails() {

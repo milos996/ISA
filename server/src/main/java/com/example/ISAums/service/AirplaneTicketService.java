@@ -1,4 +1,5 @@
 package com.example.ISAums.service;
+
 import com.example.ISAums.dto.request.ChooseSeatCoordinatesRequest;
 import com.example.ISAums.dto.request.CreateAirplaneTicketReservationRequest;
 import com.example.ISAums.dto.request.CreateQuickTicketBookingRequest;
@@ -6,13 +7,14 @@ import com.example.ISAums.email_service.EmailServiceImpl;
 import com.example.ISAums.model.*;
 import com.example.ISAums.model.enumeration.GroupTripStatus;
 import com.example.ISAums.repository.*;
+import lombok.RequiredArgsConstructor;
 import lombok.Synchronized;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
 import java.util.*;
 
 @Service
+@RequiredArgsConstructor
 public class AirplaneTicketService {
 
     private final AirplaneTicketRepository airplaneTicketRepository;
@@ -20,17 +22,6 @@ public class AirplaneTicketService {
     private final GroupTripRepository groupTripRepository;
     private final UserRepository userRepository;
     private final EmailServiceImpl emailService;
-
-    public AirplaneTicketService(AirplaneTicketRepository airplaneTicketRepository,
-                                 FlightRepository flightRepository, GroupTripRepository groupTripRepository,
-                                 UserRepository userRepository, EmailServiceImpl emailService){
-
-        this.airplaneTicketRepository = airplaneTicketRepository;
-        this.flightRepository = flightRepository;
-        this.groupTripRepository = groupTripRepository;
-        this.userRepository = userRepository;
-        this.emailService = emailService;
-    }
 
     @Synchronized
     @Transactional(rollbackFor = Exception.class)

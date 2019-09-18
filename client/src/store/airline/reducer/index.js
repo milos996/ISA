@@ -16,7 +16,7 @@ const initialState = {
     address: {
       id: "",
       city: "",
-      country: "",
+      state: "",
       street: "",
       longitude: 0.0,
       latitude: 0.0

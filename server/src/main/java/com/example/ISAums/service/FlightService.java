@@ -2,19 +2,15 @@ package com.example.ISAums.service;
 import com.example.ISAums.dto.request.CreateFlightRequest;
 import com.example.ISAums.dto.request.UpdateFlightRequest;
 import com.example.ISAums.dto.response.GetFlightAverageRatingResponse;
-import com.example.ISAums.dto.response.GetFlightOfAirlineResponse;
 import com.example.ISAums.exception.EntityWithIdDoesNotExist;
 import com.example.ISAums.model.AirlineDestination;
 import com.example.ISAums.model.Flight;
 import com.example.ISAums.model.Airplane;
 import com.example.ISAums.model.enumeration.RatingType;
 import com.example.ISAums.repository.*;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -22,6 +18,7 @@ import java.util.UUID;
 import static com.example.ISAums.util.UtilService.copyNonNullProperties;
 
 @Service
+@RequiredArgsConstructor
 public class FlightService {
 
     private final FlightRepository flightRepository;
@@ -29,23 +26,13 @@ public class FlightService {
     private final AirplaneRepository airplaneRepository;
     private final RatingRepository ratingRepository;
 
-    public FlightService(FlightRepository flightRepository, AirlineDestinationRepository airlineDestinationRepository,
-                         AirplaneRepository airplaneRepository,
-                         RatingRepository ratingRepository){
-
-        this.flightRepository = flightRepository;
-        this.airplaneRepository = airplaneRepository;
-        this.airlineDestinationRepository = airlineDestinationRepository;
-        this.ratingRepository = ratingRepository;
-    }
-
     @Transactional(rollbackFor = Exception.class)
     public Flight createFlight(CreateFlightRequest request) {
 
         Optional<AirlineDestination> airlineDestination = airlineDestinationRepository.findById(request.getAirlineDestination().getId());
         Optional<Airplane> airplane = airplaneRepository.findById(request.getAirplane().getId());
 
-        if(airlineDestination.get() == null){
+     if(airlineDestination.get() == null){
             throw new EntityWithIdDoesNotExist("AirlineDestination", request.getAirlineDestination().getId());
         }
 
@@ -75,7 +62,7 @@ public class FlightService {
 
     public List<Flight> searchFlights(String fromDestinationCity, String toDestinationCity, String departureDate, String arrivalDate) {
 
-        List<UUID> flightIDs = flightRepository.search(fromDestinationCity, toDestinationCity);//, departureLocalDate, arrivalLocalDate
+        List<UUID> flightIDs = flightRepository.search(fromDestinationCity, toDestinationCity);
         List<Flight> flights = new ArrayList<>(flightIDs.size());
 
         for(int i = 0; i < flightIDs.size(); i++){
@@ -167,13 +154,6 @@ public class FlightService {
         flightRepository.save(flight.get());
 
         return flight.get();
-    }
-
-    public AirlineDestination getFlightDestination(String flightId) {
-
-        UUID airlineDestinationId = flightRepository.getFlightDestination(UUID.fromString(flightId));
-        Optional<AirlineDestination> airlineDestination = airlineDestinationRepository.findById(airlineDestinationId);
-        return airlineDestination.get();
     }
 
     public List<Flight> getFlightsOfAirline(UUID airlineId) {

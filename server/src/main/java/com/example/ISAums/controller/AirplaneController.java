@@ -6,10 +6,8 @@ import com.example.ISAums.model.Airplane;
 import com.example.ISAums.service.AirplaneService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
 import java.util.List;
 import java.util.UUID;
-
 import static com.example.ISAums.converter.AirplaneConverter.toGetAirplaneReponseFromAirplane;
 import static com.example.ISAums.converter.AirplaneConverter.toGetAirplaneResponseFromAirplanes;
 
