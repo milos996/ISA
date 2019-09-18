@@ -12,7 +12,7 @@ const ENDPOINTS = {
   EDIT_ROOM: "/rooms/%s",
   DELETE_ROOM: "/rooms/%s",
   HOTELS_WITHOUT_ADMIN: "/hotels/no/admin",
-  FETCH_HOTEL_SERVICES_AND_SERVICES: "/hotel/$s/hotel-services/unselected"
+  FETCH_HOTEL_SERVICES_AND_SERVICES: "/hotels/%s/hotel-services/unselected"
 };
 class HotelService extends HttpBaseClient {
   fetchServices = hotelId => {
@@ -20,10 +20,9 @@ class HotelService extends HttpBaseClient {
   };
 
   saveServices = (hotelId, services) => {
-    return this.getApiClient().put(
-      format(ENDPOINTS.HOTEL_SERVICES, hotelId),
+    return this.getApiClient().put(format(ENDPOINTS.HOTEL_SERVICES, hotelId), {
       services
-    );
+    });
   };
 
   fetchHotelDetails = hotelId => {

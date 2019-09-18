@@ -35,12 +35,13 @@ export function* fetchServices() {
 }
 
 export function* saveServices() {
-  // to be checked
   const { payload } = yield take(SAVE_SERVICES);
 
-  const services = Object.keys(payload.services).map(
-    val => payload.services[val]
-  );
+  const services = Object.keys(payload.services).map(val => {
+    const service = payload.services[val];
+    const { selected, ...restServiceData } = service;
+    return { ...restServiceData };
+  });
 
   yield call(hotelServices.saveServices, payload.hotelId, services);
 
@@ -56,7 +57,6 @@ export function* fetchHotelDetails() {
 }
 
 export function* saveRoomDetails() {
-  // to be checked
   const { payload } = yield take(SAVE_ROOM_DETAILS);
   const { id, ...restData } = payload.roomDetails;
 
@@ -66,7 +66,6 @@ export function* saveRoomDetails() {
 }
 
 export function* deleteRoom() {
-  // to be checked
   const { payload } = yield take(DELETE_ROOM);
 
   yield call(hotelServices.deleteRoom, payload.roomId);
@@ -76,6 +75,7 @@ export function* deleteRoom() {
 
 export function* getHotelLocationOnLatLng() {
   const { payload } = yield take(GET_HOTEL_LOCATION_ON_LAT_LNG);
+  console.log(payload);
 
   const { data } = yield call(
     locationService.getLocationBasedOnLatLong,
@@ -95,8 +95,10 @@ export function* getHotelLocationOnLatLng() {
     })
   );
 }
+
 export function* saveHotelDetails() {
   const { payload } = yield take(SAVE_HOTEL_DETAILS);
+  console.log(payload);
 
   const { id, ...data } = payload;
 
@@ -115,9 +117,8 @@ export function* fetchHotelRooms() {
   const { payload } = yield take(FETCH_HOTEL_ROOMS);
 
   const { data } = yield call(hotelServices.fetchHotelRooms, payload);
-  yield put(putHotelRooms(data));
 
-  yield put(putHotelRooms(MOCK_ROOMS));
+  yield put(putHotelRooms(data));
 }
 
 export function* reserveRooms() {

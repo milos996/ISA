@@ -18,11 +18,11 @@ const App = () => {
     <Switch>
       <Route exact path="/" component={HomePage} />
       <Route exact path="/register" component={RegistrationPage} />
-      <Route
+      <PrivateRoute
         exact
-        path="/user/:id/hotel"
+        path="/user/hotel/:id"
         component={HotelProfilePage}
-        role={"HOTEL_ADMIN"}
+        accessRole="HOTEL_ADMIN"
       />
       <Route exact path="/airlines" component={() => <h1>Airlines</h1>} />
       <Route exact path="/hotels" component={() => <h1>Hotels</h1>} />
