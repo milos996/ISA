@@ -22,9 +22,9 @@ export default function ChooseSeats({ match }) {
   });
 
   const [ticket, setTicket] = useState({
-    userID: "96ab944e-7089-4af8-bc54-4301a58684fe",
+    userID: "96ab9400-7089-4af8-bc54-4301a5868789",
     seats: [],
-    flightID: match.params.id,
+    flightID: match.params.flight_id,
     invitedUsers: null
   });
 

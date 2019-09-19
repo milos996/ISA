@@ -37,12 +37,12 @@ const App = () => {
 
       <Route
         exact
-        path="/ticket-reservation/:id/choose-seat"
+        path="/ticket-reservation/:flight_id/choose-seat"
         component={ChooseSeats}
       />
       <Route
         exact
-        path="/ticket-reservation/:id/choose-seat/search/:requestType"
+        path="/ticket-reservation/:flight_id/choose-seat/search/:requestType"
         component={Search}
       />
       <Route exact path="/rent-a-cars" component={RentACarPage} />
