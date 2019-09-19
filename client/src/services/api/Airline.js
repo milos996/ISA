@@ -10,7 +10,7 @@ const ENDPOINTS = {
 
 class AirlineService extends HttpBaseClient {
   saveAirline = details => {
-    this.getApiClient().put(ENDPOINTS.SAVE_AIRLINE, details);
+    return this.getApiClient().put(ENDPOINTS.SAVE_AIRLINE, details);
   };
 
   fetchAirlineDetails = airlineId => {

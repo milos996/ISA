@@ -7,6 +7,7 @@ import com.example.ISAums.exception.EntityWithIdDoesNotExist;
 import com.example.ISAums.model.Friendship;
 import com.example.ISAums.model.enumeration.InvitationStatus;
 import com.example.ISAums.repository.FriendshipRepository;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import com.example.ISAums.model.User;
 import com.example.ISAums.repository.UserRepository;
@@ -18,16 +19,12 @@ import java.util.UUID;
 import static com.example.ISAums.util.UtilService.copyNonNullProperties;
 
 @Service
+@RequiredArgsConstructor
 public class UserService {
     private final UserRepository userRepository;
 	private final FriendshipRepository friendshipRepository;
 
-	public UserService(UserRepository userRepository, FriendshipRepository friendshipRepository){
-		this.userRepository = userRepository;
-		this.friendshipRepository = friendshipRepository;
-	}
-
-    @Transactional(rollbackFor = Exception.class)
+	@Transactional(rollbackFor = Exception.class)
     public User save(User user) {
         return userRepository.save(user);
     }

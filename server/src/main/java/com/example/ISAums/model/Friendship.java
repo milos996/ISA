@@ -29,5 +29,4 @@ public class Friendship extends BaseEntity {
 	@Column(name = "invitation_status")
 	@Enumerated(EnumType.STRING)
 	private InvitationStatus invitationStatus;
-
 }

@@ -2,7 +2,6 @@ package com.example.ISAums.service;
 
 import com.example.ISAums.dto.request.UpdateAirlineRequest;
 import com.example.ISAums.dto.request.UpdateSeatConfigurationRequest;
-import com.example.ISAums.dto.response.GetAirlineResponse;
 import com.example.ISAums.exception.EntityAlreadyExistsException;
 import com.example.ISAums.exception.EntityWithIdDoesNotExist;
 import com.example.ISAums.model.Address;
@@ -10,7 +9,7 @@ import com.example.ISAums.model.Airline;
 import com.example.ISAums.model.Airplane;
 import com.example.ISAums.model.enumeration.RatingType;
 import com.example.ISAums.repository.*;
-import org.springframework.http.ResponseEntity;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
@@ -19,23 +18,13 @@ import java.util.UUID;
 import static com.example.ISAums.util.UtilService.copyNonNullProperties;
 
 @Service
+@RequiredArgsConstructor
 public class AirlineService {
 
     private final RatingRepository ratingRepository;
     private final AirlineRepository airlineRepository;
     private final AddressRepository addressRepository;
     private final AirplaneRepository airplaneRepository;
-
-    public AirlineService(RatingRepository ratingRepository,
-                          AirlineRepository airlineRepository,
-                          AddressRepository addressRepository,
-                          AirplaneRepository airplaneRepository){
-
-        this.ratingRepository = ratingRepository;
-        this.airlineRepository = airlineRepository;
-        this.addressRepository = addressRepository;
-        this.airplaneRepository = airplaneRepository;
-    }
 
     public Double getAverageRating(UUID airlineId) {
 
@@ -49,7 +38,7 @@ public class AirlineService {
     }
 
     @Transactional(rollbackFor = Exception.class)
-    public void update(UpdateAirlineRequest request){
+    public Airline update(UpdateAirlineRequest request){
 
         Airline tmpAirline = airlineRepository.getAnotherWithThisName(request.getName(), String.valueOf(request.getId()));
 
@@ -69,10 +58,9 @@ public class AirlineService {
         Optional<Airline> airline = airlineRepository.findById(request.getId());
         airline.get().setCheckingInSuitcasePrice(request.getCheckingInSuitcasePrice());
         airline.get().setHandLuggagePrice(request.getHandLuggagePrice());
-
         copyNonNullProperties(request, airline.get(), "address");
 
-        airlineRepository.save(airline.get());
+        return airlineRepository.save(airline.get());
     }
 
     private void updateSeatConfiguration(UpdateSeatConfigurationRequest request, UUID airlineId){
