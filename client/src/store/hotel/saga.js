@@ -98,7 +98,6 @@ export function* getHotelLocationOnLatLng() {
 
 export function* saveHotelDetails() {
   const { payload } = yield take(SAVE_HOTEL_DETAILS);
-  console.log(payload);
 
   const { id, ...data } = payload;
 
@@ -124,8 +123,10 @@ export function* fetchHotelRooms() {
 export function* reserveRooms() {
   // to be checked
   const { payload } = yield take(RESERVE_ROOMS);
+  const { callback, ...restData } = payload;
+  yield call(hotelServices.reserve, restData);
 
-  yield call(hotelServices.reserve, payload);
+  callback();
 }
 
 export function* searchHotelsBasedOnFilters() {

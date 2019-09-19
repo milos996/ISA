@@ -10,7 +10,7 @@ import { putSelectedSeats } from "../../store/airplane_ticket/actions";
 import { Link } from "react-router-dom";
 import { REQUEST_TYPE } from "../../constants/user";
 
-export default function ChooseSeats({ match }) {
+export default function ChooseSeats({ match, history }) {
   const classes = useStyles();
   const dispatch = useDispatch();
   const selectedSeats = useSelector(selectSeats);
@@ -43,7 +43,17 @@ export default function ChooseSeats({ match }) {
 
   function handleReserveButton() {
     ticket.seats = selectedSeats;
-    dispatch(makeTicketReservation(ticket));
+    dispatch(
+      makeTicketReservation({
+        ticket,
+        callback: ticketId => {
+          history.push({
+            pathname: `/hotel-reservation`,
+            state: { airplaneTicketId: ticketId }
+          });
+        }
+      })
+    );
   }
 
   return (
