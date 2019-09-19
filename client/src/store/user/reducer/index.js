@@ -4,6 +4,10 @@ import {
   PUT_FRIENDS_DATA,
   PUT_FOUND_USERS_DATA,
   PUT_USERS,
+  PUT_USER_FLIGHTS_RESERVATION,
+  PUT_USER_HOTELS_RESERVATION,
+  PUT_USER_VEHICLES_RESERVATION,
+  PUT_USER_INVITES,
   PUT_FRIENDSHIP_REQUESTS
 } from "../constants";
 import * as computationFunctions from "./computation-functions";
@@ -160,6 +164,25 @@ const initialState = {
       }
     }
   },
+  foundUsers: [
+    {
+      id: "1",
+      firstname: "Dejan",
+      lastname: "Dejanovic",
+      email: "dejan@gmail.com"
+    },
+    {
+      id: "2",
+      firstname: "Dejan",
+      lastname: "Bojanovic",
+      email: "bojan@gmail.com"
+    }
+  ],
+  users: [],
+  userVehiclesReservation: [],
+  userFlightsReservation: [],
+  userHotelsReservation: [],
+  userInvites: [],
   foundUsers: [],
   users: []
 };
@@ -178,6 +201,12 @@ const actionHandler = {
   [PUT_FRIENDS_DATA]: computationFunctions.putFriendsData,
   [PUT_FOUND_USERS_DATA]: computationFunctions.putFoundUsersData,
   [PUT_USERS]: computationFunctions.putUsers,
+  [PUT_USER_FLIGHTS_RESERVATION]:
+    computationFunctions.putUserFlightsReservation,
+  [PUT_USER_HOTELS_RESERVATION]: computationFunctions.putUserHotelsReservation,
+  [PUT_USER_VEHICLES_RESERVATION]:
+    computationFunctions.putUserVehiclesReservation,
+  [PUT_USER_INVITES]: computationFunctions.putUserInvites,
   [PUT_FRIENDSHIP_REQUESTS]: computationFunctions.putFriendshipRequests
 };
 

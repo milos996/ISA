@@ -2,6 +2,7 @@ package com.example.ISAums.controller;
 
 
 import com.example.ISAums.dto.request.CreateHotelRequest;
+import com.example.ISAums.dto.request.CreateRatingRequest;
 import com.example.ISAums.dto.request.UpdateHotelRequest;
 import com.example.ISAums.dto.response.*;
 import com.example.ISAums.model.Hotel;
@@ -88,6 +89,19 @@ public class HotelController {
         Hotel hotel = hotelService.getHotel(hotelId);
         return ResponseEntity.ok(toGetHotelResponseFromHotel(hotel));
     }
+
+    @PostMapping
+    @RequestMapping("/rating")
+    public ResponseEntity<List<GetHotelResponse>> rating(@RequestBody CreateRatingRequest request) {
+        hotelService.rate(request);
+        return null;
+    }
+
+    @GetMapping("/sort")
+    public ResponseEntity<List<GetHotelResponse>> sort( @RequestParam(name = "by", required = true) String by) {
+        return ResponseEntity.ok(toGetHotelResponseFromHotels(hotelService.sort(by)));
+    }
+
 
     @GetMapping("/{id}/hotel-services/unselected")
     @PreAuthorize("hasAnyAuthority('HOTEL_ADMIN')")

@@ -2,10 +2,7 @@ package com.example.ISAums.converter;
 
 import com.example.ISAums.dto.request.CreateVehicleRequest;
 import com.example.ISAums.dto.request.UpdateVehicleRequest;
-import com.example.ISAums.dto.response.CreateVehicleResponse;
-import com.example.ISAums.dto.response.GetVehicleResponse;
-import com.example.ISAums.dto.response.SearchVehicleResponse;
-import com.example.ISAums.dto.response.UpdateVehicleResponse;
+import com.example.ISAums.dto.response.*;
 import com.example.ISAums.model.Vehicle;
 import com.example.ISAums.service.VehicleService;
 import org.slf4j.Logger;
@@ -83,15 +80,43 @@ public class VehicleConverter {
     }
 
     public static List<SearchVehicleResponse> toSearchVehicleResponseFromVehicles(List<Vehicle> vehicles, String pickUpDate, String dropOffDate) throws ParseException {
+        int days = getNumberOfDays(pickUpDate, dropOffDate);
+
+        return vehicles.stream()
+                .map(vehicle -> toSearchVehicleResponseFromVehicle(vehicle, days))
+                .collect(Collectors.toList());
+    }
+
+    public static GetQuickVehicleResponse toGetQuickVehicleResponseFromVehicle(Vehicle vehicle, int days)  {
+        return GetQuickVehicleResponse
+                .builder()
+                .id(vehicle.getId())
+                .brand(vehicle.getBrand())
+                .model(vehicle.getModel())
+                .numberOfSeats(vehicle.getNumberOfPeople())
+                .rating(vehicle.getRating())
+                .type(vehicle.getType())
+                .yearOfProduction(vehicle.getYearOfProduction())
+                .pricePerDay(vehicle.getPricePerDay() * days)
+                .build();
+    }
+
+    public static List<GetQuickVehicleResponse> toGetQuickVehicleResponseFromVehicles(List<Vehicle> vehicles, String pickUpDate, String dropOffDate) throws ParseException {
+        int days = getNumberOfDays(pickUpDate, dropOffDate);
+
+        return vehicles.stream()
+                .map(vehicle -> toGetQuickVehicleResponseFromVehicle(vehicle, days))
+                .collect(Collectors.toList());
+    }
+
+    private static int getNumberOfDays(String pickUpDate, String dropOffDate) throws ParseException {
         Date pickUp =new SimpleDateFormat("yyyy-mm-dd").parse(pickUpDate);
         Date dropOff =new SimpleDateFormat("yyyy-mm-dd").parse(dropOffDate);
         long diff = dropOff.getTime() - pickUp.getTime();
         float ndays = (diff / (1000*60*60*24));
         int days = (int) ndays + 1;
 
-        return vehicles.stream()
-                .map(vehicle -> toSearchVehicleResponseFromVehicle(vehicle, days))
-                .collect(Collectors.toList());
+        return days;
     }
 
 }

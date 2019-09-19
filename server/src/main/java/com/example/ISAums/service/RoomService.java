@@ -1,36 +1,42 @@
 package com.example.ISAums.service;
 
+import com.example.ISAums.dto.request.CreateRatingRequest;
 import com.example.ISAums.dto.request.CreateRoomRequest;
 import com.example.ISAums.dto.request.UpdateRoomRequest;
 import com.example.ISAums.exception.CustomException;
 import com.example.ISAums.exception.EntityWithIdDoesNotExist;
 import com.example.ISAums.model.HotelAdmin;
+import com.example.ISAums.model.HotelReservation;
+import com.example.ISAums.model.Rating;
 import com.example.ISAums.model.Room;
+import com.example.ISAums.model.enumeration.RatingType;
 import com.example.ISAums.repository.HotelReservationRepository;
+import com.example.ISAums.repository.RatingRepository;
 import com.example.ISAums.repository.RoomRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.validation.Valid;
-import java.math.BigInteger;
 import java.time.LocalDate;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
+import static com.example.ISAums.converter.RatingConverter.toRatingFromCreateRequest;
 import static com.example.ISAums.converter.RoomConverter.toRoomFromRequest;
 import static com.example.ISAums.util.UtilService.copyNonNullProperties;
-import static com.example.ISAums.util.UtilService.getValueIfNotNull;
 
 @Service
 public class RoomService {
     private final RoomRepository roomRepository;
     private final HotelReservationRepository hotelReservationRepository;
+    private final RatingRepository ratingRepository;
 
-    public RoomService(RoomRepository roomRepository, HotelReservationRepository hotelReservationRepository) {
+    public RoomService(RoomRepository roomRepository, HotelReservationRepository hotelReservationRepository, RatingRepository ratingRepository) {
         this.roomRepository = roomRepository;
         this.hotelReservationRepository = hotelReservationRepository;
+        this.ratingRepository = ratingRepository;
     }
 
     @Transactional(readOnly = true)
@@ -92,5 +98,28 @@ public class RoomService {
         return true;
     }
 
+    @Transactional(rollbackFor = Exception.class)
+    public void rate(CreateRatingRequest request) {
+        HotelReservation hotelReservation = hotelReservationRepository.findById(request.getReservationId()).orElse(null);
 
+        if (hotelReservation == null)
+            throw new EntityWithIdDoesNotExist("hotel reservation",request.getReservationId());
+
+//        if (hotelReservation.getEndDate().compareTo(new LocalDate()) >= 0)
+//            throw new CustomException("You did not left hotel yet!");
+
+
+        Room room = hotelReservation.getRoom();
+
+//        if (ratingRepository.checkIfUserAlreadyRateEntity(userId, request.getEntityId(), RatingType.RENT_A_CAR.name()) != null)
+//            throw new CustomException("You already rate this room!");
+
+        Rating rating = toRatingFromCreateRequest(room.getId(), request, RatingType.ROOM);
+//        rating.setUserID(userId);
+        ratingRepository.save(rating);
+
+        room.setRating(ratingRepository.getAverageMarkForEntity(room.getId().toString(), RatingType.ROOM.name()));
+        roomRepository.save(room);
+
+    }
 }

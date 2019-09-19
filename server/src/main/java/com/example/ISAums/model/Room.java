@@ -7,6 +7,8 @@ import org.hibernate.validator.constraints.Range;
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 
+import static com.example.ISAums.util.ValidationConstraints.MAX_RATING;
+
 @Data
 @Builder
 @Entity
@@ -56,5 +58,10 @@ public class Room extends BaseEntity {
     @ManyToOne(fetch = FetchType.EAGER)
     @NotNull
     private Hotel hotel;
+
+    @Column(name = "rating")
+    @Range(min = 0, max = MAX_RATING)
+    private Double rating;
+
 
 }

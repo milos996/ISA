@@ -12,6 +12,7 @@ import com.example.ISAums.model.RentACarLocation;
 import com.example.ISAums.repository.AgencyLocationRepository;
 import com.example.ISAums.repository.RentACarLocationRepository;
 import com.example.ISAums.repository.RentACarRepository;
+import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
@@ -24,18 +25,13 @@ import static com.example.ISAums.converter.RentACarLocationConverter.*;
 
 
 @Service
+@RequiredArgsConstructor
 public class RentACarLocationService {
     private static final Logger logger = LoggerFactory.getLogger(RentACarLocationService.class);
 
     private final RentACarLocationRepository rentACarLocationRepository;
     private final RentACarRepository rentACarRepository;
     private final AgencyLocationRepository agencyLocationRepository;
-
-    public RentACarLocationService(RentACarLocationRepository rentACarLocationRepository, RentACarRepository rentACarRepository, AgencyLocationRepository agencyLocationRepository) {
-        this.rentACarLocationRepository = rentACarLocationRepository;
-        this.rentACarRepository = rentACarRepository;
-        this.agencyLocationRepository = agencyLocationRepository;
-    }
 
     @Transactional(readOnly = true)
     public List<RentACarLocation> findAll() {

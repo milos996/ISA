@@ -1,9 +1,15 @@
 package com.example.ISAums.controller;
 
 import com.example.ISAums.dto.request.CreateHotelReservationsRequest;
+import com.example.ISAums.dto.response.GetHotelReservationResponse;
 import com.example.ISAums.dto.response.StatusResponse;
 import com.example.ISAums.service.HotelReservationService;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
+
+import static com.example.ISAums.converter.HotelReservationConverter.toGetHotelReservationResponseFromHotelReservations;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -27,4 +33,13 @@ public class HotelReservationController {
                 .build());
     }
 
+    @GetMapping("/user")
+    public ResponseEntity<List<GetHotelReservationResponse>> get() {
+        return ResponseEntity.ok(toGetHotelReservationResponseFromHotelReservations(hotelReservationService.get()));
+    }
+
+    @DeleteMapping("{id}")
+    public ResponseEntity<List<GetHotelReservationResponse>> cancel(@PathVariable("id") String hotelReservationId) {
+        return ResponseEntity.ok(toGetHotelReservationResponseFromHotelReservations(hotelReservationService.cancel(hotelReservationId)));
+    }
 }

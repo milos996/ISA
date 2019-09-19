@@ -6,6 +6,7 @@ import NavigationCards from "../components/UI/NavigationCards";
 import plane from "../assets/black-plane.png";
 import building from "../assets/skyline.png";
 import car from "../assets/car.png";
+import HomeAuth from "../pages/HomeAuthUser";
 import { userTokenSelector } from "../store/user/selectors";
 
 export default function HomePage({ history }) {
@@ -13,16 +14,16 @@ export default function HomePage({ history }) {
   const userToken = useSelector(userTokenSelector);
 
   return (
-    <Container classes={{ root: classes.root }}>
-      <NavigationCards
-        image={plane}
-        title="Airlines"
-        description="Check airlines information and their destination flights."
-        cardClick={() => {
-          history.push("/ticket-reservation");
-        }}
-      />
-      {!userToken && (
+    <Container>
+      <Container classes={{ root: classes.root }}>
+        <NavigationCards
+          image={plane}
+          title="Airlines"
+          description="Check airlines information and their destination flights."
+          cardClick={() => {
+            history.push("/ticket-reservation");
+          }}
+        />
         <NavigationCards
           image={building}
           title="Hotels"
@@ -31,15 +32,16 @@ export default function HomePage({ history }) {
             history.push("/hotel-reservation");
           }}
         />
-      )}
-      <NavigationCards
-        image={car}
-        title="Rent A Cars"
-        description="Check rent a car companies and their services."
-        cardClick={() => {
-          history.push("/rent-a-cars");
-        }}
-      />
+        <NavigationCards
+          image={car}
+          title="Rent A Cars"
+          description="Check rent a car companies and their services."
+          cardClick={() => {
+            history.push("/rent-a-cars");
+          }}
+        />
+      </Container>
+      {userToken != null ? <HomeAuth /> : null}
     </Container>
   );
 }
@@ -48,6 +50,10 @@ const useStyles = makeStyles(theme => ({
   root: {
     display: "flex",
     flexDirection: "row"
+  },
+  rootColumn: {
+    display: "flex",
+    flexDirection: "column"
   },
   inputs: {
     display: "flex",

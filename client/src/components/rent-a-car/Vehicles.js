@@ -8,6 +8,7 @@ import Modal from "@material-ui/core/Modal";
 import { Grid } from "@material-ui/core";
 import TextField from "@material-ui/core/TextField";
 import Button from "@material-ui/core/Button";
+import ButtonGroup from "@material-ui/core/ButtonGroup";
 import {
   KeyboardDatePicker,
   MuiPickersUtilsProvider
@@ -18,7 +19,8 @@ import { selectRentACarVehicles } from "../../store/rent-a-car/selectors";
 import RentACarVehicle from "./Vehicle";
 import {
   fetchRentACarVehicles,
-  searchVehicles
+  searchVehicles,
+  sortVehicles
 } from "../../store/rent-a-car/actions";
 import CreateVehicle from "./CreateVehicle";
 
@@ -40,6 +42,8 @@ export default function RentACarVehicles({ rentACarId }) {
     min: 0,
     max: 0
   });
+
+  const [sortBy, setSortBy] = useState();
 
   function closeModal() {
     setCreateModalVisibility(false);
@@ -68,6 +72,22 @@ export default function RentACarVehicles({ rentACarId }) {
         rentACarId
       })
     );
+  }
+
+  function handleSortByBrand() {
+    dispatch(sortVehicles({ by: "brand", rentACarId: rentACarId }));
+  }
+
+  function handleSortByModel() {
+    dispatch(sortVehicles({ by: "model", rentACarId: rentACarId }));
+  }
+
+  function handleSortByYop() {
+    dispatch(sortVehicles({ by: "yearOfProduction", rentACarId: rentACarId }));
+  }
+
+  function handleSortByRating() {
+    dispatch(sortVehicles({ by: "rating", rentACarId: rentACarId }));
   }
 
   return (
@@ -202,6 +222,17 @@ export default function RentACarVehicles({ rentACarId }) {
           </Grid>
         </div>
       </Grid>
+      <ButtonGroup
+        size="small"
+        aria-label="small outlined button group"
+        className={classes.button}
+      >
+        <Button disabled>SORT BY</Button>
+        <Button onClick={handleSortByBrand}>BRAND</Button>
+        <Button onClick={handleSortByModel}>MODEL</Button>
+        <Button onClick={handleSortByYop}>YEAR OF PRODUCTION</Button>
+        <Button onClick={handleSortByRating}>RATING</Button>
+      </ButtonGroup>
       <Box display="flex" p={1} bgcolor="background.paper">
         {Object.keys(vehicles).map(vehicleId => (
           <RentACarVehicle key={vehicleId} vehicle={vehicles[vehicleId]} />

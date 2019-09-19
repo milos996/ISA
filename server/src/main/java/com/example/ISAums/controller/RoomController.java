@@ -1,5 +1,8 @@
 package com.example.ISAums.controller;
 
+import com.example.ISAums.converter.RoomConverter;
+import com.example.ISAums.converter.VehicleConverter;
+import com.example.ISAums.dto.request.CreateRatingRequest;
 import com.example.ISAums.dto.request.CreateRoomRequest;
 import com.example.ISAums.dto.request.UpdateRoomRequest;
 import com.example.ISAums.dto.response.*;
@@ -61,5 +64,12 @@ public class RoomController {
     public ResponseEntity<DeleteRoomResponse> delete(@PathVariable(name = "id") UUID roomId) {
         Boolean isDeleted = roomService.deleteRoom(roomId);
         return ResponseEntity.ok(toDeleteRoomResponseFromDeleteRoomRequest(roomId, isDeleted));
+    }
+
+    @PostMapping
+    @RequestMapping("/rating")
+    public ResponseEntity<List<GetRoomResponse>> rating(@RequestBody CreateRatingRequest request) {
+        roomService.rate(request);
+        return null;
     }
 }

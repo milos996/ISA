@@ -25,3 +25,5 @@ export const FETCH_HOTEL_SERVICE_AND_SERVICES =
   "fetch_hotel_service_and_services";
 export const ADD_NEW_ROOM = "add_new_room";
 export const PUT_NEW_ROOM = "put_new_room";
+export const RATE_HOTEL = "rate_hotel";
+export const RATE_ROOM = "rate_room";
