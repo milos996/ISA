@@ -1,5 +1,6 @@
 package com.example.ISAums.controller;
 
+import com.example.ISAums.dto.request.CreateRatingRequest;
 import com.example.ISAums.dto.request.GetAirlineIncomeRequest;
 import com.example.ISAums.dto.request.UpdateAirlineRequest;
 import com.example.ISAums.dto.response.GetAirlineIncomeResponse;
@@ -11,6 +12,7 @@ import com.example.ISAums.service.AirplaneTicketService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
+
 import java.util.List;
 import java.util.UUID;
 import static com.example.ISAums.converter.AirlineConverter.*;
@@ -64,5 +66,18 @@ public class AirlineController {
         Double averageRating = airlineService.getAverageRating(airlineId);
         return ResponseEntity.ok(toGetAirlineRatingResponseFromRating(averageRating, airlineId));
     }
+
+    @PostMapping
+    @RequestMapping("/rating")
+    public ResponseEntity<GetAirlineAverageRatingResponse> rating(@RequestBody CreateRatingRequest request) {
+        airlineService.rate(request);
+        return null;
+    }
+
+    @GetMapping("/sort")
+    public ResponseEntity<List<GetAirlineResponse>> sort( @RequestParam(name = "by", required = true) String by) {
+        return ResponseEntity.ok(toGetAirlineResponseFromAirlines(airlineService.sort(by)));
+    }
+
 
 }

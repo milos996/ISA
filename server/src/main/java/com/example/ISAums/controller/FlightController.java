@@ -1,5 +1,6 @@
 package com.example.ISAums.controller;
 import com.example.ISAums.dto.request.CreateFlightRequest;
+import com.example.ISAums.dto.request.CreateRatingRequest;
 import com.example.ISAums.dto.request.UpdateFlightRequest;
 import com.example.ISAums.dto.response.*;
 import com.example.ISAums.model.*;
@@ -75,6 +76,13 @@ public class FlightController {
 
         List<AirlineDestination> destinations = flightService.getDestinations(airlineId);
         return ResponseEntity.ok(toGetAirlineDestinationResponseFromDestinations(destinations));
+    }
+
+    @PostMapping
+    @RequestMapping("/rating")
+    public ResponseEntity<GetFlightAverageRatingResponse> rating(@RequestBody CreateRatingRequest request) {
+        flightService.rate(request);
+        return null;
     }
 
 }

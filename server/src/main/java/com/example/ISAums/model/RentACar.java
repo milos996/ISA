@@ -36,10 +36,9 @@ public class RentACar extends BaseEntity {
     private Address address;
 
 
-
-//    @Range(min = 0, max = MAX_RATING)
-//    @Column(name = "rating")
-//    private Double rating;
+    @Range(min = 0, max = MAX_RATING)
+    @Column(name = "rating")
+    private Double rating;
 
 }
 

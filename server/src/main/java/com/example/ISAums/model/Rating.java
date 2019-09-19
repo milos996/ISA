@@ -5,6 +5,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.Type;
 import org.hibernate.annotations.Where;
 import org.hibernate.validator.constraints.Range;
 
@@ -26,6 +27,7 @@ public class Rating extends BaseEntity{
 
     @Column(name = "entity_id")
     @NotNull
+    @Type(type = "uuid-char")
     private UUID entityID;
 
     @Column(name = "entity_type")
@@ -37,5 +39,9 @@ public class Rating extends BaseEntity{
     @Range(min = RATING_MARK_MIN, max = RATING_MARK_MAX)
     private Integer mark;
 
+    @Column(name = "user_id")
+    @NotNull
+    @Type(type = "uuid-char")
+    private UUID userID;
 
 }

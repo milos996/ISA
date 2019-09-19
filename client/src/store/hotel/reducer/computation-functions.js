@@ -118,3 +118,10 @@ export function putRoomDetailsChange(state, { id, data }) {
     ]
   };
 }
+
+export function putNewRoom(state, newRoom) {
+  return {
+    ...state,
+    rooms: [...state.rooms, newRoom]
+  };
+}

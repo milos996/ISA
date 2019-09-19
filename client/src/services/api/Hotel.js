@@ -12,7 +12,9 @@ const ENDPOINTS = {
   EDIT_ROOM: "/rooms/%s",
   DELETE_ROOM: "/rooms/%s",
   HOTELS_WITHOUT_ADMIN: "/hotels/no/admin",
-  FETCH_HOTEL_SERVICES_AND_SERVICES: "/hotels/%s/hotel-services/unselected",
+  FETCH_HOTEL_SERVICES_AND_SERVICES: "/hotel/$s/hotel-services/unselected",
+  ROOM_RATING: "/rooms/rating",
+  HOTEL_RATING: "/hotels/rating",
   HOTEL_RESERVATION: "/hotel-reservations"
 };
 class HotelService extends HttpBaseClient {
@@ -99,6 +101,18 @@ class HotelService extends HttpBaseClient {
     return this.getApiClient().get(
       format(ENDPOINTS.FETCH_HOTEL_SERVICES_AND_SERVICES, hotelId)
     );
+  };
+
+  addNewRoom = room => {
+    return this.getApiClient().post(ENDPOINTS.ROOMS, room);
+  };
+
+  rateRoom = rateData => {
+    return this.getApiClient().post(ENDPOINTS.ROOM_RATING, rateData);
+  };
+
+  rateHotel = rateData => {
+    return this.getApiClient().post(ENDPOINTS.HOTEL_RATING, rateData);
   };
 }
 

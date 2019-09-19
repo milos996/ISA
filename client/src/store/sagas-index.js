@@ -22,7 +22,7 @@ export default function* rootSaga() {
             yield call(saga);
           } catch (e) {
             // TODO: Uncomment when finished with application
-            yield put(putError(e.message));
+            // yield put(putError(e.message));
           }
         }
       })

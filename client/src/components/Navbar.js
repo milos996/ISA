@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { Link } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
 import { makeStyles } from "@material-ui/core/styles";
@@ -10,6 +10,12 @@ import teal from "@material-ui/core/colors/teal";
 import { userTokenSelector, userDataSelector } from "../store/user/selectors";
 import { logoutUser } from "../store/user/actions";
 import { history } from "../index";
+import GroupIcon from "@material-ui/icons/Group";
+import ContactMailIcon from "@material-ui/icons/ContactMail";
+import AccountBoxIcon from "@material-ui/icons/AccountBox";
+import PersonAddSharpIcon from "@material-ui/icons/PersonAddSharp";
+import ExitToAppIcon from "@material-ui/icons/ExitToApp";
+import InputRoundedIcon from "@material-ui/icons/InputRounded";
 const primary = teal[400];
 
 export default function Navbar() {
@@ -17,6 +23,7 @@ export default function Navbar() {
   const userToken = useSelector(userTokenSelector);
   const userData = useSelector(userDataSelector);
   const dispatch = useDispatch();
+  const user = window.localStorage.getItem("userID");
   const handleLogout = () => {
     dispatch(
       logoutUser({
@@ -44,20 +51,36 @@ export default function Navbar() {
           </Typography>
           {userToken ? (
             <div>
-              <Button color="inherit" onClick={handleLogout}>
-                Logout
-              </Button>
-              <Link className="button" to="/user/">
-                <Button color="inherit">Profile</Button>
+              <Link className="button" to={`user/${user}/friends`}>
+                <Button color="inherit">
+                  <GroupIcon></GroupIcon>
+                </Button>
               </Link>
+              <Link className="button" to={`user/${user}/invites`}>
+                <Button color="inherit">
+                  <ContactMailIcon></ContactMailIcon>
+                </Button>
+              </Link>
+              <Link className="button" to={`user/${user}`}>
+                <Button color="inherit">
+                  <AccountBoxIcon></AccountBoxIcon>
+                </Button>
+              </Link>
+              <Button color="inherit" onClick={handleLogout}>
+                <ExitToAppIcon></ExitToAppIcon>
+              </Button>
             </div>
           ) : (
             <div>
-              <Link className="button" to="/register">
-                <Button color="inherit">Register</Button>
+              <Link className="button" to="/register" tooltip="Registration">
+                <Button color="inherit">
+                  <PersonAddSharpIcon></PersonAddSharpIcon>
+                </Button>
               </Link>
               <Link className="button" to="/login">
-                <Button color="inherit">Login</Button>
+                <Button color="inherit">
+                  <InputRoundedIcon></InputRoundedIcon>
+                </Button>
               </Link>
             </div>
           )}

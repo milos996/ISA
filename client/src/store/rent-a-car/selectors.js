@@ -22,6 +22,14 @@ export const selectRentACarVehicles = state => {
   return state[reducer].rentACarVehicles;
 };
 
+export const selectRentACarVehiclesIncome = state => {
+  return state[reducer].rentACarVehiclesIncome;
+};
+
+export const selectRentACarVehiclesBusyness = state => {
+  return state[reducer].rentACarVehiclesBusyness;
+};
+
 export const selectRentACarOffices = state => {
   return state[reducer].rentACarOffices;
 };

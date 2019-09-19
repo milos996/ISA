@@ -1,12 +1,17 @@
 package com.example.ISAums.service;
 
+import com.example.ISAums.dto.request.CreateRatingRequest;
 import com.example.ISAums.dto.request.CreateRentACarRequest;
 import com.example.ISAums.dto.request.UpdateRentACarRequest;
+import com.example.ISAums.dto.response.GetRentACarVehicleBusynessResponse;
+import com.example.ISAums.dto.response.GetRentACarVehicleIncomeResponse;
 import com.example.ISAums.exception.CustomException;
 import com.example.ISAums.exception.EntityAlreadyExistsException;
 import com.example.ISAums.exception.EntityWithIdDoesNotExist;
 import com.example.ISAums.model.*;
+import com.example.ISAums.model.enumeration.RatingType;
 import com.example.ISAums.repository.*;
+import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.security.authentication.AnonymousAuthenticationToken;
@@ -15,29 +20,27 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.Date;
-import java.util.List;
-import java.util.Optional;
-import java.util.UUID;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.*;
 
-import static com.example.ISAums.converter.RentACarConverter.toRentACarFromRequest;
+import static com.example.ISAums.converter.RatingConverter.toRatingFromCreateRequest;
+import static com.example.ISAums.converter.RentACarConverter.*;
 import static com.example.ISAums.util.UtilService.copyNonNullProperties;
 
 
 @Service
+@RequiredArgsConstructor
 public class RentACarService {
     private static final Logger logger = LoggerFactory.getLogger(RentACarService.class);
+
     private final UserRepository userRepository;
     private final RentACarAdminRepository rentACarAdminRepository;
     private final RentACarRepository rentACarRepository;
     private final AddressRepository addressRepository;
-
-    public RentACarService(UserRepository userRepository, RentACarAdminRepository rentACarAdminRepository, RentACarRepository rentACarRepository, AddressRepository addressRepository) {
-        this.userRepository = userRepository;
-        this.rentACarAdminRepository = rentACarAdminRepository;
-        this.rentACarRepository = rentACarRepository;
-        this.addressRepository = addressRepository;
-    }
+    private final VehicleRepository vehicleRepository;
+    private final RatingRepository ratingRepository;
+    private final VehicleReservationRepository vehicleReservationRepository;
 
     @Transactional(readOnly = true)
     public List<RentACar> findAll() {
@@ -150,5 +153,73 @@ public class RentACarService {
             dropOffDate = null;
 
         return rentACarRepository.search(city, state, name, pickUpDate, dropOffDate);
+    }
+
+    @Transactional(readOnly = true)
+    public List<GetRentACarVehicleIncomeResponse> getIncome(String id, String startDate, String endDate) throws ParseException {
+        calculateNumberOfDays(startDate, endDate);
+
+        return vehicleReservationRepository.getIncome(id, startDate, endDate);
+    }
+
+
+    @Transactional(readOnly = true)
+    public List<GetRentACarVehicleBusynessResponse> getBusyness(String id, String startDate, String endDate) throws ParseException {
+        calculateNumberOfDays(startDate, endDate);
+
+        return vehicleReservationRepository.getBusyness(id, startDate, endDate);
+    }
+
+    @Transactional(rollbackFor = Exception.class)
+    public List<Vehicle> rate(CreateRatingRequest request) {
+        VehicleReservation vehicleReservation = vehicleReservationRepository.findById(request.getReservationId()).orElse(null);
+
+        if (vehicleReservation == null)
+            throw new EntityWithIdDoesNotExist("vehicle reservation", request.getReservationId());
+
+        RentACar rentACar = vehicleReservation.getVehicle().getRentACar();
+
+        if (vehicleReservation.getEndDate().compareTo(new Date()) >= 0)
+            throw new CustomException("You did not return vehicle yet!");
+
+        if (ratingRepository.checkIfUserAlreadyRateEntity("1a8591af-7141-4ecf-aee4-a4963b56db31", rentACar.getId().toString(), RatingType.RENT_A_CAR.name()) != null)
+            throw new CustomException("You already rate this rent a car service!");
+
+        Rating rating = toRatingFromCreateRequest(rentACar.getId(), request, RatingType.RENT_A_CAR);
+        rating.setUserID(UUID.fromString("1a8591af-7141-4ecf-aee4-a4963b56db31"));
+        ratingRepository.save(rating);
+
+        rentACar.setRating(ratingRepository.getAverageMarkForEntity(rentACar.getId().toString(), RatingType.RENT_A_CAR.name()));
+        rentACarRepository.save(rentACar);
+
+        return vehicleRepository.findByRentACar_Id(rentACar.getId());
+    }
+
+
+    private int calculateNumberOfDays(String startDate, String endDate) throws ParseException {
+        if (startDate.compareTo(endDate) >= 0)
+            throw new CustomException("Start date must be before end date!");
+
+        Date start = new SimpleDateFormat("yyyy-mm-dd").parse(startDate);
+        Date end = new SimpleDateFormat("yyyy-mm-dd").parse(endDate);
+
+        long diff = end.getTime() - start.getTime();
+        float ndays = (diff / (1000*60*60*24));
+        int days = (int) ndays;
+
+        return days;
+    }
+
+    @Transactional(readOnly = true)
+    public List<RentACar> sort(String by) {
+        if (by.equals("name"))
+            return rentACarRepository.sortByName();
+        else if(by.equals("address"))
+            return rentACarRepository.sortByAddress();
+        else if(by.equals("rating"))
+            return rentACarRepository.sortByRating();
+        else
+            throw  new CustomException("Unknown attribute!");
+
     }
 }

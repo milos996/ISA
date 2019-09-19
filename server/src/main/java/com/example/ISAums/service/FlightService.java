@@ -1,11 +1,11 @@
 package com.example.ISAums.service;
 import com.example.ISAums.dto.request.CreateFlightRequest;
+import com.example.ISAums.dto.request.CreateRatingRequest;
 import com.example.ISAums.dto.request.UpdateFlightRequest;
 import com.example.ISAums.dto.response.GetFlightAverageRatingResponse;
+import com.example.ISAums.exception.CustomException;
 import com.example.ISAums.exception.EntityWithIdDoesNotExist;
-import com.example.ISAums.model.AirlineDestination;
-import com.example.ISAums.model.Flight;
-import com.example.ISAums.model.Airplane;
+import com.example.ISAums.model.*;
 import com.example.ISAums.model.enumeration.RatingType;
 import com.example.ISAums.repository.*;
 import lombok.RequiredArgsConstructor;
@@ -18,6 +18,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
+
+import static com.example.ISAums.converter.RatingConverter.toRatingFromCreateRequest;
 import static com.example.ISAums.util.UtilService.copyNonNullProperties;
 
 @Service
@@ -27,6 +29,7 @@ public class FlightService {
     private final FlightRepository flightRepository;
     private final AirlineDestinationRepository airlineDestinationRepository;
     private final AirplaneRepository airplaneRepository;
+    private final AirplaneTicketRepository airplaneTicketRepository;
     private final RatingRepository ratingRepository;
 
     @Transactional(rollbackFor = Exception.class)
@@ -189,5 +192,25 @@ public class FlightService {
         }
 
         return airlineDestinations;
+    }
+
+    @Transactional(rollbackFor = Exception.class)
+    public void rate(CreateRatingRequest request) {
+        AirplaneTicket airplaneTicket = airplaneTicketRepository.getOne(request.getReservationId());
+
+        if (airplaneTicket == null)
+            throw new EntityWithIdDoesNotExist("airplane ticket",request.getReservationId());
+
+        Flight flight = airplaneTicket.getFlight();
+
+        if (ratingRepository.checkIfUserAlreadyRateEntity("1a8591af-7141-4ecf-aee4-a4963b56db31", request.getReservationId().toString(), RatingType.FLIGHT.name()) != null)
+            throw new CustomException("You already rate this flight!");
+
+        Rating rating = toRatingFromCreateRequest(flight.getId(), request, RatingType.FLIGHT);
+        rating.setUserID(UUID.fromString("1a8591af-7141-4ecf-aee4-a4963b56db31"));
+        ratingRepository.save(rating);
+
+        flight.setRating(ratingRepository.getAverageMarkForEntity(flight.getId().toString(), RatingType.FLIGHT.name()));
+        flightRepository.save(flight);
     }
 }

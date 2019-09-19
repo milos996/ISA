@@ -5,7 +5,10 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.hibernate.validator.constraints.Range;
+
+import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
+import java.util.UUID;
 
 @Builder
 @NoArgsConstructor
@@ -21,25 +24,27 @@ public class CreateRoomRequest {
 
     @NotNull
     @Range(min = 0)
-    private Double priceSummer;
+    private Double summerPrice;
 
 
     @NotNull
     @Range(min = 0)
-    private Double priceWinter;
+    private Double winterPrice;
 
 
     @NotNull
     @Range(min = 0)
-    private Double priceSpring;
+    private Double springPrice;
 
 
     @NotNull
     @Range(min = 0)
-    private Double priceAutumn;
+    private Double autumnPrice;
 
     @NotNull
     @Range(min = 1)
     private Integer numberOfPeople;
 
+    @NotBlank
+    private UUID hotelId;
 }
