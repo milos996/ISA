@@ -13,6 +13,7 @@ import {
   SEARCH_HOTEL_BASED_ON_FILTERS,
   FETCH_HOTELS_WITHOUT_ADMIN,
   FETCH_HOTEL_SERVICE_AND_SERVICES,
+  ADD_NEW_ROOM,
   RATE_HOTEL,
   RATE_ROOM,
   SORT_HOTELS
@@ -24,7 +25,8 @@ import {
   putDeleteRoomWithId,
   putHotels,
   putHotelRooms,
-  putRoomDetailsChange
+  putRoomDetailsChange,
+  putNewRoom
 } from "./actions";
 import hotelServices from "../../services/api/Hotel";
 import locationService from "../../services/LocationService";
@@ -158,6 +160,14 @@ export function* fetchHotelServiceAndServices() {
   );
 
   yield put(putHotelServices(data));
+}
+
+export function* addNewRoom() {
+  const { payload } = yield take(ADD_NEW_ROOM);
+
+  const { data } = yield call(hotelServices.addNewRoom, payload);
+
+  yield put(putNewRoom({ ...payload, id: data.id }));
 }
 
 export function* rateRoom() {

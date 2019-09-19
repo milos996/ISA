@@ -22,6 +22,8 @@ import {
   FETCH_HOTELS_WITHOUT_ADMIN,
   PUT_ROOM_DETAILS_CHANGE,
   FETCH_HOTEL_SERVICE_AND_SERVICES,
+  ADD_NEW_ROOM,
+  PUT_NEW_ROOM,
   RATE_HOTEL,
   RATE_ROOM,
   SORT_HOTELS
@@ -138,6 +140,16 @@ export const putRoomDetailsChange = payload => ({
 
 export const fetchHotelServiceAndService = payload => ({
   type: FETCH_HOTEL_SERVICE_AND_SERVICES,
+  payload
+});
+
+export const addNewRoom = payload => ({
+  type: ADD_NEW_ROOM,
+  payload
+});
+
+export const putNewRoom = payload => ({
+  type: PUT_NEW_ROOM,
   payload
 });
 

@@ -59,6 +59,9 @@ public class Room extends BaseEntity {
     @NotNull
     private Hotel hotel;
 
+    @Version
+    private Integer version;
+
     @Column(name = "rating")
     @Range(min = 0, max = MAX_RATING)
     private Double rating;

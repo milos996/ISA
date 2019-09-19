@@ -5,20 +5,22 @@ import com.example.ISAums.dto.request.CreateRoomRequest;
 import com.example.ISAums.dto.request.UpdateRoomRequest;
 import com.example.ISAums.exception.CustomException;
 import com.example.ISAums.exception.EntityWithIdDoesNotExist;
-import com.example.ISAums.model.HotelAdmin;
+import com.example.ISAums.model.Hotel;
+import com.example.ISAums.model.Room;
+import com.example.ISAums.model.User;
+import com.example.ISAums.repository.HotelRepository;
 import com.example.ISAums.model.HotelReservation;
 import com.example.ISAums.model.Rating;
-import com.example.ISAums.model.Room;
 import com.example.ISAums.model.enumeration.RatingType;
 import com.example.ISAums.repository.HotelReservationRepository;
 import com.example.ISAums.repository.RatingRepository;
 import com.example.ISAums.repository.RoomRepository;
+import com.example.ISAums.repository.UserRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.validation.Valid;
 import java.time.LocalDate;
-import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -31,19 +33,22 @@ import static com.example.ISAums.util.UtilService.copyNonNullProperties;
 public class RoomService {
     private final RoomRepository roomRepository;
     private final HotelReservationRepository hotelReservationRepository;
+    private final HotelRepository hotelRepository;
+    private final UserRepository userRepository;
     private final RatingRepository ratingRepository;
 
-    public RoomService(RoomRepository roomRepository, HotelReservationRepository hotelReservationRepository, RatingRepository ratingRepository) {
+    public RoomService(RoomRepository roomRepository, HotelReservationRepository hotelReservationRepository, HotelRepository hotelRepository, UserRepository userRepository, RatingRepository ratingRepository) {
         this.roomRepository = roomRepository;
         this.hotelReservationRepository = hotelReservationRepository;
+        this.hotelRepository = hotelRepository;
+        this.userRepository = userRepository;
         this.ratingRepository = ratingRepository;
     }
 
     @Transactional(readOnly = true)
     public List<Room> get(UUID hotelId, LocalDate startDate, Integer nights, Integer people, Double fromPrice, Double toPrice) {
         LocalDate endDate = startDate != null ? startDate.plusDays(nights) : null;
-        return this.roomRepository.getRooms(hotelId, people, fromPrice, toPrice);
-//        return this.roomRepository.getRooms(hotelId, startDate, endDate, people, fromPrice, toPrice);
+        return this.roomRepository.getRooms(hotelId, startDate, endDate, people, fromPrice, toPrice);
     }
 
     @Transactional(readOnly = true)
@@ -51,17 +56,25 @@ public class RoomService {
         return roomRepository.findAll();
     }
 
-    // TODO: Use token to get user and his hotel id
     @Transactional(rollbackFor = Exception.class)
-    public Room createRoom(CreateRoomRequest request) {
-
-        // TODO: Delete this line when  authentication gets implemented
-        HotelAdmin user = new HotelAdmin();
-        if (roomRepository.existsByFloorAndNumberAndHotelId(request.getFloor(), request.getNumber(), user.getHotel().getId())) {
+    public Room createRoom(CreateRoomRequest request, UUID userId) {
+        if (roomRepository.existsByFloorAndNumberAndHotelId(request.getFloor(), request.getNumber(), request.getHotelId())) {
             throw new CustomException("Room at this floor " + request.getFloor() + " and with this room number " + request.getNumber() + " already exist!");
         }
 
-        Room room = toRoomFromRequest(request, user.getHotel());
+        Optional<Hotel> optionalHotel = this.hotelRepository.findById(request.getHotelId());
+
+        if (!optionalHotel.isPresent()) {
+            throw  new EntityWithIdDoesNotExist("Hotel", request.getHotelId());
+        }
+
+        Optional<User> user = this.userRepository.findById(userId);
+
+        if (user.get().getHotelAdmin() == null || !optionalHotel.get().getId().equals(user.get().getHotelAdmin().getHotel().getId()) ) {
+            throw new CustomException("Not Hotel of user with id " + userId);
+        }
+
+        Room room = toRoomFromRequest(request, optionalHotel.get());
 
         roomRepository.save(room);
 

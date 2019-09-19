@@ -104,6 +104,10 @@ class HotelService extends HttpBaseClient {
     );
   };
 
+  addNewRoom = room => {
+    return this.getApiClient().post(ENDPOINTS.ROOMS, room);
+  };
+
   rateRoom = rateData => {
     return this.getApiClient().post(ENDPOINTS.ROOM_RATING, rateData);
   };
