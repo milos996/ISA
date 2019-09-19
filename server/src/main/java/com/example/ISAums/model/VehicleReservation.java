@@ -39,4 +39,7 @@ public class VehicleReservation extends BaseEntity {
     @NotNull
     private Vehicle vehicle;
 
+    @Version
+    private Integer version;
+
 }

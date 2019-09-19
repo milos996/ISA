@@ -40,5 +40,8 @@ public class RentACar extends BaseEntity {
     @Column(name = "rating")
     private Double rating;
 
+    @Version
+    private Integer version;
+
 }
 

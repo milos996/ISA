@@ -12,6 +12,4 @@ import java.util.UUID;
 
 @Repository
 public interface DiscountRepository extends JpaRepository<Discount, UUID> {
-
-    List<Discount> quick(String pickUpDate, String dropOffDate);
 }

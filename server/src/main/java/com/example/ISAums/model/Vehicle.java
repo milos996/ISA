@@ -58,4 +58,7 @@ public class Vehicle extends BaseEntity {
     @ManyToOne(fetch = FetchType.LAZY)
     @NotNull
     private RentACar rentACar;
+
+    @Version
+    private Integer version;
 }
