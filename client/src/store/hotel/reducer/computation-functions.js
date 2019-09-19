@@ -12,13 +12,13 @@ export function changeHotelServices(
   state,
   { id = null, price, shouldDelete = false }
 ) {
-  const { [id]: serviceWithId, ...restState } = state.services;
+  const { [id]: serviceWithId } = state.services;
 
   if (shouldDelete) {
     return {
       ...state,
       services: {
-        ...restState,
+        ...state.services,
         [id]: {
           ...serviceWithId,
           selected: false
@@ -30,7 +30,7 @@ export function changeHotelServices(
   return {
     ...state,
     services: {
-      ...restState,
+      ...state.services,
       [id]: {
         ...serviceWithId,
         price
@@ -81,13 +81,13 @@ export function putHotelLocationInformation(state, payload) {
 }
 
 export function deleteRoomWithId(state, roomId) {
-  const { [roomId]: deleteRoom, ...restRooms } = state.rooms;
+  const index = state.rooms.findIndex(val => val.id === roomId);
 
   return {
     ...state,
     rooms: [
-      ...state.rooms.slice(0, roomId),
-      ...state.rooms.slice(roomId + 1, state.rooms.length)
+      ...state.rooms.slice(0, index),
+      ...state.rooms.slice(index + 1, state.rooms.length)
     ]
   };
 }
@@ -107,12 +107,14 @@ export function putHotelRooms(state, rooms) {
 }
 
 export function putRoomDetailsChange(state, { id, data }) {
+  const index = state.rooms.findIndex(val => val.id === id);
+
   return {
     ...state,
     rooms: [
-      ...state.rooms.slice(0, id),
+      ...state.rooms.slice(0, index),
       { ...data, id },
-      ...state.rooms.slice(id + 1, state.rooms.length)
+      ...state.rooms.slice(index + 1, state.rooms.length)
     ]
   };
 }

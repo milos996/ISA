@@ -1,16 +1,20 @@
 package com.example.ISAums.service;
+
+import com.example.ISAums.dto.request.ChooseSeatCoordinatesRequest;
 import com.example.ISAums.dto.request.CreateAirplaneTicketReservationRequest;
 import com.example.ISAums.dto.request.CreateQuickTicketBookingRequest;
 import com.example.ISAums.email_service.EmailServiceImpl;
 import com.example.ISAums.model.*;
 import com.example.ISAums.model.enumeration.GroupTripStatus;
 import com.example.ISAums.repository.*;
+import lombok.RequiredArgsConstructor;
+import lombok.Synchronized;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
 import java.util.*;
 
 @Service
+@RequiredArgsConstructor
 public class AirplaneTicketService {
 
     private final AirplaneTicketRepository airplaneTicketRepository;
@@ -19,41 +23,36 @@ public class AirplaneTicketService {
     private final UserRepository userRepository;
     private final EmailServiceImpl emailService;
 
-    public AirplaneTicketService(AirplaneTicketRepository airplaneTicketRepository,
-                                 FlightRepository flightRepository, GroupTripRepository groupTripRepository,
-                                 UserRepository userRepository, EmailServiceImpl emailService){
-
-        this.airplaneTicketRepository = airplaneTicketRepository;
-        this.flightRepository = flightRepository;
-        this.groupTripRepository = groupTripRepository;
-        this.userRepository = userRepository;
-        this.emailService = emailService;
-    }
-
+    @Synchronized
     @Transactional(rollbackFor = Exception.class)
       public void reservation(CreateAirplaneTicketReservationRequest request){
 
-        boolean [][][]seatConfig = request.getSeatConfiguration();
+        List<ChooseSeatCoordinatesRequest> seats = request.getSeats();
+
         Optional<Flight> flight = flightRepository.findById(request.getFlightID());
         Airplane airplane = flight.get().getAirplane();
 
         int numOfSegments = airplane.getNumberOfSegments();
         int numOfColumns = airplane.getNumberOfColumnsPerSegment();
         int numOfRows = airplane.getNumberOfRows();
-
+        boolean [][][] seatsOfAirplane = initSeatConfigurationOfFlight(flight.get(), numOfSegments, numOfRows, numOfColumns);
+        List<String> coordinatesOfSeats = new ArrayList<>();
         int segment = 0;
         int row = 0;
         int column = 0;
 
-       List<String> coordinatesOfSeats = new ArrayList<>();
+        for(int i = 0 ; i < seats.size(); i++){
+            segment = seats.get(i).getSegmentNumber()-1;
+            row = seats.get(i).getRowNumber()-1;
+            column = seats.get(i).getColumnNumber()-1;
+            if(!seatsOfAirplane[segment][row][column]){
+                seatsOfAirplane[segment][row][column] = true;//flag that indicates that seat is reserved
+                coordinatesOfSeats.add(segment+":"+row+":"+column);
+            }
 
-        for(segment = 0; segment < numOfSegments; segment++) {
-            for (row = 0; row < numOfRows; row++) {
-                for (column = 0; column < numOfColumns; column++) {
-
-                    if(seatConfig[segment][row][column])
-                        coordinatesOfSeats.add(segment+":"+row+":"+column); //saving coordinates of reserved seat
-                }
+            else
+            {  //throw error on front because you can't reserve seat that is already reserved
+                break;
             }
         }
 
@@ -92,7 +91,7 @@ public class AirplaneTicketService {
 
                 UUID userId = request.getInvitedUsers().get(counter);
                 Optional<User> invitedUser = userRepository.findById(userId);
-                emailService.send(userOwner.getEmail(), invitedUser.get().getEmail(), "Trip invitation", "link");
+                emailService.send(userOwner.getEmail(), invitedUser.get().getEmail(), "Trip invitation", "/group-trip-confirmation-page");
 
                 segment_row_column = coordinatesOfSeats.get(counter).split(":");
 
@@ -116,6 +115,7 @@ public class AirplaneTicketService {
         }
 
         airplaneTicketRepository.save(airplaneTicket);
+
     }
 
     public Double getIncome(UUID airlineID, Date startDate, Date endDate) {

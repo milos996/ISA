@@ -14,8 +14,9 @@ import {
 import TextField from "@material-ui/core/TextField";
 import DateFnsUtils from "@date-io/date-fns";
 import { searchHotelsBasedOnFilters } from "../store/hotel/actions";
+import { userTokenSelector } from "../store/user/selectors";
 
-export default function HotelsPage({ history }) {
+export default function HotelsPage({ history, location }) {
   const dispatch = useDispatch();
   const classes = useStyles();
   const hotels = useSelector(selectHotels);
@@ -25,6 +26,7 @@ export default function HotelsPage({ history }) {
   const [hotelName, setHotelName] = useState(null);
   const [startDate, setStartDate] = useState(null);
   const [endDate, setEndDate] = useState(null);
+  const userToken = useSelector(userTokenSelector);
 
   function handleMouseEnter(id) {
     setCurrentLocation(hotels.find(val => val.id === id).address);
@@ -49,6 +51,17 @@ export default function HotelsPage({ history }) {
   return (
     <div className="horizontal-items a-i-fs f-ww">
       <div className="vertical-items a-i-fs f-ww">
+        {userToken && (
+          <Button
+            variant="contained"
+            className={classes.button}
+            onClick={() => {
+              history.push("/");
+            }}
+          >
+            Cancel Reservation
+          </Button>
+        )}
         <div className="vertical-items a-i-fs f-ww">
           <TextField
             required
@@ -128,7 +141,13 @@ export default function HotelsPage({ history }) {
             cardClick={() => {
               history.push({
                 pathname: `/hotel-reservation/${val.id}/rooms`,
-                state: { startDate, endDate }
+                state: {
+                  startDate,
+                  endDate,
+                  airplaneTicketId: location.state
+                    ? location.state.airplaneTicketId
+                    : ""
+                }
               });
             }}
           />

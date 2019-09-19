@@ -10,6 +10,10 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 import static com.example.ISAums.converter.HotelReservationConverter.toGetHotelReservationResponseFromHotelReservations;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping("hotel-reservations")
@@ -22,7 +26,7 @@ public class HotelReservationController {
     }
 
     @PostMapping
-    public ResponseEntity<Object> create(CreateHotelReservationsRequest request) {
+    public ResponseEntity<Object> create(@RequestBody  CreateHotelReservationsRequest request) {
         this.hotelReservationService.create(request);
         return ResponseEntity.ok(StatusResponse.builder()
                 .status("Successfuly create reservations")

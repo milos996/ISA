@@ -1,5 +1,3 @@
-import { createSelector } from "reselect";
-
 const reducer = "userReducer";
 
 export const userDataSelector = state => state[reducer].data;
@@ -14,3 +12,5 @@ export const selectHotelsReservation = state =>
   state[reducer].userHotelsReservation;
 export const selectFlightsReservation = state =>
   state[reducer].userFlightsReservation;
+export const selectFriendshipRequests = state =>
+  state[reducer].friendshipRequests;

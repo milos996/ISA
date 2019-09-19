@@ -9,6 +9,7 @@ import com.example.ISAums.exception.EntityWithIdDoesNotExist;
 import com.example.ISAums.model.*;
 import com.example.ISAums.model.enumeration.RatingType;
 import com.example.ISAums.repository.*;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
@@ -19,6 +20,7 @@ import static com.example.ISAums.converter.RatingConverter.toRatingFromCreateReq
 import static com.example.ISAums.util.UtilService.copyNonNullProperties;
 
 @Service
+@RequiredArgsConstructor
 public class AirlineService {
 
     private final RatingRepository ratingRepository;
@@ -27,22 +29,10 @@ public class AirlineService {
     private final AirplaneRepository airplaneRepository;
     private final AirplaneTicketRepository airplaneTicketRepository;
 
-    public AirlineService(RatingRepository ratingRepository,
-                          AirlineRepository airlineRepository,
-                          AddressRepository addressRepository,
-                          AirplaneRepository airplaneRepository, AirplaneTicketRepository airplaneTicketRepository){
-
-        this.ratingRepository = ratingRepository;
-        this.airlineRepository = airlineRepository;
-        this.addressRepository = addressRepository;
-        this.airplaneRepository = airplaneRepository;
-        this.airplaneTicketRepository = airplaneTicketRepository;
-    }
-
     public Double getAverageRating(UUID airlineId) {
 
         double sum = 0;
-        List<Integer> marks = ratingRepository.getMarksByEntityId(String.valueOf(airlineId), RatingType.AIRLINE);
+        List<Integer> marks = ratingRepository.getMarksByEntityId(String.valueOf(airlineId) , RatingType.AIRLINE.name());
 
         for(int i : marks)
             sum += i;
@@ -51,7 +41,7 @@ public class AirlineService {
     }
 
     @Transactional(rollbackFor = Exception.class)
-    public void update(UpdateAirlineRequest request){
+    public Airline update(UpdateAirlineRequest request){
 
         Airline tmpAirline = airlineRepository.getAnotherWithThisName(request.getName(), String.valueOf(request.getId()));
 
@@ -68,15 +58,12 @@ public class AirlineService {
         copyNonNullProperties(request.getAddress(), address.get());
         addressRepository.save(address.get());
 
-        updateSeatConfiguration(request.getSeatConfiguration(), request.getId());
-
         Optional<Airline> airline = airlineRepository.findById(request.getId());
-        airline.get().setCheckingInSuitcasePrice(request.getPricesRequest().getCheckingInSuitcasePrice());
-        airline.get().setHandLuggagePrice(request.getPricesRequest().getHandLuggagePrice());
+        airline.get().setCheckingInSuitcasePrice(request.getCheckingInSuitcasePrice());
+        airline.get().setHandLuggagePrice(request.getHandLuggagePrice());
+        copyNonNullProperties(request, airline.get(), "address");
 
-        copyNonNullProperties(request, airline.get(), "address", "seatConfiguration", "pricesRequest");
-
-        airlineRepository.save(airline.get());
+        return airlineRepository.save(airline.get());
     }
 
     private void updateSeatConfiguration(UpdateSeatConfigurationRequest request, UUID airlineId){
@@ -118,15 +105,20 @@ public class AirlineService {
     public List<Airline> sort(String by) {
         if (by.equals("name"))
             return airlineRepository.sortByName();
-        else if(by.equals("handLuggage"))
+        else if (by.equals("handLuggage"))
             return airlineRepository.sortByHandLuggagePrice();
-        else if(by.equals("suitcasePrice"))
+        else if (by.equals("suitcasePrice"))
             return airlineRepository.sortBySuitcasePrice();
-        else if(by.equals("rating"))
+        else if (by.equals("rating"))
             return airlineRepository.sortByRating();
-        else if(by.equals("address"))
+        else if (by.equals("address"))
             return airlineRepository.sortByAddress();
         else
-            throw  new CustomException("Unknown attribute!");
+            throw new CustomException("Unknown attribute!");
+
+    }
+
+    public List<Airline> getAll() {
+        return airlineRepository.findAll();
     }
 }

@@ -29,6 +29,9 @@ public class AirlineAdmin extends BaseEntity {
     @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "airline_id")
     private Airline airline;
+
+    @Column(name = "is_first_login")
+    private boolean isFirstLogin;
 }
 
 

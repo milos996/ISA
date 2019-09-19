@@ -25,7 +25,8 @@ import {
   putAirlineFlights,
   putTicketsForFastReservation,
   putAirlineAirplanes,
-  putAirlineRating
+  putAirlineRating,
+  putAirplaneDetails
 } from "./actions";
 
 export function* saveAirline() {
@@ -42,21 +43,6 @@ export function* fetchAirlineDetails() {
   yield put(putAirlineDetails(data));
 }
 
-export function* fetchDestinations() {
-  const { payload } = yield take(FETCH_AIRLINE_DESTINATIONS);
-  const { data } = yield call(
-    flightService.fetchDestinations,
-    payload.airlineId
-  );
-  yield put(putAirlineDestinations(data));
-}
-
-export function* fetchFlights() {
-  const { payload } = yield take(FETCH_AIRLINE_FLIGHTS);
-  const { data } = yield call(flightService.fetchFlights, payload.airlineId);
-  yield put(putAirlineFlights(data));
-}
-
 export function* fetchTicketsForFastReservation() {
   const { payload } = yield take(FETCH_TICKETS_FOR_FAST_RESERVATION);
   const { data } = yield call(
@@ -64,19 +50,6 @@ export function* fetchTicketsForFastReservation() {
     payload.airlineId
   );
   yield put(putTicketsForFastReservation(data));
-}
-
-export function* createFastTicketReservation() {
-  const { payload } = yield take(CREATE_FAST_TICKET_RESERVATION);
-  yield call(
-    airplaneTicketService.createFastTicketReservation,
-    payload.flightId
-  );
-}
-
-export function* saveAirplane() {
-  const { payload } = yield take(SAVE_AIRPLANE_DETAILS);
-  yield call(airplaneService.save, payload);
 }
 
 export function* fetchAirplanes() {
@@ -115,9 +88,46 @@ export function* rateFlight() {
 
 export function* cancelFlight() {
   const { payload } = yield take(CANCEL_FLIGHT);
-  console.log(payload);
   const { data } = yield call(
     reservationService.cancelFlightReservation,
     payload
   );
+}
+
+export function* fetchDestinations() {
+  const { payload } = yield take(FETCH_AIRLINE_DESTINATIONS);
+  const { data } = yield call(
+    flightService.fetchDestinations,
+    payload.airlineId
+  );
+  yield put(putAirlineDestinations(data));
+}
+
+export function* fetchFlights() {
+  const { payload } = yield take(FETCH_AIRLINE_FLIGHTS);
+  const { data } = yield call(flightService.fetchFlights, payload.airlineId);
+  yield put(putAirlineFlights(data));
+}
+
+export function* createFastTicketReservation() {
+  const { payload } = yield take(CREATE_FAST_TICKET_RESERVATION);
+  yield call(
+    airplaneTicketService.createFastTicketReservation,
+    payload.flightId
+  );
+}
+
+export function* saveAirplane() {
+  const { payload } = yield take(SAVE_AIRPLANE_DETAILS);
+  const { data } = yield call(airplaneService.save, payload);
+  yield put(putAirplaneDetails(data));
+}
+
+export function* fetchAirlineAirplanes() {
+  const { payload } = yield take(FETCH_AIRLINE_AIRPLANES);
+  const { data } = yield call(
+    airplaneService.fetchAirplanes,
+    payload.airlineId
+  );
+  yield put(putAirlineAirplanes(data));
 }

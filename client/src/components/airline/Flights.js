@@ -19,10 +19,10 @@ export default function Flights({ airlineId }) {
   const classes = useStyles();
   const flights = useSelector(selectFlights);
   const [columns, setColumns] = useState([
-    { title: "Departure time", field: "departure_time" },
-    { title: "Arrival time", field: "arrival_time" },
+    { title: "Departure date", field: "departure_date" },
+    { title: "Return date", field: "arrival_date" },
     { title: "Duration", field: "duration" },
-    { title: "Length", field: "length" },
+    { title: "Length(km)", field: "length" },
     { title: "Price($)", field: "price" },
     { title: "Destination", field: "destination" }
   ]);
@@ -69,23 +69,15 @@ export default function Flights({ airlineId }) {
             </TableRow>
           </TableHead>
           <TableBody>
-            {flights.map(flight_rating => (
-              <TableRow key={flight_rating.flight.id}>
+            {flights.map(flight => (
+              <TableRow key={flight.id}>
+                <TableCell align="left">{flight.departureTime}</TableCell>
+                <TableCell align="left">{flight.arrivalTime}</TableCell>
+                <TableCell align="left">{flight.duration}</TableCell>
+                <TableCell align="left">{flight.length}</TableCell>
+                <TableCell align="left">{flight.price}</TableCell>
                 <TableCell align="left">
-                  {flight_rating.flight.departureTime}
-                </TableCell>
-                <TableCell align="left">
-                  {flight_rating.flight.arrivalTime}
-                </TableCell>
-                <TableCell align="left">
-                  {flight_rating.flight.duration}
-                </TableCell>
-                <TableCell align="left">
-                  {flight_rating.flight.length}
-                </TableCell>
-                <TableCell align="left">{flight_rating.flight.price}</TableCell>
-                <TableCell align="left">
-                  {flight_rating.flight.airlineDestination.destination.city}
+                  {flight.airlineDestination.destination.city}
                 </TableCell>
               </TableRow>
             ))}

@@ -16,7 +16,8 @@ public class CreateAirplaneTicketReservationRequest {
     @NotNull
     private UUID userID;
 
-    boolean [][][] seatConfiguration;
+    @NotNull
+    private List<ChooseSeatCoordinatesRequest> seats;
 
     @NotNull
     private UUID flightID;

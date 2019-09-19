@@ -6,7 +6,6 @@ import org.hibernate.validator.constraints.Range;
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import java.sql.Time;
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 import static com.example.ISAums.util.ValidationConstraints.MAX_RATING;

@@ -30,10 +30,13 @@ export default function CreateFlight({ closeModal, airlineId }) {
     length: 0,
     price: 0,
     airlineDestination: {
+      id: "",
       destination: {},
       airline: {}
     },
-    airplane: {}
+    airplane: {
+      id: ""
+    }
   });
 
   const [
@@ -62,7 +65,7 @@ export default function CreateFlight({ closeModal, airlineId }) {
   }, [airlineId]);
 
   function handleSaveButton() {
-    dispatch(saveFlight({ newFlight }));
+    dispatch(saveFlight(newFlight));
     closeModal();
   }
 
@@ -104,7 +107,7 @@ export default function CreateFlight({ closeModal, airlineId }) {
       <form className={classes.container} noValidate>
         <TextField
           id="datetime-local"
-          label="Choose departure time"
+          label="Choose departure date"
           type="datetime-local"
           defaultValue="2017-05-24T10:30"
           className={classes.textField}
@@ -122,7 +125,7 @@ export default function CreateFlight({ closeModal, airlineId }) {
       <form className={classes.container} noValidate>
         <TextField
           id="datetime-local"
-          label="Choose arrival time"
+          label="Choose return date"
           type="datetime-local"
           defaultValue="2017-05-24T10:30"
           className={classes.textField}

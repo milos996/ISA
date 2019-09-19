@@ -9,8 +9,10 @@ class HttpBaseClient {
     this.setInterceptor();
   }
 
-  setInterceptor() {
-    this.client.interceptors.request.use(async config => {
+  // setInterceptor() {
+  //   this.client.interceptors.request.use(async config => {
+  setInterceptor = () => {
+    this.client.interceptors.request.use(config => {
       const token = window.localStorage.getItem("token");
 
       if (!!token) {
@@ -21,7 +23,7 @@ class HttpBaseClient {
 
       return config;
     });
-  }
+  };
 
   attachHeaders(headers) {
     Object.assign(this.client.defaults.headers, headers);

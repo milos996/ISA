@@ -7,7 +7,9 @@ const ENDPOINTS = {
   FETCH_TICKETS_FOR_FAST_RESERVATION: "/flights/quickBooking/%s",
   FETCH_DESTINATIONS: "/flights/destinations/%s",
   SAVE_FLIGHT: "/flights",
-  RATE_FLIGHT: "/flights/rating"
+  RATE_FLIGHT: "/flights/rating",
+  SEARCH:
+    "/flights/search/fromDestinationCity=%s&toDestinationCity=%s&departureDate=%s&arrivalDate=%s"
 };
 
 class FlightService extends HttpBaseClient {
@@ -32,7 +34,19 @@ class FlightService extends HttpBaseClient {
   };
 
   rateFlight = rateData => {
-    this.getApiClient().post(ENDPOINTS.RATE_FLIGHT, rateData);
+    return this.getApiClient().post(ENDPOINTS.RATE_FLIGHT, rateData);
+  };
+
+  search = data => {
+    return this.getApiClient().get(
+      format(
+        ENDPOINTS.SEARCH,
+        data.fromDestination,
+        data.toDestination,
+        data.departureDate,
+        data.arrivalDate
+      )
+    );
   };
 }
 

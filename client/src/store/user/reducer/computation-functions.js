@@ -1,10 +1,7 @@
 export function putUserData(state, payload) {
   return {
     ...state,
-    data: {
-      ...state.data,
-      ...payload
-    }
+    data: payload
   };
 }
 
@@ -18,17 +15,14 @@ export function putUserToken(state, payload) {
 export function putFriendsData(state, payload) {
   return {
     ...state,
-    friends: {
-      ...state.friends,
-      ...payload
-    }
+    friends: payload
   };
 }
 
 export function putFoundUsersData(state, payload) {
   return {
     ...state,
-    payload
+    foundUsers: payload
   };
 }
 
@@ -64,5 +58,12 @@ export function putUserFlightsReservation(state, userFlightsReservation) {
   return {
     ...state,
     userFlightsReservation
+  };
+}
+
+export function putFriendshipRequests(state, payload) {
+  return {
+    ...state,
+    friendshipRequests: payload
   };
 }

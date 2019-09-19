@@ -8,9 +8,9 @@ import com.example.ISAums.exception.EntityWithIdDoesNotExist;
 import com.example.ISAums.model.*;
 import com.example.ISAums.model.enumeration.RatingType;
 import com.example.ISAums.repository.*;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -20,6 +20,7 @@ import static com.example.ISAums.converter.RatingConverter.toRatingFromCreateReq
 import static com.example.ISAums.util.UtilService.copyNonNullProperties;
 
 @Service
+@RequiredArgsConstructor
 public class FlightService {
 
     private final FlightRepository flightRepository;
@@ -28,29 +29,18 @@ public class FlightService {
     private final AirplaneTicketRepository airplaneTicketRepository;
     private final RatingRepository ratingRepository;
 
-    public FlightService(FlightRepository flightRepository, AirlineDestinationRepository airlineDestinationRepository,
-                         AirplaneRepository airplaneRepository,
-                         AirplaneTicketRepository airplaneTicketRepository, RatingRepository ratingRepository){
-
-        this.flightRepository = flightRepository;
-        this.airplaneRepository = airplaneRepository;
-        this.airlineDestinationRepository = airlineDestinationRepository;
-        this.airplaneTicketRepository = airplaneTicketRepository;
-        this.ratingRepository = ratingRepository;
-    }
-
     @Transactional(rollbackFor = Exception.class)
     public Flight createFlight(CreateFlightRequest request) {
 
-        Optional<AirlineDestination> airlineDestination = airlineDestinationRepository.findById(request.getAirlineDestinationID());
-        Optional<Airplane> airplane = airplaneRepository.findById(request.getAirplaneID());
+        Optional<AirlineDestination> airlineDestination = airlineDestinationRepository.findById(request.getAirlineDestination().getId());
+        Optional<Airplane> airplane = airplaneRepository.findById(request.getAirplane().getId());
 
-        if(airlineDestination.get() == null){
-            throw new EntityWithIdDoesNotExist("AirlineDestination", request.getAirlineDestinationID());
+     if(airlineDestination.get() == null){
+            throw new EntityWithIdDoesNotExist("AirlineDestination", request.getAirlineDestination().getId());
         }
 
         if(airplane.get() == null){
-            throw new EntityWithIdDoesNotExist("Airplane", request.getAirplaneID());
+            throw new EntityWithIdDoesNotExist("Airplane", request.getAirplane().getId());
         }
 
         Flight flight = Flight.builder()
@@ -73,17 +63,18 @@ public class FlightService {
        return flightRepository.getFlightsForDestination(String.valueOf(destinationId));
     }
 
-    public List<Flight> searchFlights(UUID depAirlineID, UUID  destAirlineID, LocalDate departureTime, LocalDate arrivalTime) {
+    public List<Flight> searchFlights(String fromDestinationCity, String toDestinationCity, String departureDate, String arrivalDate) {
 
-        String departureAirlineID = String.valueOf(depAirlineID);
-        String destinationAirlineID = String.valueOf(destAirlineID);
-
-        List<UUID> flightIDs = flightRepository.search(departureAirlineID, destinationAirlineID, departureTime, arrivalTime);
-        List<Flight> flights = new ArrayList<Flight>(flightIDs.size());
+        List<UUID> flightIDs = flightRepository.search(fromDestinationCity, toDestinationCity);
+        List<Flight> flights = new ArrayList<>(flightIDs.size());
 
         for(int i = 0; i < flightIDs.size(); i++){
-            Optional<Flight> tmp = flightRepository.findById(UUID.fromString(String.valueOf(flightIDs.get(i))));
-            flights.add(tmp.get());
+            Optional<Flight> flight = flightRepository.findById(UUID.fromString(String.valueOf(flightIDs.get(i))));
+            String depDate = flight.get().getDepartureTime().toLocalDate().toString();
+            String arrDate = flight.get().getArrivalTime().toLocalDate().toString();
+
+            if(depDate.equals(departureDate) && arrDate.equals(arrivalDate))
+              flights.add(flight.get());
         }
 
         return flights;
@@ -92,7 +83,7 @@ public class FlightService {
     public Double getAverageRatingOfFlights(UUID flightId) {
 
         double sum = 0;
-        List<Integer> marks = ratingRepository.getMarksByEntityId(String.valueOf(flightId), RatingType.FLIGHT);
+        List<Integer> marks = ratingRepository.getMarksByEntityId(String.valueOf(flightId), RatingType.FLIGHT.name());
 
         for(int i : marks)
             sum += i;
@@ -109,7 +100,14 @@ public class FlightService {
             double rating = getAverageRatingOfFlights(flights.get(i).getId());
 
             GetFlightAverageRatingResponse getFlightAverageRatingResponse = GetFlightAverageRatingResponse.builder()
-                                                                    .flight(flight.get())
+                                                                    .airlineDestination(flight.get().getAirlineDestination())
+                                                                    .airplane(flight.get().getAirplane())
+                                                                    .arrivalTime(flight.get().getArrivalTime().toLocalDate().toString())
+                                                                    .departureTime(flight.get().getDepartureTime().toLocalDate().toString())
+                                                                    .duration(flight.get().getDuration())
+                                                                    .id(flight.get().getId())
+                                                                    .length(flight.get().getLength())
+                                                                    .price(flight.get().getPrice())
                                                                     .avgRating(rating)
                                                                     .build();
             flightWithRatings.add(getFlightAverageRatingResponse);
@@ -120,7 +118,7 @@ public class FlightService {
 
     public List<Flight> getQuickBooking(UUID airlineId) {
 
-        List<UUID> flightIDs = flightRepository.getQuickBookingFlights(airlineId);
+        List<UUID> flightIDs = flightRepository.getQuickBookingFlights(String.valueOf(airlineId));
         List<Flight> flights = new ArrayList<>(flightIDs.size());
         double discount = 10;
         double currentPrice;
@@ -161,16 +159,9 @@ public class FlightService {
         return flight.get();
     }
 
-    public AirlineDestination getFlightDestination(String flightId) {
-
-        UUID airlineDestinationId = flightRepository.getFlightDestination(UUID.fromString(flightId));
-        Optional<AirlineDestination> airlineDestination = airlineDestinationRepository.findById(airlineDestinationId);
-        return airlineDestination.get();
-    }
-
     public List<Flight> getFlightsOfAirline(UUID airlineId) {
 
-        List<UUID> flightIDs = flightRepository.getFlightsByAirlineId(airlineId);
+        List<UUID> flightIDs = flightRepository.getFlightsByAirlineId(String.valueOf(airlineId));
         List<Flight> flights = new ArrayList<>(flightIDs.size());
 
         for(int i = 0; i < flightIDs.size(); i++){
@@ -183,12 +174,13 @@ public class FlightService {
 
     public List<AirlineDestination> getDestinations(UUID airlineId) {
 
-        List<UUID> airlineDestinationIDs = flightRepository.getAirlineDestinations(airlineId);
+        List<UUID> airlineDestinationIDs = flightRepository.getAirlineDestinations(String.valueOf(airlineId));
         List<AirlineDestination> airlineDestinations = new ArrayList<>(airlineDestinationIDs.size());
 
         for(int i = 0; i < airlineDestinationIDs.size(); i++){
             Optional<AirlineDestination> tmp = airlineDestinationRepository.findById(UUID.fromString(String.valueOf(airlineDestinationIDs.get(i))));
-            airlineDestinations.add(tmp.get());
+            if(!airlineDestinations.contains(tmp.get()))
+                airlineDestinations.add(tmp.get());
         }
 
         return airlineDestinations;

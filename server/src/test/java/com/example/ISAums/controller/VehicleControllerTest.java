@@ -76,6 +76,7 @@ class VehicleControllerTest {
     @After
     public void tearDown() throws Exception {
     }
+       // given(vehicleController.getVehicles().getBody()).willReturn(allVehicles);
 
     @Test
     public void getVehicles() throws Exception {

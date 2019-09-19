@@ -14,7 +14,8 @@ const ENDPOINTS = {
   HOTELS_WITHOUT_ADMIN: "/hotels/no/admin",
   FETCH_HOTEL_SERVICES_AND_SERVICES: "/hotel/$s/hotel-services/unselected",
   ROOM_RATING: "/rooms/rating",
-  HOTEL_RATING: "/hotels/rating"
+  HOTEL_RATING: "/hotels/rating",
+  HOTEL_RESERVATION: "/hotel-reservations"
 };
 class HotelService extends HttpBaseClient {
   fetchServices = hotelId => {
@@ -22,10 +23,9 @@ class HotelService extends HttpBaseClient {
   };
 
   saveServices = (hotelId, services) => {
-    return this.getApiClient().put(
-      format(ENDPOINTS.HOTEL_SERVICES, hotelId),
+    return this.getApiClient().put(format(ENDPOINTS.HOTEL_SERVICES, hotelId), {
       services
-    );
+    });
   };
 
   fetchHotelDetails = hotelId => {
@@ -44,8 +44,6 @@ class HotelService extends HttpBaseClient {
   };
 
   saveHotel = (hotelId, newData) => {
-    console.log(hotelId, newData);
-
     return this.getApiClient().put(format(ENDPOINTS.HOTELS, hotelId), newData);
   };
 
@@ -92,9 +90,7 @@ class HotelService extends HttpBaseClient {
   };
 
   reserve = data => {
-    console.log(data);
-
-    return this.getApiClient().post(ENDPOINTS.ROOMS, data);
+    return this.getApiClient().post(ENDPOINTS.HOTEL_RESERVATION, data);
   };
 
   fetchHotelsWithoutAdmin = () => {

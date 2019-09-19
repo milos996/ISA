@@ -6,12 +6,18 @@ const ENDPOINTS = {
   FETCH_FRIENDS: "/users/listOfFriends/%s",
   SAVE_PASSWORD: "/users/password/update/",
   FETCH_BY_NAME: "/users/find/%s",
-  REMOVE_FRIEND: "/users/friendship",
-  FRIENDSHIP: "/users/friedship/%s",
-  USERS_WITHOUT_ENTITY: "/users/no/entity",
+  //REMOVE_FRIEND: "/users/friendship",
+  //FRIENDSHIP: "/users/friedship/%s",
   USER_INVITES: "/users/%s/invites",
   USER_ACCEPT_INVITE: "/users/%s/invites/accept",
-  USER_DECLINE_INVITE: "/users/%s/invites/decline"
+  USER_DECLINE_INVITE: "/users/%s/invites/decline",
+  REMOVE_FRIEND: "/users/friendship/mineId=%s&friendsId=%s",
+  FRIENDSHIP: "/users/friendshipRequest",
+  SEARCH: "/users/search/mineId=%s&userName=%s",
+  USERS_WITHOUT_ENTITY: "/users/no/entity",
+  FETCH: "/users/%s",
+  FRIENDSHIP_REQUESTS: "/users/friendship/requests/%s",
+  UPDATE_FRIENDSHIP_REQUEST: "/users/friendship/update"
 };
 
 class UserService extends HttpBaseClient {
@@ -20,27 +26,29 @@ class UserService extends HttpBaseClient {
   };
 
   fetchFriends = userId => {
-    return this.getApiClient.get(format(ENDPOINTS.FETCH_FRIENDS, userId));
+    return this.getApiClient().get(format(ENDPOINTS.FETCH_FRIENDS, userId));
   };
   //didn't finish on backend
   savePassword = password => {
     return this.getApiClient().put(ENDPOINTS.SAVE_PASSWORD, { password });
   };
 
-  fetchByName = name => {
-    return this.getApiClient().get(format(ENDPOINTS.FETCH_BY_NAME), name);
+  sendFriendshipRequest = (senderUserId, invitedUserId) => {
+    return this.getApiClient().post(ENDPOINTS.FRIENDSHIP, {
+      senderUserId,
+      invitedUserId
+    });
   };
 
-  sendFriendshipRequest = invitedUserId => {
-    return this.getApiClient().post(
-      format(ENDPOINTS.FRIENDSHIP, invitedUserId)
+  removeFriend = (mineId, friendsId) => {
+    return this.getApiClient().delete(
+      format(ENDPOINTS.REMOVE_FRIEND, mineId, friendsId)
     );
   };
 
-  removeFriend = friendsId => {
-    return this.getApiClient().delete(format(ENDPOINTS.FRIENDSHIP, friendsId));
+  searchByName = (mineId, userName) => {
+    return this.getApiClient().get(format(ENDPOINTS.SEARCH, mineId, userName));
   };
-
   fetchUsersWithoutEntity = () => {
     return this.getApiClient().get(ENDPOINTS.USERS_WITHOUT_ENTITY);
   };
@@ -64,6 +72,20 @@ class UserService extends HttpBaseClient {
       format(ENDPOINTS.USER_DECLINE_INVITE, payload.userId),
       payload.inviteId
     );
+  };
+
+  fetchUser = userId => {
+    return this.getApiClient().get(format(ENDPOINTS.FETCH, userId));
+  };
+
+  fetchFriendshipRequests = userId => {
+    return this.getApiClient().get(
+      format(ENDPOINTS.FRIENDSHIP_REQUESTS, userId)
+    );
+  };
+
+  updateFriendshipRequest = friendship => {
+    this.getApiClient().put(ENDPOINTS.UPDATE_FRIENDSHIP_REQUEST, friendship);
   };
 }
 export default new UserService();
