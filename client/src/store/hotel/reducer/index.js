@@ -7,7 +7,8 @@ import {
   PUT_DELETE_ROOM_WITH_ID,
   PUT_HOTELS,
   PUT_HOTEL_ROOMS,
-  PUT_ROOM_DETAILS_CHANGE
+  PUT_ROOM_DETAILS_CHANGE,
+  PUT_NEW_ROOM
 } from "../constants";
 import * as computationFunctions from "./computation-functions";
 
@@ -37,7 +38,8 @@ const actionHandler = {
   [PUT_DELETE_ROOM_WITH_ID]: computationFunctions.deleteRoomWithId,
   [PUT_HOTELS]: computationFunctions.putHotels,
   [PUT_HOTEL_ROOMS]: computationFunctions.putHotelRooms,
-  [PUT_ROOM_DETAILS_CHANGE]: computationFunctions.putRoomDetailsChange
+  [PUT_ROOM_DETAILS_CHANGE]: computationFunctions.putRoomDetailsChange,
+  [PUT_NEW_ROOM]: computationFunctions.putNewRoom
 };
 
 export default hotelReducer;

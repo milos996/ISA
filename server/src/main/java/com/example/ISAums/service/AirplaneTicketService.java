@@ -197,4 +197,9 @@ public class AirplaneTicketService {
 
         return airplaneTicket;
     }
+
+    @Transactional(readOnly = true)
+    public List<AirplaneTicket> getTickets() {
+        return airplaneTicketRepository.findAll();
+    }
 }

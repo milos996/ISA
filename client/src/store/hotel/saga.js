@@ -12,7 +12,10 @@ import {
   RESERVE_ROOMS,
   SEARCH_HOTEL_BASED_ON_FILTERS,
   FETCH_HOTELS_WITHOUT_ADMIN,
-  FETCH_HOTEL_SERVICE_AND_SERVICES
+  FETCH_HOTEL_SERVICE_AND_SERVICES,
+  ADD_NEW_ROOM,
+  RATE_HOTEL,
+  RATE_ROOM
 } from "./constants";
 import {
   putHotelServices,
@@ -21,7 +24,8 @@ import {
   putDeleteRoomWithId,
   putHotels,
   putHotelRooms,
-  putRoomDetailsChange
+  putRoomDetailsChange,
+  putNewRoom
 } from "./actions";
 import hotelServices from "../../services/api/Hotel";
 import locationService from "../../services/LocationService";
@@ -98,7 +102,6 @@ export function* getHotelLocationOnLatLng() {
 
 export function* saveHotelDetails() {
   const { payload } = yield take(SAVE_HOTEL_DETAILS);
-  console.log(payload);
 
   const { id, ...data } = payload;
 
@@ -124,8 +127,10 @@ export function* fetchHotelRooms() {
 export function* reserveRooms() {
   // to be checked
   const { payload } = yield take(RESERVE_ROOMS);
+  const { callback, ...restData } = payload;
+  yield call(hotelServices.reserve, restData);
 
-  yield call(hotelServices.reserve, payload);
+  callback();
 }
 
 export function* searchHotelsBasedOnFilters() {
@@ -154,6 +159,26 @@ export function* fetchHotelServiceAndServices() {
   );
 
   yield put(putHotelServices(data));
+}
+
+export function* addNewRoom() {
+  const { payload } = yield take(ADD_NEW_ROOM);
+
+  const { data } = yield call(hotelServices.addNewRoom, payload);
+
+  yield put(putNewRoom({ ...payload, id: data.id }));
+}
+
+export function* rateRoom() {
+  const { payload } = yield take(RATE_ROOM);
+
+  const { data } = yield call(hotelServices.rateRoom, payload);
+}
+
+export function* rateHotel() {
+  const { payload } = yield take(RATE_HOTEL);
+
+  const { data } = yield call(hotelServices.rateHotel, payload);
 }
 
 const MOCK_ROOMS = [

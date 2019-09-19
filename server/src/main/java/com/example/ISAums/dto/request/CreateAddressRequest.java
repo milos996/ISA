@@ -1,6 +1,7 @@
 package com.example.ISAums.dto.request;
 
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.hibernate.validator.constraints.Range;
@@ -12,6 +13,7 @@ import javax.validation.constraints.Size;
 import static com.example.ISAums.util.ValidationConstraints.*;
 
 
+@Builder
 @Data
 @NoArgsConstructor
 @AllArgsConstructor

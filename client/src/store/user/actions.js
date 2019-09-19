@@ -13,6 +13,17 @@ import {
   SEARCH_USERS,
   FETCH_USERS_THAT_DONT_HAVE_ENTITY,
   PUT_USERS,
+  FETCH_USER_VEHICLES_RESERVATION,
+  PUT_USER_VEHICLES_RESERVATION,
+  FETCH_USER_HOTELS_RESERVATION,
+  PUT_USER_HOTELS_RESERVATION,
+  FETCH_USER_FLIGHTS_RESERVATION,
+  PUT_USER_FLIGHTS_RESERVATION,
+  CHANGE_RENT_A_CAR_ADMIN_PASSWORD,
+  FETCH_USER_INVITES,
+  PUT_USER_INVITES,
+  ACCEPT_INVITE,
+  DECLINE_INVITE,
   FETCH_USER_DATA,
   FETCH_FRIENDS_DATA,
   FETCH_FRIENDSHIP_REQUESTS,
@@ -87,6 +98,61 @@ export const fetchUsersThatDontHaveEntity = payload => ({
 
 export const putUsers = payload => ({
   type: PUT_USERS,
+  payload
+});
+
+export const fetchUserVehiclesReservation = payload => ({
+  type: FETCH_USER_VEHICLES_RESERVATION,
+  payload
+});
+
+export const putUserVehiclesReservation = payload => ({
+  type: PUT_USER_VEHICLES_RESERVATION,
+  payload
+});
+
+export const fetchUserHotelsReservation = payload => ({
+  type: FETCH_USER_HOTELS_RESERVATION,
+  payload
+});
+
+export const putUserHotelsReservation = payload => ({
+  type: PUT_USER_HOTELS_RESERVATION,
+  payload
+});
+
+export const fetchUserFlightsReservation = payload => ({
+  type: FETCH_USER_FLIGHTS_RESERVATION,
+  payload
+});
+
+export const putUserFlightsReservation = payload => ({
+  type: PUT_USER_FLIGHTS_RESERVATION,
+  payload
+});
+
+export const fetchUserInvites = payload => ({
+  type: FETCH_USER_INVITES,
+  payload
+});
+
+export const putUserInvites = payload => ({
+  type: PUT_USER_INVITES,
+  payload
+});
+
+export const acceptInvite = payload => ({
+  type: ACCEPT_INVITE,
+  payload
+});
+
+export const declineInvite = payload => ({
+  type: DECLINE_INVITE,
+  payload
+});
+
+export const changeRentACarAdminPassword = payload => ({
+  type: CHANGE_RENT_A_CAR_ADMIN_PASSWORD,
   payload
 });
 

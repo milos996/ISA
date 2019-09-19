@@ -33,7 +33,7 @@ export default function RentACarVehicle({ vehicle }) {
       info.dropOffLocation === ""
     ) {
       alert(
-        "You need to search for vehicle first!\nSelect 'pickup-dropoff location' and 'pickup-dropoff date'"
+        "You need to search for the vehicle first!\nSelect 'pickup-dropoff location' and 'pickup-dropoff date'"
       );
       return;
     }
@@ -68,21 +68,26 @@ export default function RentACarVehicle({ vehicle }) {
         <Typography variant="h5" component="h2">
           {vehicle.brand}
         </Typography>
-        <Typography className={classes.pos} color="textSecondary">
-          {vehicle.model}
-        </Typography>
+        <Typography color="textSecondary">{vehicle.model}</Typography>
         <Typography variant="body2" component="p">
           <strong>
             {" "}
-            {vehicle.brand} {vehicle.model}.
+            {vehicle.type} {vehicle.brand} {vehicle.model}, from{" "}
+            {vehicle.yearOfProduction}.
           </strong>
-          <br /> Price per day for this vehicle:{" "}
-          <strong>{vehicle.pricePerDay}$</strong>. <br />
+          <div>
+            <br /> Price for this vehicle:{" "}
+            <strong>{vehicle.pricePerDay}$</strong>.
+          </div>
+          <br />
+          For {vehicle.numberOfSeats} people.
+          <br /> Rating: <strong>{vehicle.rating}</strong>
         </Typography>
+        <br />
         {role === "RENT_A_CAR_ADMIN" ? (
           <Typography variant="body2" component="p">
             For update and more information about this vehicle click on{" "}
-            <strong>SEE MORE</strong>
+            <strong>UPDATE</strong>
           </Typography>
         ) : (
           <Typography variant="body2" component="p">
@@ -92,18 +97,20 @@ export default function RentACarVehicle({ vehicle }) {
         )}
       </CardContent>
       <CardActions>
-        <Button size="small" onClick={() => setEditModalVisibility(true)}>
-          See more
-        </Button>
         {role === "RENT_A_CAR_ADMIN" ? (
-          <IconButton
-            aria-label="delete"
-            onClick={() => {
-              setDialogVisibility(true);
-            }}
-          >
-            <DeleteIcon fontSize="small" />
-          </IconButton>
+          <div>
+            <Button size="small" onClick={() => setEditModalVisibility(true)}>
+              UPDATE
+            </Button>
+            <IconButton
+              aria-label="delete"
+              onClick={() => {
+                setDialogVisibility(true);
+              }}
+            >
+              <DeleteIcon fontSize="small" />
+            </IconButton>
+          </div>
         ) : null}
         {role === "USER" ? (
           <Button size="small" onClick={handleReserve}>
@@ -145,11 +152,11 @@ const useStyles = makeStyles(theme => ({
   },
   card: {
     width: 250,
-    height: 250,
+    height: 350,
     marginBottom: 25,
-    marginRight: 10,
-    padding: 5,
-    paddingBottom: 25
+    marginRight: 25,
+    padding: 15,
+    paddingBottom: 15
   },
   bullet: {
     display: "inline-block",

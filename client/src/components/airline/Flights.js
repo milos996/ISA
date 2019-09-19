@@ -19,10 +19,10 @@ export default function Flights({ airlineId }) {
   const classes = useStyles();
   const flights = useSelector(selectFlights);
   const [columns, setColumns] = useState([
-    { title: "Departure time", field: "departure_time" },
-    { title: "Arrival time", field: "arrival_time" },
+    { title: "Departure date", field: "departure_date" },
+    { title: "Return date", field: "arrival_date" },
     { title: "Duration", field: "duration" },
-    { title: "Length", field: "length" },
+    { title: "Length(km)", field: "length" },
     { title: "Price($)", field: "price" },
     { title: "Destination", field: "destination" }
   ]);

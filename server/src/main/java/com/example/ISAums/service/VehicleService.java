@@ -1,15 +1,20 @@
 package com.example.ISAums.service;
 
+import com.example.ISAums.dto.request.CreateRatingRequest;
 import com.example.ISAums.dto.request.CreateRentACarVehicleRequest;
-import com.example.ISAums.dto.request.CreateVehicleRequest;
 import com.example.ISAums.dto.request.UpdateVehicleRequest;
 import com.example.ISAums.exception.CustomException;
-import com.example.ISAums.exception.EntityAlreadyExistsException;
 import com.example.ISAums.exception.EntityWithIdDoesNotExist;
+import com.example.ISAums.model.Rating;
 import com.example.ISAums.model.RentACar;
 import com.example.ISAums.model.Vehicle;
+import com.example.ISAums.model.VehicleReservation;
+import com.example.ISAums.model.enumeration.RatingType;
+import com.example.ISAums.repository.RatingRepository;
 import com.example.ISAums.repository.RentACarRepository;
 import com.example.ISAums.repository.VehicleRepository;
+import com.example.ISAums.repository.VehicleReservationRepository;
+import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
@@ -17,20 +22,18 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.*;
 
-import static com.example.ISAums.util.UtilService.copyNonNullProperties;
+import static com.example.ISAums.converter.RatingConverter.toRatingFromCreateRequest;
 import static com.example.ISAums.converter.VehicleConverter.*;
 
 @Service
+@RequiredArgsConstructor
 public class VehicleService {
     private static final Logger logger = LoggerFactory.getLogger(VehicleService.class);
 
     private final VehicleRepository vehicleRepository;
     private final RentACarRepository rentACarRepository;
-
-    public VehicleService(VehicleRepository vehicleRepository, RentACarRepository rentACarRepository) {
-        this.vehicleRepository = vehicleRepository;
-        this.rentACarRepository = rentACarRepository;
-    }
+    private final RatingRepository ratingRepository;
+    private final VehicleReservationRepository vehicleReservationRepository;
 
     @Transactional(rollbackFor = Exception.class)
     public List<Vehicle> create(CreateRentACarVehicleRequest request) {
@@ -137,6 +140,54 @@ public class VehicleService {
         if (dropOffDate.equals("null"))
             dropOffDate = null;
 
-        return vehicleRepository.search(pickUpDate, dropOffDate, pickUpLocation, dropOffLocation, type, seats, startRange, endRange, cityCount);
+        return vehicleRepository.search(rentACarId, pickUpDate, dropOffDate, pickUpLocation, dropOffLocation, type, seats, startRange, endRange, cityCount);
+    }
+
+    @Transactional(rollbackFor = Exception.class)
+    public List<Vehicle> rate(CreateRatingRequest request) {
+        VehicleReservation vehicleReservation = vehicleReservationRepository.findById(request.getReservationId()).orElse(null);
+
+        if (vehicleReservation == null)
+            throw new EntityWithIdDoesNotExist("vehicle reservation",request.getReservationId());
+
+        if (vehicleReservation.getEndDate().compareTo(new Date()) >= 0)
+            throw new CustomException("You did not return vehicle yet!");
+
+        Vehicle vehicle = vehicleReservation.getVehicle();
+
+        if (vehicle == null)
+            throw new EntityWithIdDoesNotExist("vehicle", vehicleReservation.getVehicle().getId());
+
+        if (ratingRepository.checkIfUserAlreadyRateEntity("1a8591af-7141-4ecf-aee4-a4963b56db31", vehicle.getId().toString(), RatingType.VEHICLE.name()) != null)
+            throw new CustomException("You already rate this vehicle!");
+
+        Rating rating = toRatingFromCreateRequest(vehicle.getId(), request, RatingType.VEHICLE);
+        rating.setUserID(UUID.fromString("1a8591af-7141-4ecf-aee4-a4963b56db31"));
+        ratingRepository.save(rating);
+
+        vehicle.setRating(ratingRepository.getAverageMarkForEntity(vehicle.getId().toString(), RatingType.VEHICLE.name()));
+        vehicleRepository.save(vehicle);
+
+        return vehicleRepository.findByRentACar_Id(vehicle.getRentACar().getId());
+    }
+
+    @Transactional(readOnly = true)
+    public List<Vehicle> sort(String by, String rentACarId) {
+        if (by.equals("brand"))
+            return vehicleRepository.sortByBrand(rentACarId);
+        else if(by.equals("model"))
+            return vehicleRepository.sortByModel(rentACarId);
+        else if(by.equals("rating"))
+            return vehicleRepository.sortByRating(rentACarId);
+        else if(by.equals("yearOfProduction"))
+            return vehicleRepository.sortByYearOfProduction(rentACarId);
+        else
+            throw  new CustomException("Unknown attribute!");
+
+    }
+
+    @Transactional(readOnly = true)
+    public List<Vehicle> getQuick(String pickUpDate, String dropOffDate) {
+        return null;
     }
 }

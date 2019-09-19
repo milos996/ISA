@@ -12,13 +12,13 @@ export function changeHotelServices(
   state,
   { id = null, price, shouldDelete = false }
 ) {
-  const { [id]: serviceWithId, ...restState } = state.services;
+  const { [id]: serviceWithId } = state.services;
 
   if (shouldDelete) {
     return {
       ...state,
       services: {
-        ...restState,
+        ...state.services,
         [id]: {
           ...serviceWithId,
           selected: false
@@ -30,7 +30,7 @@ export function changeHotelServices(
   return {
     ...state,
     services: {
-      ...restState,
+      ...state.services,
       [id]: {
         ...serviceWithId,
         price
@@ -116,5 +116,12 @@ export function putRoomDetailsChange(state, { id, data }) {
       { ...data, id },
       ...state.rooms.slice(index + 1, state.rooms.length)
     ]
+  };
+}
+
+export function putNewRoom(state, newRoom) {
+  return {
+    ...state,
+    rooms: [...state.rooms, newRoom]
   };
 }

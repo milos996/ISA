@@ -10,7 +10,7 @@ import { putSelectedSeats } from "../../store/airplane_ticket/actions";
 import { Link } from "react-router-dom";
 import { REQUEST_TYPE } from "../../constants/user";
 
-export default function ChooseSeats({ match }) {
+export default function ChooseSeats({ match, history }) {
   const classes = useStyles();
   const dispatch = useDispatch();
   const selectedSeats = useSelector(selectSeats);
@@ -22,9 +22,9 @@ export default function ChooseSeats({ match }) {
   });
 
   const [ticket, setTicket] = useState({
-    userID: "96ab944e-7089-4af8-bc54-4301a58684fe",
+    userID: "96ab9400-7089-4af8-bc54-4301a5868789",
     seats: [],
-    flightID: match.params.id,
+    flightID: match.params.flight_id,
     invitedUsers: null
   });
 
@@ -43,7 +43,17 @@ export default function ChooseSeats({ match }) {
 
   function handleReserveButton() {
     ticket.seats = selectedSeats;
-    dispatch(makeTicketReservation(ticket));
+    dispatch(
+      makeTicketReservation({
+        ticket,
+        callback: ticketId => {
+          history.push({
+            pathname: `/hotel-reservation`,
+            state: { airplaneTicketId: ticketId }
+          });
+        }
+      })
+    );
   }
 
   return (
@@ -113,7 +123,7 @@ export default function ChooseSeats({ match }) {
         <Link
           to={
             "/ticket-reservation/" +
-            match.params.id +
+            match.params.flight_id +
             "/choose-seat" +
             "/search/" +
             REQUEST_TYPE.GROUP_TRIP

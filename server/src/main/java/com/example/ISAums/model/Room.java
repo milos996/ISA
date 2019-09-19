@@ -7,6 +7,8 @@ import org.hibernate.validator.constraints.Range;
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 
+import static com.example.ISAums.util.ValidationConstraints.MAX_RATING;
+
 @Data
 @Builder
 @Entity
@@ -59,4 +61,10 @@ public class Room extends BaseEntity {
 
     @Version
     private Integer version;
+
+    @Column(name = "rating")
+    @Range(min = 0, max = MAX_RATING)
+    private Double rating;
+
+
 }

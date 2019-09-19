@@ -62,4 +62,12 @@ public class HotelReservationService {
 
     }
 
+    public List<HotelReservation> get() {
+        return hotelReservationRepository.findAll();
+    }
+
+    public List<HotelReservation> cancel(String hotelReservationId) {
+
+        return hotelReservationRepository.findAll();
+    }
 }

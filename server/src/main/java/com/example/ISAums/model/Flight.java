@@ -8,6 +8,8 @@ import javax.validation.constraints.NotNull;
 import java.sql.Time;
 import java.time.LocalDateTime;
 
+import static com.example.ISAums.util.ValidationConstraints.MAX_RATING;
+
 @Data
 @Builder
 @Entity
@@ -47,5 +49,11 @@ public class Flight extends BaseEntity {
   @JoinColumn(name = "airplane_id")
   @NotNull
   private Airplane airplane;
+
+  @Column(name = "rating")
+  @Range(min = 0, max = MAX_RATING)
+  private Double rating;
+
+
 }
 

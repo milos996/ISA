@@ -9,8 +9,8 @@ import { putError } from "./common/actions";
 
 export default function* rootSaga() {
   let sagas = flatten(
-    [userSaga, hotelSaga, airplaneTicketSaga, airlineSaga, rentACarSaga].map(saga =>
-      Object.keys(saga).map(sagaFunctionName => saga[sagaFunctionName])
+    [userSaga, hotelSaga, airplaneTicketSaga, airlineSaga, rentACarSaga].map(
+      saga => Object.keys(saga).map(sagaFunctionName => saga[sagaFunctionName])
     )
   );
 

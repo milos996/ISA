@@ -1,5 +1,6 @@
 package com.example.ISAums.service;
 
+import com.example.ISAums.dto.request.CreateRatingRequest;
 import com.example.ISAums.dto.request.CreateRoomRequest;
 import com.example.ISAums.dto.request.UpdateRoomRequest;
 import com.example.ISAums.exception.CustomException;
@@ -8,7 +9,11 @@ import com.example.ISAums.model.Hotel;
 import com.example.ISAums.model.Room;
 import com.example.ISAums.model.User;
 import com.example.ISAums.repository.HotelRepository;
+import com.example.ISAums.model.HotelReservation;
+import com.example.ISAums.model.Rating;
+import com.example.ISAums.model.enumeration.RatingType;
 import com.example.ISAums.repository.HotelReservationRepository;
+import com.example.ISAums.repository.RatingRepository;
 import com.example.ISAums.repository.RoomRepository;
 import com.example.ISAums.repository.UserRepository;
 import org.springframework.stereotype.Service;
@@ -20,6 +25,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
+import static com.example.ISAums.converter.RatingConverter.toRatingFromCreateRequest;
 import static com.example.ISAums.converter.RoomConverter.toRoomFromRequest;
 import static com.example.ISAums.util.UtilService.copyNonNullProperties;
 
@@ -29,12 +35,14 @@ public class RoomService {
     private final HotelReservationRepository hotelReservationRepository;
     private final HotelRepository hotelRepository;
     private final UserRepository userRepository;
+    private final RatingRepository ratingRepository;
 
-    public RoomService(RoomRepository roomRepository, HotelReservationRepository hotelReservationRepository, HotelRepository hotelRepository, UserRepository userRepository) {
+    public RoomService(RoomRepository roomRepository, HotelReservationRepository hotelReservationRepository, HotelRepository hotelRepository, UserRepository userRepository, RatingRepository ratingRepository) {
         this.roomRepository = roomRepository;
         this.hotelReservationRepository = hotelReservationRepository;
         this.hotelRepository = hotelRepository;
         this.userRepository = userRepository;
+        this.ratingRepository = ratingRepository;
     }
 
     @Transactional(readOnly = true)
@@ -103,5 +111,28 @@ public class RoomService {
         return true;
     }
 
+    @Transactional(rollbackFor = Exception.class)
+    public void rate(CreateRatingRequest request) {
+        HotelReservation hotelReservation = hotelReservationRepository.findById(request.getReservationId()).orElse(null);
 
+        if (hotelReservation == null)
+            throw new EntityWithIdDoesNotExist("hotel reservation",request.getReservationId());
+
+//        if (hotelReservation.getEndDate().compareTo(new LocalDate()) >= 0)
+//            throw new CustomException("You did not left hotel yet!");
+
+
+        Room room = hotelReservation.getRoom();
+
+//        if (ratingRepository.checkIfUserAlreadyRateEntity(userId, request.getEntityId(), RatingType.RENT_A_CAR.name()) != null)
+//            throw new CustomException("You already rate this room!");
+
+        Rating rating = toRatingFromCreateRequest(room.getId(), request, RatingType.ROOM);
+//        rating.setUserID(userId);
+        ratingRepository.save(rating);
+
+        room.setRating(ratingRepository.getAverageMarkForEntity(room.getId().toString(), RatingType.ROOM.name()));
+        roomRepository.save(room);
+
+    }
 }
