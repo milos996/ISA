@@ -100,6 +100,10 @@ class HotelService extends HttpBaseClient {
       format(ENDPOINTS.FETCH_HOTEL_SERVICES_AND_SERVICES, hotelId)
     );
   };
+
+  addNewRoom = room => {
+    return this.getApiClient().post(ENDPOINTS.ROOMS, room);
+  };
 }
 
 function formDataForChangeService(services) {
