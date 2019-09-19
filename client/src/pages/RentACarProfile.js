@@ -1,9 +1,9 @@
 import React from "react";
+import { useSelector } from "react-redux";
 import RentACarVehicles from "../components/rent-a-car/Vehicles";
 import RentACarInformation from "../components/rent-a-car/Information";
 import Container from "@material-ui/core/Container";
 import RentACarOffices from "../components/rent-a-car/Offices";
-import Typography from "@material-ui/core/Typography";
 import { makeStyles } from "@material-ui/core/styles";
 
 export default function RentACarProfilePage({ match }) {

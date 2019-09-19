@@ -47,7 +47,6 @@ export function* login() {
   const { data } = yield call(authService.login, payload);
   yield put(putUserToken(data.token));
   yield put(putUserData(data));
-  payload.callback();
 }
 
 export function* logout() {
@@ -55,7 +54,6 @@ export function* logout() {
   window.localStorage.clear();
   yield put(putUserToken(null));
   yield put(putUserData(null));
-  payload.callback();
 }
 
 export function* saveUserData() {

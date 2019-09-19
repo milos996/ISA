@@ -114,7 +114,12 @@ export default function Busyness({ closeModal }) {
           // tickFormat specifies how ticks should be displayed
           tickFormat={x => `${x}`}
         />
-        <VictoryBar data={rentACar} x="vehicle" y="busyness" />
+        <VictoryBar
+          data={rentACar}
+          x="vehicle"
+          y="busyness"
+          style={{ data: { fill: "#008080" } }}
+        />
       </VictoryChart>
     </Container>
   );
@@ -146,7 +151,8 @@ const useStyles = makeStyles(theme => ({
   button: {
     margin: theme.spacing(1),
     width: "30%",
-    marginLeft: "auto"
+    marginLeft: "auto",
+    background: "#008080"
   },
   formControl: {
     margin: theme.spacing(1),

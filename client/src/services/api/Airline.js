@@ -7,7 +7,8 @@ const ENDPOINTS = {
   //FETCH_RATING: "/airlines/averageRating/%s",
   RATE_AIRLINE: "/airlines/rating",
   FETCH_RATING: "/airlines/airline/%s/average-rating",
-  FETCH_AIRLINES: "/airlines/all"
+  FETCH_AIRLINES: "/airlines/all",
+  SORT_AIRLINES: "/airlines/sort?by=%s"
 };
 
 class AirlineService extends HttpBaseClient {
@@ -31,6 +32,10 @@ class AirlineService extends HttpBaseClient {
 
   fetchAirlines = () => {
     return this.getApiClient().get(ENDPOINTS.FETCH_AIRLINES);
+  };
+
+  sortAirlines = payload => {
+    return this.getApiClient().get(format(ENDPOINTS.SORT_AIRLINES, payload.by));
   };
 }
 

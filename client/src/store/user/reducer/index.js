@@ -14,7 +14,7 @@ import * as computationFunctions from "./computation-functions";
 
 const initialState = {
   data: {
-    id: "",
+    id: window.localStorage.getItem("userID"),
     firstName: "",
     lastName: "",
     email: "",

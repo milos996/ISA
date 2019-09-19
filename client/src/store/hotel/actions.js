@@ -23,7 +23,8 @@ import {
   PUT_ROOM_DETAILS_CHANGE,
   FETCH_HOTEL_SERVICE_AND_SERVICES,
   RATE_HOTEL,
-  RATE_ROOM
+  RATE_ROOM,
+  SORT_HOTELS
 } from "./constants";
 
 export const putHotelDetails = payload => ({
@@ -147,5 +148,10 @@ export const rateHotel = payload => ({
 
 export const rateRoom = payload => ({
   type: RATE_ROOM,
+  payload
+});
+
+export const sortHotels = payload => ({
+  type: SORT_HOTELS,
   payload
 });

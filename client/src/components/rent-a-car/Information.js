@@ -9,7 +9,8 @@ import img from "../../assets/car.png";
 import { fetchRentACarDetails } from "../../store/rent-a-car/actions";
 import {
   selectRentACarDetails,
-  selectRentACarLocationInformation
+  selectRentACarLocationInformation,
+  selectRentACars
 } from "../../store/rent-a-car/selectors";
 import ISAMap from "../hotel/ISAMap";
 import RentACarOffices from "./Offices";
@@ -23,9 +24,9 @@ export default function RentACarInformation({ rentACarId }) {
 
   const [officesModalVisibility, setOfficesModalVisibility] = useState(false);
 
-  useEffect(() => {
-    dispatch(fetchRentACarDetails({ rentACarId }));
-  }, [rentACarId]);
+  // useEffect(() => {
+  //   dispatch(fetchRentACarDetails({ rentACarId }));
+  // }, [rentACarId]);
 
   function closeModal() {
     setOfficesModalVisibility(false);
@@ -46,12 +47,10 @@ export default function RentACarInformation({ rentACarId }) {
         </Modal>
         <Grid item xs={4}>
           <Grid item xs={6}>
-            <div class="container">
-              <div class="row">
-                <Typography variant="h5" component="h2" class="mt-4">
-                  {rentACar.name}
-                </Typography>
-              </div>
+            <div>
+              <Typography variant="h5" component="h2">
+                {rentACar.name}
+              </Typography>
             </div>
           </Grid>
           <Grid item xs={6}>

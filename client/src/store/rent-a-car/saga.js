@@ -106,7 +106,7 @@ export function* deleteRentACar() {
 
 export function* fetchRentACarDetails() {
   const { payload } = yield take(FETCH_RENT_A_CAR_DETAILS);
-  const { data } = yield call(rentACarService.fetchRentACarDetails, payload.id);
+  const { data } = yield call(rentACarService.fetchRentACarDetails, payload);
   yield put(putRentACarDetails(data));
 }
 

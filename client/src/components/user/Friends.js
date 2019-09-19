@@ -1,6 +1,9 @@
 import React, { useState, useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
-import { selectUserFriends } from "../../store/user/selectors";
+import {
+  selectUserFriends,
+  userDataSelector
+} from "../../store/user/selectors";
 import { fetchFriendsData, removeFriend } from "../../store/user/actions";
 import Button from "@material-ui/core/Button";
 import Container from "@material-ui/core/Container";
@@ -8,6 +11,7 @@ import makeStyles from "@material-ui/core/styles/makeStyles";
 
 export default function Friends({ userId }) {
   const userFriends = useSelector(selectUserFriends);
+  const user = useSelector(userDataSelector);
   const dispatch = useDispatch();
   const classes = useStyles();
 
@@ -21,7 +25,7 @@ export default function Friends({ userId }) {
   }
 
   useEffect(() => {
-    dispatch(fetchFriendsData(userId));
+    dispatch(fetchFriendsData(user.id));
   });
 
   return (

@@ -26,3 +26,4 @@ export const FETCH_HOTEL_SERVICE_AND_SERVICES =
 
 export const RATE_HOTEL = "rate_hotel";
 export const RATE_ROOM = "rate_room";
+export const SORT_HOTELS = "sort_hotels";

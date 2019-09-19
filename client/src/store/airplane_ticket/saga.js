@@ -5,7 +5,8 @@ import {
   FETCH_AIRLINES,
   DO_SEARCH,
   MAKE_TICKET_RESERVATION,
-  PUT_SELECTED_SEATS
+  PUT_SELECTED_SEATS,
+  SORT_AIRLINES
 } from "./constants";
 import { SEARCH_USERS } from "../../store/user/constants";
 import userService from "../../services/api/User";
@@ -43,4 +44,10 @@ export function* searchUsers() {
     payload.name
   );
   yield put(putFoundUsersData(data));
+}
+
+export function* sortAirlines() {
+  const { payload } = yield take(SORT_AIRLINES);
+  const { data } = yield call(airlineService.sortAirlines, payload);
+  yield put(putAirlines(data));
 }

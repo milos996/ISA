@@ -4,7 +4,8 @@ import {
   DO_SEARCH,
   PUT_SEARCH_RESULTS,
   MAKE_TICKET_RESERVATION,
-  PUT_SELECTED_SEATS
+  PUT_SELECTED_SEATS,
+  SORT_AIRLINES
 } from "./constants";
 
 export const fetchAirlines = payload => ({
@@ -34,5 +35,10 @@ export const makeTicketReservation = payload => ({
 
 export const putSelectedSeats = payload => ({
   type: PUT_SELECTED_SEATS,
+  payload
+});
+
+export const sortAirlines = payload => ({
+  type: SORT_AIRLINES,
   payload
 });

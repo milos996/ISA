@@ -15,7 +15,8 @@ const ENDPOINTS = {
   FETCH_HOTEL_SERVICES_AND_SERVICES: "/hotel/$s/hotel-services/unselected",
   ROOM_RATING: "/rooms/rating",
   HOTEL_RATING: "/hotels/rating",
-  HOTEL_RESERVATION: "/hotel-reservations"
+  HOTEL_RESERVATION: "/hotel-reservations",
+  HOTELS_SORT: "/hotels/sort?by=%s"
 };
 class HotelService extends HttpBaseClient {
   fetchServices = hotelId => {
@@ -109,6 +110,10 @@ class HotelService extends HttpBaseClient {
 
   rateHotel = rateData => {
     return this.getApiClient().post(ENDPOINTS.HOTEL_RATING, rateData);
+  };
+
+  sortHotels = payload => {
+    return this.getApiClient().get(format(ENDPOINTS.HOTELS_SORT, payload.by));
   };
 }
 

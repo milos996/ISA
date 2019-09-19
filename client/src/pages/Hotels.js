@@ -7,13 +7,14 @@ import building from "../assets/skyline.png";
 import NavigationCards from "../components/UI/NavigationCards";
 import ISAMap from "../components/hotel/ISAMap";
 import Button from "@material-ui/core/Button";
+import ButtonGroup from "@material-ui/core/ButtonGroup";
 import {
   KeyboardDatePicker,
   MuiPickersUtilsProvider
 } from "@material-ui/pickers";
 import TextField from "@material-ui/core/TextField";
 import DateFnsUtils from "@date-io/date-fns";
-import { searchHotelsBasedOnFilters } from "../store/hotel/actions";
+import { searchHotelsBasedOnFilters, sortHotels } from "../store/hotel/actions";
 import { userTokenSelector } from "../store/user/selectors";
 
 export default function HotelsPage({ history, location }) {
@@ -42,6 +43,18 @@ export default function HotelsPage({ history, location }) {
         country
       })
     );
+  }
+
+  function handleSortByName() {
+    dispatch(sortHotels({ by: "name" }));
+  }
+
+  function handleSortByAddress() {
+    dispatch(sortHotels({ by: "address" }));
+  }
+
+  function handleSortByRating() {
+    dispatch(sortHotels({ by: "rating" }));
   }
 
   useEffect(() => {
@@ -128,6 +141,16 @@ export default function HotelsPage({ history, location }) {
           >
             Search
           </Button>
+          <ButtonGroup
+            size="small"
+            aria-label="small outlined button group"
+            className={classes.button}
+          >
+            <Button disabled>SORT BY</Button>
+            <Button onClick={handleSortByName}>NAME</Button>
+            <Button onClick={handleSortByAddress}>ADDRESS</Button>
+            <Button onClick={handleSortByRating}>RATING</Button>
+          </ButtonGroup>
         </div>
         {hotels.map(val => (
           <NavigationCards

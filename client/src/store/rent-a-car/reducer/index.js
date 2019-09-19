@@ -58,19 +58,7 @@ const initialState = {
     }
   ],
   rentACarOffices: {},
-  rentACar: [
-    {
-      id: "12312",
-      description: "ponvolasdjas",
-      address: {
-        street: "Ulica",
-        city: "Beograd",
-        country: "Srbija",
-        long: 19.8335,
-        lat: 45.2671
-      }
-    }
-  ],
+  rentACar: {},
   vehicleSearchInformation: {
     pickUpDate: "",
     dropOffDate: "",

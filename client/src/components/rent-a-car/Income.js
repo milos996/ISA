@@ -107,7 +107,7 @@ export default function Income({ closeModal }) {
         <VictoryAxis
           // tickValues specifies both the number of ticks and where
           // they are placed on the axis
-          tickValues={[1, 2, 3, 4, 5]}
+          tickValues={[1, 2, 3, 4, 5, 6, 7, 8, 9, 10]}
         />
         <VictoryAxis
           dependentAxis

@@ -66,9 +66,9 @@ class RentACarService extends HttpBaseClient {
     );
   };
 
-  fetchRentACarDetails = rentACarId => {
+  fetchRentACarDetails = payload => {
     return this.getApiClient().get(
-      format(ENDPOINTS.RENT_A_CAR_DETAILS, rentACarId)
+      format(ENDPOINTS.RENT_A_CAR_DETAILS, payload.id)
     );
   };
 

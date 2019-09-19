@@ -22,7 +22,7 @@ export default function Navbar() {
   const classes = useStyles();
   const userToken = useSelector(userTokenSelector);
   const dispatch = useDispatch();
-  const user = window.localStorage.getItem("userID");
+  const user = useSelector(userDataSelector);
   const handleLogout = () => {
     dispatch(
       logoutUser({
@@ -50,17 +50,17 @@ export default function Navbar() {
           </Typography>
           {userToken ? (
             <div>
-              <Link className="button" to={`user/${user}/friends`}>
+              <Link className="button" to={`/user/${user.id}/friends`}>
                 <Button color="inherit">
                   <GroupIcon></GroupIcon>
                 </Button>
               </Link>
-              <Link className="button" to={`user/${user}/invites`}>
+              <Link className="button" to={`/user/${user.id}/invites`}>
                 <Button color="inherit">
                   <ContactMailIcon></ContactMailIcon>
                 </Button>
               </Link>
-              <Link className="button" to={`user/${user}`}>
+              <Link className="button" to={`/user/${user.id}`}>
                 <Button color="inherit">
                   <AccountBoxIcon></AccountBoxIcon>
                 </Button>

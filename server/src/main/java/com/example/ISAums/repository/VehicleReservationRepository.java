@@ -2,6 +2,7 @@ package com.example.ISAums.repository;
 
 import com.example.ISAums.dto.response.GetRentACarVehicleBusynessResponse;
 import com.example.ISAums.dto.response.GetRentACarVehicleIncomeResponse;
+import com.example.ISAums.model.Vehicle;
 import com.example.ISAums.model.VehicleReservation;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -32,4 +33,8 @@ public interface VehicleReservationRepository extends JpaRepository<VehicleReser
                   "GROUP BY v.id ", nativeQuery = true)
     List<GetRentACarVehicleBusynessResponse> getBusyness(String rentACarId, String startDate, String endDate);
 
+    @Query(value= "SELECT * FROM vehice_reservation as vr " +
+                  "WHERE vr.vehicle_id = :vid " +
+                  "AND vr.end_date >= :endDate" ,nativeQuery = true)
+    List<Vehicle> isReserved(String vid, String endDate);
 }

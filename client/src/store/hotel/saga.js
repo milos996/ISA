@@ -14,7 +14,8 @@ import {
   FETCH_HOTELS_WITHOUT_ADMIN,
   FETCH_HOTEL_SERVICE_AND_SERVICES,
   RATE_HOTEL,
-  RATE_ROOM
+  RATE_ROOM,
+  SORT_HOTELS
 } from "./constants";
 import {
   putHotelServices,
@@ -169,6 +170,14 @@ export function* rateHotel() {
   const { payload } = yield take(RATE_HOTEL);
 
   const { data } = yield call(hotelServices.rateHotel, payload);
+}
+
+export function* sortHotels() {
+  const { payload } = yield take(SORT_HOTELS);
+
+  const { data } = yield call(hotelServices.sortHotels, payload);
+
+  yield put(putHotels(data));
 }
 
 const MOCK_ROOMS = [

@@ -20,6 +20,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.text.SimpleDateFormat;
 import java.util.*;
 
 import static com.example.ISAums.converter.RatingConverter.toRatingFromCreateRequest;
@@ -93,9 +94,18 @@ public class VehicleService {
     public List<Vehicle> delete(UUID vehicleId) {
         Vehicle vehicle = vehicleRepository.findById(vehicleId).orElse(null);
 
-        UUID rentACarId = vehicle.getRentACar().getId();
         if(vehicle == null)
             throw new EntityWithIdDoesNotExist("Vehicle", vehicleId);
+
+        Date date = new Date();
+        String endDate = formatDate(date);
+
+        List<Vehicle> reserved = vehicleReservationRepository.isReserved(vehicleId.toString(), endDate);
+
+        if (reserved.size() != 0)
+            throw new CustomException("Vehicle with id '" + vehicleId + "' is still reserved!");
+
+        UUID rentACarId = vehicle.getRentACar().getId();
 
         vehicleRepository.delete(vehicle);
 
@@ -189,5 +199,10 @@ public class VehicleService {
     @Transactional(readOnly = true)
     public List<Vehicle> getQuick(String pickUpDate, String dropOffDate) {
         return null;
+    }
+
+    private String formatDate(Date date) {
+        SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
+        return formatter.format(date);
     }
 }

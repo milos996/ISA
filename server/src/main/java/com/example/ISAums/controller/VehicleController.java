@@ -55,7 +55,6 @@ public class VehicleController {
         return ResponseEntity.ok(toUpdateVehicleResponseFromVehicle(vehicleService.update(request)));
     }
 
-    //TODO is vehicle reserved?
     @DeleteMapping
     @RequestMapping("/{id}")
     public ResponseEntity<List<GetVehicleResponse>> delete(@PathVariable(name = "id") UUID vehicleId) {
