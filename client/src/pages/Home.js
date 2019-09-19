@@ -5,35 +5,41 @@ import NavigationCards from "../components/UI/NavigationCards";
 import plane from "../assets/black-plane.png";
 import building from "../assets/skyline.png";
 import car from "../assets/car.png";
+import HomeAuth from "./HomeAuthUser";
 
 export default function HomePage({ history }) {
   const classes = useStyles();
+  const role = window.localStorage.getItem("role");
   return (
-    <Container classes={{ root: classes.root }}>
-      <NavigationCards
-        image={plane}
-        title="Airlines"
-        description="Check airlines information and their destination flights."
-        cardClick={() => {
-          history.push("/airlines");
-        }}
-      />
-      <NavigationCards
-        image={building}
-        title="Hotels"
-        description="Check hotels information and their rooms and prices."
-        cardClick={() => {
-          history.push("/hotel-reservation");
-        }}
-      />
-      <NavigationCards
-        image={car}
-        title="Rent A Cars"
-        description="Check rent a car companies and their services."
-        cardClick={() => {
-          history.push("/rent-a-cars");
-        }}
-      />
+    <Container classes={{ root: classes.rootColumn }}>
+      <Container classes={{ root: classes.root }}>
+        <NavigationCards
+          image={plane}
+          title="Airlines"
+          description="Check airlines information and their destination flights."
+          cardClick={() => {
+            history.push("/airlines");
+          }}
+        />
+        <NavigationCards
+          image={building}
+          title="Hotels"
+          description="Check hotels information and their rooms and prices."
+          cardClick={() => {
+            history.push("/hotel-reservation");
+          }}
+        />
+        <NavigationCards
+          image={car}
+          title="Rent A Cars"
+          description="Check rent a car companies and their services."
+          cardClick={() => {
+            history.push("/rent-a-cars");
+          }}
+        />
+      </Container>
+      {/* {role === "USER" ? <HomeAuth /> : null} */}
+      <HomeAuth />
     </Container>
   );
 }
@@ -42,6 +48,10 @@ const useStyles = makeStyles(theme => ({
   root: {
     display: "flex",
     flexDirection: "row"
+  },
+  rootColumn: {
+    display: "flex",
+    flexDirection: "column"
   },
   inputs: {
     display: "flex",

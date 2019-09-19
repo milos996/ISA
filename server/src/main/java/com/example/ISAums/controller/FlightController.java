@@ -90,4 +90,11 @@ public class FlightController {
         return ResponseEntity.ok(toGetAirlineDestinationResponseFromDestinations(destinations));
     }
 
+    @PostMapping
+    @RequestMapping("/rating")
+    public ResponseEntity<GetFlightAverageRatingResponse> rating(@RequestBody CreateRatingRequest request) {
+        flightService.rate(request);
+        return null;
+    }
+
 }

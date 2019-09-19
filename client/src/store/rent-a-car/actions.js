@@ -4,6 +4,12 @@ import {
   PUT_RENT_A_CARS,
   DELETE_RENT_A_CAR,
   SEARCH_RENT_A_CARS,
+  SORT_RENT_A_CARS,
+  RATE_RENT_A_CAR,
+  SHOW_RENT_A_CAR_INCOME,
+  PUT_RENT_A_CAR_INCOME,
+  SHOW_RENT_A_CAR_BUSYNESS,
+  PUT_RENT_A_CAR_BUSYNESS,
   SAVE_RENT_A_CAR_DETAILS,
   FETCH_RENT_A_CAR_LOCATION_INFORMATION,
   PUT_RENT_A_CAR_LOCATION_INFORMATION,
@@ -25,8 +31,11 @@ import {
   FETCH_VEHICLES,
   PUT_VEHICLES,
   SEARCH_VEHICLES,
+  SORT_VEHICLES,
   PUT_VEHICLE_SEARCH_INFORMATION,
-  CREATE_VEHICLE_RESERVATION
+  RATE_VEHICLE,
+  CREATE_VEHICLE_RESERVATION,
+  CANCEL_VEHICLE_RESERVATION
 } from "./constants";
 
 export const fetchRentACars = payload => ({
@@ -51,6 +60,36 @@ export const putRentACars = payload => ({
 
 export const searchRentACars = payload => ({
   type: SEARCH_RENT_A_CARS,
+  payload
+});
+
+export const sortRentACars = payload => ({
+  type: SORT_RENT_A_CARS,
+  payload
+});
+
+export const rateRentACar = payload => ({
+  type: RATE_RENT_A_CAR,
+  payload
+});
+
+export const showRentACarIncome = payload => ({
+  type: SHOW_RENT_A_CAR_INCOME,
+  payload
+});
+
+export const putRentACarIncome = payload => ({
+  type: PUT_RENT_A_CAR_INCOME,
+  payload
+});
+
+export const showRentACarBusyness = payload => ({
+  type: SHOW_RENT_A_CAR_BUSYNESS,
+  payload
+});
+
+export const putRentACarBusyness = payload => ({
+  type: PUT_RENT_A_CAR_BUSYNESS,
   payload
 });
 
@@ -134,6 +173,16 @@ export const searchVehicles = payload => ({
   payload
 });
 
+export const sortVehicles = payload => ({
+  type: SORT_VEHICLES,
+  payload
+});
+
+export const rateVehicle = payload => ({
+  type: RATE_VEHICLE,
+  payload
+});
+
 export const createRentACarVehicle = payload => ({
   type: CREATE_VEHICLE,
   payload
@@ -166,5 +215,10 @@ export const putSearchInformation = payload => ({
 
 export const createVehicleReservation = payload => ({
   type: CREATE_VEHICLE_RESERVATION,
+  payload
+});
+
+export const cancelVehicleReservation = payload => ({
+  type: CANCEL_VEHICLE_RESERVATION,
   payload
 });

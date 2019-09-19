@@ -38,3 +38,31 @@ export function putUsers(state, users) {
     users
   };
 }
+
+export function putUserInvites(state, userInvites) {
+  return {
+    ...state,
+    userInvites
+  };
+}
+
+export function putUserVehiclesReservation(state, userVehiclesReservation) {
+  return {
+    ...state,
+    userVehiclesReservation
+  };
+}
+
+export function putUserHotelsReservation(state, userHotelsReservation) {
+  return {
+    ...state,
+    userHotelsReservation
+  };
+}
+
+export function putUserFlightsReservation(state, userFlightsReservation) {
+  return {
+    ...state,
+    userFlightsReservation
+  };
+}

@@ -6,7 +6,6 @@ export function putRentACars(state, rentACars) {
 }
 
 export function putCreatedRentACarVehicle(state, rentACarVehicle) {
-  const { data } = state["rentACarReducer"].rentACarVehicles;
   return {
     ...state,
     rentACarVehicle
@@ -31,6 +30,20 @@ export function putRentACarVehicles(state, rentACarVehicles) {
   return {
     ...state,
     rentACarVehicles
+  };
+}
+
+export function putRentACarVehiclesIncome(state, rentACarVehiclesIncome) {
+  return {
+    ...state,
+    rentACarVehiclesIncome
+  };
+}
+
+export function putRentACarVehiclesBusyness(state, rentACarVehiclesBusyness) {
+  return {
+    ...state,
+    rentACarVehiclesBusyness
   };
 }
 

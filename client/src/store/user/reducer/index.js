@@ -3,7 +3,11 @@ import {
   PUT_USER_TOKEN,
   PUT_FRIENDS_DATA,
   PUT_FOUND_USERS_DATA,
-  PUT_USERS
+  PUT_USERS,
+  PUT_USER_FLIGHTS_RESERVATION,
+  PUT_USER_HOTELS_RESERVATION,
+  PUT_USER_VEHICLES_RESERVATION,
+  PUT_USER_INVITES
 } from "../constants";
 import * as computationFunctions from "./computation-functions";
 
@@ -156,7 +160,11 @@ const initialState = {
       email: "bojan@gmail.com"
     }
   ],
-  users: []
+  users: [],
+  userVehiclesReservation: [],
+  userFlightsReservation: [],
+  userHotelsReservation: [],
+  userInvites: []
 };
 
 const userReducer = (state = initialState, { type, payload }) => {
@@ -172,7 +180,13 @@ const actionHandler = {
   [PUT_USER_TOKEN]: computationFunctions.putUserToken,
   [PUT_FRIENDS_DATA]: computationFunctions.putFriendsData,
   [PUT_FOUND_USERS_DATA]: computationFunctions.putFoundUsersData,
-  [PUT_USERS]: computationFunctions.putUsers
+  [PUT_USERS]: computationFunctions.putUsers,
+  [PUT_USER_FLIGHTS_RESERVATION]:
+    computationFunctions.putUserFlightsReservation,
+  [PUT_USER_HOTELS_RESERVATION]: computationFunctions.putUserHotelsReservation,
+  [PUT_USER_VEHICLES_RESERVATION]:
+    computationFunctions.putUserVehiclesReservation,
+  [PUT_USER_INVITES]: computationFunctions.putUserInvites
 };
 
 export default userReducer;

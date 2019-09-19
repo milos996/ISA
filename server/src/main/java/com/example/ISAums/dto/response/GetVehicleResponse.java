@@ -10,7 +10,7 @@ import java.util.UUID;
 @NoArgsConstructor
 @AllArgsConstructor
 public class GetVehicleResponse {
-    private  UUID id;
+    private UUID id;
 
     private String brand;
 
@@ -25,5 +25,7 @@ public class GetVehicleResponse {
     private Double rating;
 
     private Double pricePerDay;
+
+    private String rentACar;
 
 }

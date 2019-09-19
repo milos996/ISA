@@ -14,3 +14,16 @@ export const REMOVE_FRIEND = "remove_friend";
 export const FETCH_USERS_THAT_DONT_HAVE_ENTITY =
   "fetch_users_that_dont_have_entity";
 export const PUT_USERS = "put_users";
+export const FETCH_USER_VEHICLES_RESERVATION =
+  "fetch_user_vehicles_reservation";
+export const PUT_USER_VEHICLES_RESERVATION = "put_user_vehicles_reservation";
+export const FETCH_USER_HOTELS_RESERVATION = "fetch_user_hotels_reservation";
+export const PUT_USER_HOTELS_RESERVATION = "put_user_hotels_reservation";
+export const FETCH_USER_FLIGHTS_RESERVATION = "fetch_user_flights_reservation";
+export const PUT_USER_FLIGHTS_RESERVATION = "put_user_flights_reservation";
+export const CHANGE_RENT_A_CAR_ADMIN_PASSWORD =
+  "change_rent_a_car_admin_password";
+export const FETCH_USER_INVITES = "fetch_user_invites";
+export const PUT_USER_INVITES = "put_user_invites";
+export const ACCEPT_INVITE = "accept_invite";
+export const DECLINE_INVITE = "decline_invite";

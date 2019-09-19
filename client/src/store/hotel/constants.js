@@ -23,3 +23,6 @@ export const FETCH_HOTELS_WITHOUT_ADMIN = "fetch_hotels_without_admin";
 export const PUT_ROOM_DETAILS_CHANGE = "put_room_details_change";
 export const FETCH_HOTEL_SERVICE_AND_SERVICES =
   "fetch_hotel_service_and_services";
+
+export const RATE_HOTEL = "rate_hotel";
+export const RATE_ROOM = "rate_room";

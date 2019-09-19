@@ -8,7 +8,9 @@ import {
   PUT_VEHICLE_SEARCH_INFORMATION,
   PUT_VEHICLE_DETAILS,
   PUT_CREATED_RENT_A_CAR_VEHICLE,
-  PUT_DELETE_VEHICLE_WITH_ID
+  PUT_DELETE_VEHICLE_WITH_ID,
+  PUT_RENT_A_CAR_INCOME,
+  PUT_RENT_A_CAR_BUSYNESS
 } from "../constants";
 import * as computationFunctions from "./computation-functions";
 
@@ -17,31 +19,36 @@ const initialState = {
     {
       id: "12312",
       city: "Beograd",
+      name: "Deluxe Auto",
       description: "Najudobnija vozila",
       address: {
+        state: "Republika Srbija",
         street: "Ulica",
         city: "Beograd",
         country: "Srbija",
-        long: 19.8335,
-        lat: 45.2671
+        longitude: 19.8335,
+        latitude: 45.2671
       }
     },
     {
       id: "123112",
       city: "Beograd",
+      name: "Moj Auto",
       description: "Najudobnija vozila",
       address: {
+        state: "Republika Srbija",
         street: "Ulica",
         city: "Beograd",
         country: "Srbija",
-        long: 19.8335,
-        lat: 45.2671
+        longitude: 19.9335,
+        latitude: 45.2671
       }
     }
   ],
   vehicles: [
     {
-      id: "6fd5fc58-467c-430f-8cb5-18f5eabef791"
+      id: "6fd5fc58-467c-430f-8cb5-18f5eabef791",
+      brand: "Mercedes"
     }
   ],
   rentACarVehicles: [
@@ -76,7 +83,9 @@ const initialState = {
     model: "",
     yearOfProduction: "",
     numberOfSeats: ""
-  }
+  },
+  rentACarVehiclesIncome: [{ vehicle: "", income: 0 }],
+  rentACarVehiclesBusyness: [{ vehicle: "", busyness: 0 }]
 };
 
 const rentACarReducer = (state = initialState, { type, payload }) => {
@@ -99,7 +108,9 @@ const actionHandler = {
   [PUT_VEHICLE_SEARCH_INFORMATION]:
     computationFunctions.putVehicleSearchInformation,
   [PUT_CREATED_RENT_A_CAR_VEHICLE]:
-    computationFunctions.putCreatedRentACarVehicle
+    computationFunctions.putCreatedRentACarVehicle,
+  [PUT_RENT_A_CAR_INCOME]: computationFunctions.putRentACarVehiclesIncome,
+  [PUT_RENT_A_CAR_BUSYNESS]: computationFunctions.putRentACarVehiclesBusyness
 };
 
 export default rentACarReducer;

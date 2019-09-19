@@ -4,6 +4,7 @@ import { makeStyles } from "@material-ui/core/styles";
 import NavigationCards from "../components/UI/NavigationCards";
 import TextField from "@material-ui/core/TextField";
 import Button from "@material-ui/core/Button";
+import ButtonGroup from "@material-ui/core/ButtonGroup";
 import DateFnsUtils from "@date-io/date-fns";
 import {
   KeyboardDatePicker,
@@ -14,11 +15,14 @@ import dateFormat from "dateformat";
 import Modal from "@material-ui/core/Modal";
 import CreateRentACar from "../components/rent-a-car/CreateRentACar";
 import EditRentACar from "../components/rent-a-car/EditRentACar";
+import RentACarIncome from "../components/rent-a-car/Income";
+import RentACarBusyness from "../components/rent-a-car/Busyness";
 import vehicle from "../assets/car.png";
 import ISAMap from "../components/hotel/ISAMap";
 import {
   fetchRentACars,
   searchRentACars,
+  sortRentACars,
   fetchRentACarDetails,
   fetchVehicles,
   fetchRentACarLocationInformation
@@ -36,6 +40,14 @@ export default function RentACarPage({ history }) {
   const [modalStyle] = React.useState(getModalStyle);
   const [createModalVisibility, setCreateModalVisibility] = useState(false);
   const [updateModalVisibility, setUpdateModalVisibility] = useState(false);
+  const [showIncomeModalVisibility, setShowIncomeModalVisibility] = useState(
+    false
+  );
+  const [
+    showBusynessModalVisibility,
+    setShowBusynessModalVisibility
+  ] = useState(false);
+
   const selected = useSelector(selectRentACarDetails);
 
   const [name, setName] = useState(null);
@@ -49,6 +61,8 @@ export default function RentACarPage({ history }) {
   function closeModal() {
     setUpdateModalVisibility(false);
     setCreateModalVisibility(false);
+    setShowIncomeModalVisibility(false);
+    setShowBusynessModalVisibility(false);
   }
 
   function handleUpdate() {
@@ -74,6 +88,28 @@ export default function RentACarPage({ history }) {
     );
   }
 
+  function handleShowIncome() {
+    if (selected.name === undefined) alert("Please select rent a car first");
+    else setShowIncomeModalVisibility(true);
+  }
+
+  function handleShowBusyness() {
+    if (selected.name === undefined) alert("Please select rent a car first");
+    else setShowBusynessModalVisibility(true);
+  }
+
+  function handleSortByName() {
+    dispatch(sortRentACars({ by: "name" }));
+  }
+
+  function handleSortByAddress() {
+    dispatch(sortRentACars({ by: "address" }));
+  }
+
+  function handleSortByRating() {
+    dispatch(sortRentACars({ by: "rating" }));
+  }
+
   useEffect(() => {
     dispatch(fetchRentACars());
   }, []);
@@ -97,6 +133,18 @@ export default function RentACarPage({ history }) {
           className={classes.paper}
         >
           <EditRentACar closeModal={closeModal} />
+          <Button onClick={closeModal}>Close</Button>
+        </div>
+      </Modal>
+      <Modal open={showIncomeModalVisibility}>
+        <div style={modalStyle} className={classes.paper}>
+          <RentACarIncome closeModal={closeModal} />
+          <Button onClick={closeModal}>Close</Button>
+        </div>
+      </Modal>
+      <Modal open={showBusynessModalVisibility}>
+        <div style={modalStyle} className={classes.paper}>
+          <RentACarBusyness closeModal={closeModal} />
           <Button onClick={closeModal}>Close</Button>
         </div>
       </Modal>
@@ -167,6 +215,16 @@ export default function RentACarPage({ history }) {
           >
             Search
           </Button>
+          <ButtonGroup
+            size="small"
+            aria-label="small outlined button group"
+            className={classes.button}
+          >
+            <Button disabled>SORT BY</Button>
+            <Button onClick={handleSortByName}>NAME</Button>
+            <Button onClick={handleSortByAddress}>ADDRESS</Button>
+            <Button onClick={handleSortByRating}>RATING</Button>
+          </ButtonGroup>
 
           {role === "RENT_A_CAR_ADMIN" ? (
             <div>
@@ -178,7 +236,31 @@ export default function RentACarPage({ history }) {
               >
                 Create
               </Button>
+            </div>
+          ) : null}
+        </Grid>
 
+        <Grid item xs={3} sm={3}>
+          {rentACars.map((val, index) => (
+            <div>
+              <NavigationCards
+                onMouseEnter={handleMouseEnter}
+                id={val.id}
+                key={val.id}
+                image={vehicle}
+                title={val.name}
+                description={val.description + ", Rating:" + val.rating}
+                tooltip={val.description}
+                cardClick={() => {
+                  dispatch(
+                    fetchRentACarLocationInformation(rentACars[index].address)
+                  );
+                  history.push({
+                    pathname: `/rent-a-cars/${val.id}/vehicles`,
+                    state: { pickUpDate, dropOffDate }
+                  });
+                }}
+              />
               <Button
                 variant="contained"
                 color="primary"
@@ -187,30 +269,23 @@ export default function RentACarPage({ history }) {
               >
                 Update
               </Button>
+              <Button
+                variant="contained"
+                color="primary"
+                className={classes.button}
+                onClick={handleShowIncome}
+              >
+                Income
+              </Button>
+              <Button
+                variant="contained"
+                color="primary"
+                className={classes.button}
+                onClick={handleShowBusyness}
+              >
+                Busyness
+              </Button>
             </div>
-          ) : null}
-        </Grid>
-
-        <Grid item xs={3} sm={3}>
-          {rentACars.map((val, index) => (
-            <NavigationCards
-              onMouseEnter={handleMouseEnter}
-              id={val.id}
-              key={val.id}
-              image={vehicle}
-              title={val.name}
-              description={val.description}
-              tooltip={val.description}
-              cardClick={() => {
-                dispatch(
-                  fetchRentACarLocationInformation(rentACars[index].address)
-                );
-                history.push({
-                  pathname: `/rent-a-cars/${val.id}/vehicles`,
-                  state: { pickUpDate, dropOffDate }
-                });
-              }}
-            />
           ))}
         </Grid>
         <Grid item xs={12} sm={9}>
@@ -237,9 +312,9 @@ function getModalStyle() {
 const useStyles = makeStyles(theme => ({
   paper: {
     position: "absolute",
-    width: "40%",
+    width: "50%",
     backgroundColor: theme.palette.background.paper,
-    border: "2px solid #000",
+    border: "2px solid #008080",
     boxShadow: theme.shadows[5],
     padding: theme.spacing(2, 4, 3)
   },
@@ -259,6 +334,7 @@ const useStyles = makeStyles(theme => ({
     width: 200
   },
   button: {
-    margin: theme.spacing(1)
+    margin: theme.spacing(1),
+    background: "#008080"
   }
 }));

@@ -6,12 +6,12 @@ class HttpBaseClient {
     this.client = axios.create({
       baseURL: API_BASE.URL
     });
-    // this.setInterceptor();
+    this.setInterceptor();
   }
 
   setInterceptor() {
     this.client.interceptors.request.use(async config => {
-      const token = await JSON.parse(localStorage.getItem("token"));
+      const token = window.localStorage.getItem("token");
 
       if (!!token) {
         Object.assign(config.headers, {

@@ -21,7 +21,9 @@ import {
   POST_ADMIN_FOR_HOTEL,
   FETCH_HOTELS_WITHOUT_ADMIN,
   PUT_ROOM_DETAILS_CHANGE,
-  FETCH_HOTEL_SERVICE_AND_SERVICES
+  FETCH_HOTEL_SERVICE_AND_SERVICES,
+  RATE_HOTEL,
+  RATE_ROOM
 } from "./constants";
 
 export const putHotelDetails = payload => ({
@@ -135,5 +137,15 @@ export const putRoomDetailsChange = payload => ({
 
 export const fetchHotelServiceAndService = payload => ({
   type: FETCH_HOTEL_SERVICE_AND_SERVICES,
+  payload
+});
+
+export const rateHotel = payload => ({
+  type: RATE_HOTEL,
+  payload
+});
+
+export const rateRoom = payload => ({
+  type: RATE_ROOM,
   payload
 });

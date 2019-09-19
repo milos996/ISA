@@ -12,7 +12,9 @@ import {
   RESERVE_ROOMS,
   SEARCH_HOTEL_BASED_ON_FILTERS,
   FETCH_HOTELS_WITHOUT_ADMIN,
-  FETCH_HOTEL_SERVICE_AND_SERVICES
+  FETCH_HOTEL_SERVICE_AND_SERVICES,
+  RATE_HOTEL,
+  RATE_ROOM
 } from "./constants";
 import {
   putHotelServices,
@@ -153,6 +155,18 @@ export function* fetchHotelServiceAndServices() {
   );
 
   yield put(putHotelServices(data));
+}
+
+export function* rateRoom() {
+  const { payload } = yield take(RATE_ROOM);
+
+  const { data } = yield call(hotelServices.rateRoom, payload);
+}
+
+export function* rateHotel() {
+  const { payload } = yield take(RATE_HOTEL);
+
+  const { data } = yield call(hotelServices.rateHotel, payload);
 }
 
 const MOCK_ROOMS = [

@@ -1,3 +1,3 @@
 export const API_BASE = {
-  URL: "http://192.168.0.21:8080/api"
+  URL: "http://127.0.0.1:8080/api"
 };

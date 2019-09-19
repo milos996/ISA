@@ -12,6 +12,10 @@ import UserProfile from "./pages/UserProfile";
 import AdminPage from "./pages/AdminPage";
 import RentACarPage from "./pages/RentACars";
 import RentACarProfilePage from "./pages/RentACarProfile";
+import PasswordUpdatePage from "./pages/PasswordChangePage";
+import RACAdminProfilePage from "./pages/RACAdminProfile";
+import InvitePage from "./pages/Invites";
+import Friends from "./components/user/Friends";
 
 const App = () => {
   return (
@@ -41,8 +45,21 @@ const App = () => {
         component={HotelRoomsPage}
       />
       <Route exact path="/user/:id" component={UserProfile} />
-
+      <Route exact path="/user/:id/invites" component={InvitePage} />
+      <Route exact path="/user/:id/friends" component={Friends} />
       <Route exact path="/admin" component={AdminPage} />
+      <Route
+        exact
+        path="/rent-a-car-admin/update-password"
+        component={PasswordUpdatePage}
+        role={"RENT_A_CAR_ADMIN"}
+      />
+      <Route
+        exact
+        path="/rent-a-car-admin/:id"
+        component={RACAdminProfilePage}
+        role={"RENT_A_CAR_ADMIN"}
+      />
 
       <Route
         exact

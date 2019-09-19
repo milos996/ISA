@@ -1,17 +1,23 @@
 package com.example.ISAums.controller;
 
+import com.example.ISAums.dto.request.CreateRatingRequest;
 import com.example.ISAums.dto.request.GetAirlineIncomeRequest;
 import com.example.ISAums.dto.request.UpdateAirlineRequest;
 import com.example.ISAums.dto.response.GetAirlineIncomeResponse;
 import com.example.ISAums.dto.response.GetAirlineAverageRatingResponse;
 import com.example.ISAums.dto.response.GetAirlineResponse;
+import com.example.ISAums.dto.response.GetRentACarResponse;
 import com.example.ISAums.model.Airline;
 import com.example.ISAums.service.AirlineService;
 import com.example.ISAums.service.AirplaneTicketService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.text.ParseException;
+import java.util.List;
 import java.util.UUID;
 import static com.example.ISAums.converter.AirlineConverter.*;
+import static com.example.ISAums.converter.RentACarConverter.toGetRentACarsResponseFromRentACar;
 
 @RestController
 @RequestMapping("/airlines")
@@ -55,5 +61,18 @@ public class AirlineController {
 
         return ResponseEntity.ok(toGetAirlineRatingResponseFromRating(averageRating, airlineId));
     }
+
+    @PostMapping
+    @RequestMapping("/rating")
+    public ResponseEntity<GetAirlineAverageRatingResponse> rating(@RequestBody CreateRatingRequest request) {
+        airlineService.rate(request);
+        return null;
+    }
+
+    @GetMapping("/sort")
+    public ResponseEntity<List<GetAirlineResponse>> sort( @RequestParam(name = "by", required = true) String by) {
+        return ResponseEntity.ok(toGetAirlineResponseFromAirlines(airlineService.sort(by)));
+    }
+
 
 }

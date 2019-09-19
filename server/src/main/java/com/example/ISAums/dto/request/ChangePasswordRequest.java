@@ -17,10 +17,6 @@ import static com.example.ISAums.util.ValidationConstraints.PASSWORD_HASH_SIZE;
 @AllArgsConstructor
 public class ChangePasswordRequest {
     @NotBlank
-    @Size(max = EMAIL_SIZE)
-    private String email;
-
-    @NotBlank
     @Size(max = PASSWORD_HASH_SIZE)
     private String oldPassword;
 

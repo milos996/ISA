@@ -42,4 +42,10 @@ public class AirlineConverter {
                 .name(airline.getName())
                 .build();
     }
+
+    public static List<GetAirlineResponse> toGetAirlineResponseFromAirlines(List<Airline> airlines) {
+        return airlines.stream()
+                .map(airline -> toGetAirlineResponseFromAirline(airline))
+                .collect(Collectors.toList());
+    }
 }
