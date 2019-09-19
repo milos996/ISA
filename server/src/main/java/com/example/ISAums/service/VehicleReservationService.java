@@ -15,10 +15,12 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 import java.util.UUID;
+import java.util.concurrent.TimeUnit;
 
 import static com.example.ISAums.converter.VehicleReservationConverter.*;
 
@@ -68,9 +70,9 @@ public class VehicleReservationService {
 
         vehicleReservation.setPrice(vehicle.getPricePerDay() * days);
         //airplaneTicketRepository.save(airplaneTicket);
-//        AirplaneTicket airplaneTicket = airplaneTicketRepository.findById(request.getAirplaneTicketId());
-//        vehicleReservation.setAirplaneTicket(airplaneTicket);
-     //   vehicleReservation.setAirplaneTicket(airplaneTicket);
+        AirplaneTicket airplaneTicket = airplaneTicketRepository.findById(request.getAirplaneTicketId()).orElse(null);
+        vehicleReservation.setAirplaneTicket(airplaneTicket);
+
         vehicleReservationRepository.save(vehicleReservation);
 
         return vehicle;
@@ -78,9 +80,12 @@ public class VehicleReservationService {
 
     private String format(Date date) {
         SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
-
-        logger.info("DATE: " + formatter.format(date));
         return formatter.format(date);
+    }
+
+    private Date toDate(String sdate) throws ParseException {
+        Date date=new SimpleDateFormat("dd/MM/yyyy").parse(sdate);
+        return date;
     }
 
     @Transactional(readOnly = true)
@@ -93,9 +98,13 @@ public class VehicleReservationService {
         VehicleReservation vehicleReservation = vehicleReservationRepository.findById(UUID.fromString(vehicleReservationId)).orElse(null);
 
         Date currentDate = new Date();
-        if (vehicleReservation.getEndDate().compareTo(currentDate) <= 3) {
-            throw new CustomException("Yo");
-        }
+
+        long diff = vehicleReservation.getEndDate().getTime() - currentDate.getTime();
+        float ndays = (diff / (1000*60*60*24));
+        int days = (int) ndays;
+
+        if (days <= 3 )
+            throw new CustomException("You can not cancel reservation anymore!");
 
         vehicleReservationRepository.deleteById(UUID.fromString(vehicleReservationId));
 

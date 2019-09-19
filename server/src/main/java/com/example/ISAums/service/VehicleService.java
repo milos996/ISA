@@ -10,10 +10,7 @@ import com.example.ISAums.model.RentACar;
 import com.example.ISAums.model.Vehicle;
 import com.example.ISAums.model.VehicleReservation;
 import com.example.ISAums.model.enumeration.RatingType;
-import com.example.ISAums.repository.RatingRepository;
-import com.example.ISAums.repository.RentACarRepository;
-import com.example.ISAums.repository.VehicleRepository;
-import com.example.ISAums.repository.VehicleReservationRepository;
+import com.example.ISAums.repository.*;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -35,6 +32,7 @@ public class VehicleService {
     private final RentACarRepository rentACarRepository;
     private final RatingRepository ratingRepository;
     private final VehicleReservationRepository vehicleReservationRepository;
+    private final DiscountRepository discountRepository;
 
     @Transactional(rollbackFor = Exception.class)
     public List<Vehicle> create(CreateRentACarVehicleRequest request) {

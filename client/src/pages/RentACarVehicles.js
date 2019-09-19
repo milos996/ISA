@@ -19,12 +19,12 @@ import {
   selectRentACarLocationInformation
 } from "../store/rent-a-car/selectors";
 
-export default function RentACarVehiclesPage({ match, history }) {
+export default function RentACarVehiclesPage({ match, location }) {
   const classes = useStyles();
   const dispatch = useDispatch();
   const vehicles = useSelector(selectRentACarVehicles);
-  const [pickUpDate, setPickUpDate] = useState();
-  const [dropOffDate, setDropOffDate] = useState();
+  const [pickUpDate, setPickUpDate] = useState(location.state.startDate);
+  const [dropOffDate, setDropOffDate] = useState(location.state.endDate);
   const [seats, setSeats] = useState(null);
   const [yearOfProduction, setYearOfProduction] = useState(null);
   const [price, setPrice] = useState({
@@ -35,7 +35,7 @@ export default function RentACarVehiclesPage({ match, history }) {
   const [selectedVehicle, setSelectedVehicle] = useState();
 
   function handleSearchButton() {
-    // dispatch(fetchRentACarVehicles());
+    dispatch(fetchRentACarVehicles());
   }
 
   useEffect(() => {
@@ -147,11 +147,6 @@ export default function RentACarVehiclesPage({ match, history }) {
             image={vehicle}
             title={`${val.brand} - ${val.model}`}
             description={"OP"}
-            // cardClick={() => {
-            //   setSelectedVehicle(currState =>
-            //     addRemoveItemFromList(currState, val)
-            //   );
-            // }}
           />
         ))}
       </div>

@@ -15,7 +15,7 @@ import { deleteVehicle } from "../../store/rent-a-car/actions";
 import { selectVehicleSearchInformation } from "../../store/rent-a-car/selectors";
 import { createVehicleReservation } from "./../../store/rent-a-car/actions";
 
-export default function RentACarVehicle({ vehicle }) {
+export default function RentACarVehicle({ vehicle, location }) {
   const role = window.localStorage.getItem("role");
   const classes = useStyles();
   const dispatch = useDispatch();
@@ -24,6 +24,11 @@ export default function RentACarVehicle({ vehicle }) {
   const [isDialogForDeleteVisible, setDialogVisibility] = useState(false);
 
   const info = useSelector(selectVehicleSearchInformation);
+
+  useEffect(() => {
+    info.pickUpDate = location.state.pickUpDate;
+    info.dropOffDate = location.state.dropOffDate;
+  });
 
   function handleReserve() {
     if (

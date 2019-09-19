@@ -31,9 +31,10 @@ import {
   selectRentACars,
   selectRentACarDetails
 } from "../store/rent-a-car/selectors";
+import { userDataSelector } from "../store/user/selectors";
 
-export default function RentACarPage({ history }) {
-  const role = window.localStorage.getItem("role");
+export default function RentACarPage({ history, location }) {
+  const user = useSelector(userDataSelector);
   const dispatch = useDispatch();
   const classes = useStyles();
   const rentACars = useSelector(selectRentACars);
@@ -53,8 +54,8 @@ export default function RentACarPage({ history }) {
   const [name, setName] = useState(null);
   const [city, setCity] = useState(null);
   const [state, setState] = useState(null);
-  const [pickUpDate, setPickUpDate] = useState(null);
-  const [dropOffDate, setDropOffDate] = useState(null);
+  const [pickUpDate, setPickUpDate] = useState(location.state.startDate);
+  const [dropOffDate, setDropOffDate] = useState(location.state.endDate);
 
   const [currentLocation, setCurrentLocation] = useState(null);
 
@@ -226,7 +227,7 @@ export default function RentACarPage({ history }) {
             <Button onClick={handleSortByRating}>RATING</Button>
           </ButtonGroup>
 
-          {role === "RENT_A_CAR_ADMIN" ? (
+          {user.role === "RENT_A_CAR_ADMIN" ? (
             <div>
               <Button
                 variant="contained"
@@ -257,34 +258,43 @@ export default function RentACarPage({ history }) {
                   );
                   history.push({
                     pathname: `/rent-a-cars/${val.id}/vehicles`,
-                    state: { pickUpDate, dropOffDate }
+                    state: {
+                      pickUpDate: pickUpDate,
+                      dropOffDate: dropOffDate,
+                      airplaneTicketId: location.state.airplaneTicketId
+                    }
                   });
                 }}
               />
-              <Button
-                variant="contained"
-                color="primary"
-                className={classes.button}
-                onClick={handleUpdate}
-              >
-                Update
-              </Button>
-              <Button
-                variant="contained"
-                color="primary"
-                className={classes.button}
-                onClick={handleShowIncome}
-              >
-                Income
-              </Button>
-              <Button
-                variant="contained"
-                color="primary"
-                className={classes.button}
-                onClick={handleShowBusyness}
-              >
-                Busyness
-              </Button>
+
+              {user.role === "RENT_A_CAR_ADMIN" ? (
+                <div>
+                  <Button
+                    variant="contained"
+                    color="primary"
+                    className={classes.button}
+                    onClick={handleUpdate}
+                  >
+                    Update
+                  </Button>
+                  <Button
+                    variant="contained"
+                    color="primary"
+                    className={classes.button}
+                    onClick={handleShowIncome}
+                  >
+                    Income
+                  </Button>
+                  <Button
+                    variant="contained"
+                    color="primary"
+                    className={classes.button}
+                    onClick={handleShowBusyness}
+                  >
+                    Busyness
+                  </Button>
+                </div>
+              ) : null}
             </div>
           ))}
         </Grid>

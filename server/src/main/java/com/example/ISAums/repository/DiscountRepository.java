@@ -1,6 +1,7 @@
 package com.example.ISAums.repository;
 
 import com.example.ISAums.model.Discount;
+import com.example.ISAums.model.Vehicle;
 import com.example.ISAums.model.enumeration.DiscountType;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -12,4 +13,5 @@ import java.util.UUID;
 @Repository
 public interface DiscountRepository extends JpaRepository<Discount, UUID> {
 
+    List<Discount> quick(String pickUpDate, String dropOffDate);
 }

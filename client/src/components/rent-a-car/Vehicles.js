@@ -16,6 +16,7 @@ import {
 import DateFnsUtils from "@date-io/date-fns";
 import dateFormat from "dateformat";
 import { selectRentACarVehicles } from "../../store/rent-a-car/selectors";
+import { userDataSelector } from "../../store/user/selectors";
 import RentACarVehicle from "./Vehicle";
 import {
   fetchRentACarVehicles,
@@ -24,16 +25,16 @@ import {
 } from "../../store/rent-a-car/actions";
 import CreateVehicle from "./CreateVehicle";
 
-export default function RentACarVehicles({ rentACarId }) {
-  const role = window.localStorage.getItem("role");
+export default function RentACarVehicles({ rentACarId, location }) {
+  const user = useSelector(userDataSelector);
   const vehicles = useSelector(selectRentACarVehicles);
   const classes = useStyles();
   const dispatch = useDispatch();
   const [createModalVisibility, setCreateModalVisibility] = useState(false);
   const [modalStyle] = React.useState(getModalStyle);
 
-  const [pickUpDate, setPickUpDate] = useState(null);
-  const [dropOffDate, setDropOffDate] = useState(null);
+  const [pickUpDate, setPickUpDate] = useState(location.state.startDate);
+  const [dropOffDate, setDropOffDate] = useState(location.state.startDate);
   const [pickUpLocation, setPickUpLocation] = useState("");
   const [dropOffLocation, setDropOffLocation] = useState("");
   const [type, setType] = useState("");
@@ -106,7 +107,7 @@ export default function RentACarVehicles({ rentACarId }) {
         <Grid item xl={2}>
           <h2>Vehicles</h2>
         </Grid>
-        {role == "RENT_A_CAR_ADMIN" ? (
+        {user.role === "RENT_A_CAR_ADMIN" ? (
           <Grid mx={4}>
             <Icon onClick={() => setCreateModalVisibility(true)}>
               add_circle

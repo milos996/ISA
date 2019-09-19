@@ -38,7 +38,8 @@ import reservationService from "../../services/api/Reservation";
 
 export function* registration() {
   const { payload } = yield take(REGISTRATION);
-  alert(yield call(authService.registration, payload));
+  const { data } = yield call(authService.registration, payload);
+  alert(data.message);
   payload.callback();
 }
 
