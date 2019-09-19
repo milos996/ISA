@@ -1,5 +1,4 @@
 import HttpBaseClient from "../HttpBaseClient";
-import { format } from "util";
 
 const ENDPOINTS = {
   FAST_TICKET_RESERVATION: "/tickets/quickBooking",
@@ -8,10 +7,9 @@ const ENDPOINTS = {
 
 class AirplaneTicketService extends HttpBaseClient {
   createFastTicketReservation = flightId => {
-    return this.getApiClient().post(
-      ENDPOINTS.FAST_TICKET_RESERVATION,
+    return this.getApiClient().post(ENDPOINTS.FAST_TICKET_RESERVATION, {
       flightId
-    );
+    });
   };
 
   reserve = ticket => {

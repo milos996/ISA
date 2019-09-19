@@ -4,8 +4,7 @@ import { take, put, call } from "redux-saga/effects";
 import {
   FETCH_AIRLINES,
   DO_SEARCH,
-  MAKE_TICKET_RESERVATION,
-  PUT_SELECTED_SEATS
+  MAKE_TICKET_RESERVATION
 } from "./constants";
 import { SEARCH_USERS } from "../../store/user/constants";
 import userService from "../../services/api/User";
@@ -27,12 +26,8 @@ export function* doSearch() {
 
 export function* makeTicketReservation() {
   const { payload } = yield take(MAKE_TICKET_RESERVATION);
-  const { data } = yield call(airplaneTicketService.reserve(payload));
-}
-
-export function* putSelectedSeats() {
-  const { payload } = yield take(PUT_SELECTED_SEATS);
-  yield put(putSelectedSeats(payload));
+  const { data } = yield call(airplaneTicketService.reserve, payload.ticket);
+  payload.callback(data.reservationId);
 }
 
 export function* searchUsers() {

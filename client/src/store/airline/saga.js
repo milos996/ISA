@@ -66,10 +66,7 @@ export function* fetchTicketsForFastReservation() {
 
 export function* createFastTicketReservation() {
   const { payload } = yield take(CREATE_FAST_TICKET_RESERVATION);
-  yield call(
-    airplaneTicketService.createFastTicketReservation,
-    payload.flightId
-  );
+  yield call(airplaneTicketService.createFastTicketReservation, payload);
 }
 
 export function* saveAirplane() {

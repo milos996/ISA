@@ -47,5 +47,8 @@ public class Flight extends BaseEntity {
   @JoinColumn(name = "airplane_id")
   @NotNull
   private Airplane airplane;
+
+  @Version
+  private Integer version;
 }
 

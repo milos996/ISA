@@ -25,7 +25,7 @@ public class AirplaneTicketService {
 
     @Synchronized
     @Transactional(rollbackFor = Exception.class)
-      public void reservation(CreateAirplaneTicketReservationRequest request){
+      public AirplaneTicket reservation(UUID userOwnerId, CreateAirplaneTicketReservationRequest request) throws Exception {
 
         List<ChooseSeatCoordinatesRequest> seats = request.getSeats();
 
@@ -49,14 +49,12 @@ public class AirplaneTicketService {
                 seatsOfAirplane[segment][row][column] = true;//flag that indicates that seat is reserved
                 coordinatesOfSeats.add(segment+":"+row+":"+column);
             }
-
             else
-            {  //throw error on front because you can't reserve seat that is already reserved
-                break;
-            }
+                throw new Exception("Seat is already reserved!");
+
         }
 
-        User userOwner = userRepository.findById(request.getUserID()).get();
+        User userOwner = userRepository.findById(userOwnerId).get();
         String [] segment_row_column = coordinatesOfSeats.get(0).split(":");
 
         segment = Integer.parseInt(segment_row_column[0]);
@@ -115,7 +113,7 @@ public class AirplaneTicketService {
         }
 
         airplaneTicketRepository.save(airplaneTicket);
-
+        return airplaneTicket;
     }
 
     public Double getIncome(UUID airlineID, Date startDate, Date endDate) {
@@ -153,9 +151,9 @@ public class AirplaneTicketService {
     }
 
     @Transactional(rollbackFor = Exception.class)
-    public AirplaneTicket createQuickTicketBooking(CreateQuickTicketBookingRequest request) {
+    public AirplaneTicket createQuickTicketBooking(UUID userId, CreateQuickTicketBookingRequest request) {
 
-        Optional<User> user = userRepository.findById(request.getUserId());
+        Optional<User> user = userRepository.findById(userId);
         Optional<Flight> flight = flightRepository.findById(request.getFlightId());
         Airplane airplane = flight.get().getAirplane();
 

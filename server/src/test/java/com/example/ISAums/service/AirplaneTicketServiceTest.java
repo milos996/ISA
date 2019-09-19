@@ -44,10 +44,9 @@ public class AirplaneTicketServiceTest {
 
         CreateQuickTicketBookingRequest request = CreateQuickTicketBookingRequest.builder()
                 .flightId(UUID.fromString("8f6d6695-aa41-446f-8f00-5d5db0246816"))
-                .userId(UUID.fromString("8221dbfb-0dbb-48ef-84ec-6f09a0e9698e"))
                 .build();
 
-
+        UUID userId = UUID.fromString("8221dbfb-0dbb-48ef-84ec-6f09a0e9698e");
         User user = User.builder()
                 .city("Belgrade")
                 .state("Serbia")
@@ -85,7 +84,7 @@ public class AirplaneTicketServiceTest {
 
         when(userRepository.findById(any(UUID.class))).thenReturn(java.util.Optional.ofNullable(user));
         when(flightRepository.findById(any(UUID.class))).thenReturn(java.util.Optional.ofNullable(flight));
-        AirplaneTicket airplaneTicket = airplaneTicketService.createQuickTicketBooking(request);
+        AirplaneTicket airplaneTicket = airplaneTicketService.createQuickTicketBooking(userId, request);
         assertThat(airplaneTicket).isNotNull();
     }
 }

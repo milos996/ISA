@@ -22,7 +22,6 @@ export default function ChooseSeats({ match, history }) {
   });
 
   const [ticket, setTicket] = useState({
-    userID: "96ab9400-7089-4af8-bc54-4301a5868789",
     seats: [],
     flightID: match.params.flight_id,
     invitedUsers: null

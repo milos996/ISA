@@ -7,7 +7,7 @@ import Toolbar from "@material-ui/core/Toolbar";
 import Typography from "@material-ui/core/Typography";
 import Button from "@material-ui/core/Button";
 import teal from "@material-ui/core/colors/teal";
-import { userTokenSelector } from "../store/user/selectors";
+import { userTokenSelector, userDataSelector } from "../store/user/selectors";
 import { logoutUser } from "../store/user/actions";
 import { history } from "../index";
 const primary = teal[400];
@@ -15,6 +15,7 @@ const primary = teal[400];
 export default function Navbar() {
   const classes = useStyles();
   const userToken = useSelector(userTokenSelector);
+  const userData = useSelector(userDataSelector);
   const dispatch = useDispatch();
   const handleLogout = () => {
     dispatch(
@@ -46,7 +47,7 @@ export default function Navbar() {
               <Button color="inherit" onClick={handleLogout}>
                 Logout
               </Button>
-              <Link className="button" to="/user-profile">
+              <Link className="button" to="/user/">
                 <Button color="inherit">Profile</Button>
               </Link>
             </div>
