@@ -33,14 +33,13 @@ public class HotelReservationService {
     }
 
     public void create(CreateHotelReservationsRequest request) {
-        Optional<AirplaneTicket> optionaAirplaneTicket = airplaneTicketRepository.findById(request.getAirplaneTicketId());
-        if (!optionaAirplaneTicket.isPresent()) {
+        Optional<AirplaneTicket> optionalAirplaneTicket = airplaneTicketRepository.findById(request.getAirplaneTicketId());
+        if (!optionalAirplaneTicket.isPresent()) {
             throw new EntityWithIdDoesNotExist("AirplaneTicker", request.getAirplaneTicketId());
         }
 
-
         List<HotelService> hotelServices = hotelServiceRepository.findAllById(request.getAdditionalServices());
-        List<HotelReservation> hotelReservations =  request.getRooms().stream().map(roomId -> reserveRoom(roomId, optionaAirplaneTicket.get(), hotelServices, request.getDate(), request.getNumberOfNights())).collect(Collectors.toList());
+        List<HotelReservation> hotelReservations =  request.getRooms().stream().map(roomId -> reserveRoom(roomId, optionalAirplaneTicket.get(), hotelServices, request.getDate(), request.getNumberOfNights())).collect(Collectors.toList());
         
         hotelReservationRepository.saveAll(hotelReservations);
     }

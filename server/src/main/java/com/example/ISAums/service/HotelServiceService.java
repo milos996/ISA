@@ -53,6 +53,24 @@ public class HotelServiceService {
                 .collect(Collectors.toList())
         );
 
+        hotelServiceRepository.saveAll(hotelServices.stream()
+                .map(hotelService -> {
+                   ServiceRequest changedHotelService = request.getServices().stream()
+                           .filter(service -> service.getId().equals(hotelService.getId()) && service.getPrice() != hotelService.getPrice())
+                           .findFirst()
+                           .orElse(null);
+
+                    if (changedHotelService !=  null) {
+                        hotelService.setPrice(changedHotelService.getPrice());
+                    }
+
+                    return hotelService;
+                })
+                .collect(Collectors.toList())
+        );
+
+
+
         return saveNonExistedHotelServices(request, hotelServices, hotel.get());
 
     }
