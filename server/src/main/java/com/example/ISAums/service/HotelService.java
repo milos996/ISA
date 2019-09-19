@@ -37,15 +37,9 @@ public class HotelService {
         this.hotelReservationRepository = hotelReservationRepository;
     }
 
-//    @Transactional(readOnly = true)
-//    public List<Hotel> getHotels() {
-//        return hotelRepository.findAll();
-//    }
-
     @Transactional(readOnly = true)
     public List<Hotel> get(LocalDate startDate, LocalDate endDate, String name, String city, String state) {
         return hotelRepository.findAllByFilters(startDate, endDate, name, city, state);
-//        return hotels.stream().map(dbHotel -> Hotel.builder().build()).collect(Collectors.toList());
     }
 
     @Transactional(rollbackFor = Exception.class)

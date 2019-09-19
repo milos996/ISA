@@ -8,6 +8,7 @@ import com.example.ISAums.service.RoomService;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 import reactor.util.annotation.Nullable;
 
@@ -44,8 +45,8 @@ public class RoomController {
 
     @PostMapping
     @PreAuthorize("hasAnyAuthority('HOTEL_ADMIN')")
-    public ResponseEntity<CreateRoomResponse> create(CreateRoomRequest request) {
-        Room room = roomService.createRoom(request);
+    public ResponseEntity<CreateRoomResponse> create(@AuthenticationPrincipal UUID userId, @RequestBody CreateRoomRequest request) {
+        Room room = roomService.createRoom(request, userId);
         return ResponseEntity.ok(toCreateRoomResponseFromRoom(room));
     }
 

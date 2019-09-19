@@ -57,4 +57,6 @@ public class Room extends BaseEntity {
     @NotNull
     private Hotel hotel;
 
+    @Version
+    private Integer version;
 }

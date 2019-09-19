@@ -19,9 +19,10 @@ public interface RoomRepository extends JpaRepository<Room, UUID> {
             "left join HotelReservation res on r.id = res.room.id " +
             "WHERE r.hotel.id = :hotelId " +
             "AND (:people = 0 or r.numberOfPeople = :people) " +
+            "AND (:startDate is null or :endDate is null or res.startDate is null or res.endDate is null  or ((res.startDate not between :startDate and :endDate) and ( res.endDate not between :startDate and :endDate))) " +
             "AND (:fromPrice = 0.0 or r.priceSummer >= :fromPrice) " +
             "AND (:toPrice = 0.0 or r.priceSummer <= :toPrice) ")
-    List<Room> getRooms(UUID hotelId, Integer people, Double fromPrice, Double toPrice);
+    List<Room> getRooms(UUID hotelId, LocalDate startDate, LocalDate endDate, Integer people, Double fromPrice, Double toPrice);
 }
 //    @Query("SELECT DISTINCT r " +
 //            "FROM  Room r  " +
