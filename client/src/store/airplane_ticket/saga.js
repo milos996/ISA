@@ -28,12 +28,8 @@ export function* doSearch() {
 
 export function* makeTicketReservation() {
   const { payload } = yield take(MAKE_TICKET_RESERVATION);
-  const { data } = yield call(airplaneTicketService.reserve(payload));
-}
-
-export function* putSelectedSeats() {
-  const { payload } = yield take(PUT_SELECTED_SEATS);
-  yield put(putSelectedSeats(payload));
+  const { data } = yield call(airplaneTicketService.reserve, payload.ticket);
+  payload.callback(data.reservationId);
 }
 
 export function* searchUsers() {

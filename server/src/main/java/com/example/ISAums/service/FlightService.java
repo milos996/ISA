@@ -9,8 +9,11 @@ import com.example.ISAums.model.*;
 import com.example.ISAums.model.enumeration.RatingType;
 import com.example.ISAums.repository.*;
 import lombok.RequiredArgsConstructor;
+import org.apache.tomcat.jni.Local;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -118,14 +121,19 @@ public class FlightService {
 
     public List<Flight> getQuickBooking(UUID airlineId) {
 
-        List<UUID> flightIDs = flightRepository.getQuickBookingFlights(String.valueOf(airlineId));
+        List<UUID> flightIDs = flightRepository.getFlightsByAirlineId(String.valueOf(airlineId));
         List<Flight> flights = new ArrayList<>(flightIDs.size());
         double discount = 10;
         double currentPrice;
 
         for(int i = 0; i < flightIDs.size(); i++){
             Optional<Flight> tmp = flightRepository.findById(UUID.fromString(String.valueOf(flightIDs.get(i))));
-            flights.add(tmp.get());
+
+            LocalDate departureDate = tmp.get().getDepartureTime().toLocalDate();
+            LocalDate threeDaysFromNow = LocalDate.now().plusDays(3);
+            if(departureDate.equals(threeDaysFromNow))
+                flights.add(tmp.get());
+            continue;
         }
 
         for(int i = 0; i < flights.size(); i++){

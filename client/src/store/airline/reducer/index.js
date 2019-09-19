@@ -18,8 +18,8 @@ const initialState = {
       city: "",
       state: "",
       street: "",
-      longitude: 0.0,
-      latitude: 0.0
+      longitude: null,
+      latitude: null
     },
     checkingInSuitcasePrice: 0.0,
     handLuggagePrice: 0.0

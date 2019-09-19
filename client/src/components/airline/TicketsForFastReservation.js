@@ -61,9 +61,7 @@ export default function TicketsForFastReservation({ airlineId }) {
               <TableCell align="left">
                 <Button
                   onClick={() =>
-                    dispatch(
-                      createFastTicketReservation({ flightId: ticket.id })
-                    )
+                    dispatch(createFastTicketReservation(ticket.id))
                   }
                 >
                   Reserve

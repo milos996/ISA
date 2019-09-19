@@ -10,6 +10,7 @@ import com.example.ISAums.model.Airline;
 import com.example.ISAums.service.AirlineService;
 import com.example.ISAums.service.AirplaneTicketService;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -35,6 +36,7 @@ public class AirlineController {
         return ResponseEntity.ok(toGetAirlineResponseFromAirlines(airlines));
     }
     @PutMapping
+    @PreAuthorize("hasAnyAuthority('AIRLINE_ADMIN')")
     public ResponseEntity<GetAirlineResponse> update(@RequestBody UpdateAirlineRequest request){
 
         Airline airline = airlineService.update(request);
@@ -42,12 +44,14 @@ public class AirlineController {
     }
 
     @GetMapping(value = "/{id}")
+    @PreAuthorize("hasAnyAuthority('AIRLINE_ADMIN')")
     public ResponseEntity<GetAirlineResponse> getAirline(@PathVariable(name = "id") String airlineId){
         Airline airline = airlineService.getAirline(airlineId);
         return ResponseEntity.ok(toGetAirlineResponseFromAirline(airline));
     }
 
     @GetMapping(value = "/getAirlineIncomeForDate")
+    @PreAuthorize("hasAnyAuthority('AIRLINE_ADMIN')")
     public ResponseEntity<GetAirlineIncomeResponse> getAirlineIncomeForDate(@RequestBody GetAirlineIncomeRequest req){
 
         Double income = airplaneTicketService.getIncome(req.getAirlineID(), req.getStartDate(), req.getEndDate());
@@ -56,6 +60,7 @@ public class AirlineController {
     }
 
     @GetMapping(value = "/airline/{id}/average-rating")
+    @PreAuthorize("hasAnyAuthority('AIRLINE_ADMIN')")
     public ResponseEntity<GetAirlineAverageRatingResponse> getAverageRating(@PathVariable(name = "id") UUID airlineId){
 
         Double averageRating = airlineService.getAverageRating(airlineId);

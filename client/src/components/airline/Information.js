@@ -32,7 +32,7 @@ export default function AirlineInformation({ airlineId }) {
     isVisible: false,
     value: ""
   });
-
+  console.log(airlineDetails.address);
   function setStreet(street) {
     dispatch(putAirlineLocationInformation({ street }));
   }
@@ -183,7 +183,11 @@ export default function AirlineInformation({ airlineId }) {
         >
           Save
         </Button>
-        <ISAMap address={airlineDetails.address} setStreet={setStreet} />
+        <ISAMap
+          address={airlineDetails.address}
+          setStreet={setStreet}
+          hasClick={false}
+        />
       </Container>
     </div>
   );

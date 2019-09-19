@@ -3,7 +3,6 @@ import com.example.ISAums.dto.request.CreateFlightRequest;
 import com.example.ISAums.dto.request.CreateRatingRequest;
 import com.example.ISAums.dto.request.UpdateFlightRequest;
 import com.example.ISAums.dto.response.*;
-import com.example.ISAums.email_service.EmailServiceImpl;
 import com.example.ISAums.model.*;
 import com.example.ISAums.service.FlightService;
 import org.springframework.http.ResponseEntity;
@@ -20,17 +19,8 @@ public class FlightController {
 
     private final FlightService flightService;
 
-    private final EmailServiceImpl emailService;
-
-    public FlightController(FlightService flightService, EmailServiceImpl emailService){
+    public FlightController(FlightService flightService){
         this.flightService = flightService;
-        this.emailService = emailService;
-    }
-
-    @PostMapping(value = "/sendInvitationForTrip")
-    public void sendInvitationForTrip(){
-
-        emailService.send("uroskojo96@gmail.com", "uroskojo96@gmail.com", "Invitation","linkzapotvrdu");
     }
 
     @PostMapping

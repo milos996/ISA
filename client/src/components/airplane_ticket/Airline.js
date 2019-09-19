@@ -4,12 +4,23 @@ import Card from "@material-ui/core/Card";
 import CardActions from "@material-ui/core/CardActions";
 import CardContent from "@material-ui/core/CardContent";
 import Typography from "@material-ui/core/Typography";
+import Button from "@material-ui/core/Button";
+import Modal from "@material-ui/core/Modal";
+import TicketsForFastReservation from "../airline/TicketsForFastReservation";
 
 export default function Airline({ airline }) {
   const classes = useStyles();
+  const [isModalVisible, setModalVisibility] = useState(false);
 
   return (
     <Card className={classes.card}>
+      <Modal open={isModalVisible}>
+        <div className="modal-container">
+          {<TicketsForFastReservation airlineId={airline.id} />}
+
+          <Button onClick={e => setModalVisibility(false)}>Close</Button>
+        </div>
+      </Modal>
       <CardContent>
         <Typography variant="h5" component="h2">
           {airline.name}
@@ -30,7 +41,11 @@ export default function Airline({ airline }) {
           Hand luggage price:{airline.handLuggagePrice}€
         </Typography>
       </CardContent>
-      <CardActions></CardActions>
+      <CardActions>
+        <Button size="small" onClick={() => setModalVisibility(true)}>
+          Tickets on discount
+        </Button>
+      </CardActions>
     </Card>
   );
 }
@@ -38,7 +53,7 @@ export default function Airline({ airline }) {
 const useStyles = makeStyles(theme => ({
   card: {
     width: 220,
-    height: 320,
+    height: 370,
     marginBottom: 15,
     marginRight: 10,
     padding: 5,

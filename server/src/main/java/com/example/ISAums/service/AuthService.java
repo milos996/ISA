@@ -83,7 +83,7 @@ public class AuthService {
         userRepository.save(user);
 
         String appUrl = servletRequest.getRequestURI();
-        emailService.sendConfirmation(appUrl, user);
+     //   emailService.sendConfirmation(appUrl, user);
 
         return user;
     }

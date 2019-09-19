@@ -21,6 +21,7 @@ const primary = teal[400];
 export default function Navbar() {
   const classes = useStyles();
   const userToken = useSelector(userTokenSelector);
+  const userData = useSelector(userDataSelector);
   const dispatch = useDispatch();
   const user = useSelector(userDataSelector);
   const handleLogout = () => {

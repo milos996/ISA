@@ -2,6 +2,7 @@ package com.example.ISAums.controller;
 
 import com.example.ISAums.dto.request.*;
 import com.example.ISAums.dto.response.GetFriendshipRequestsResponse;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import com.example.ISAums.dto.response.GetUserResponse;
 import com.example.ISAums.dto.response.SendFriendshipRequestResponse;
@@ -27,6 +28,7 @@ public class UserController {
 	}
 
 	@PutMapping
+	@PreAuthorize("hasAnyAuthority('AIRLINE_ADMIN', 'USER')")
 	public ResponseEntity<UpdateUserProfileResponse> updateUserProfile(@RequestBody UpdateUserProfileRequest request){
 
 		User user = userService.updateUser(request);
@@ -34,6 +36,7 @@ public class UserController {
 	}
 
 	@PostMapping(value = "/friendshipRequest")
+	@PreAuthorize("hasAnyAuthority('USER')")
 	public ResponseEntity<SendFriendshipRequestResponse> sendFriendshipRequest(@RequestBody SendFriendshipRequestRequest request){
 
 		Friendship friendship = userService.sendFriendshipRequest(request);
@@ -41,6 +44,7 @@ public class UserController {
 	}
 
 	@GetMapping(value = "/listOfFriends/{id}")
+	@PreAuthorize("hasAnyAuthority('USER')")
 	public ResponseEntity<List<GetUserResponse>> getListOfFriends(@PathVariable(name = "id") UUID user_id){
 
 		List<User> friends = userService.getListOfFriends(user_id);
@@ -48,6 +52,7 @@ public class UserController {
 	}
 
 	@DeleteMapping(value = "/friendship/mineId={mineId}&friendsId={friendsId}")
+	@PreAuthorize("hasAnyAuthority('USER')")
 	public ResponseEntity removeFriendFromListOfFriends(@PathVariable(name = "mineId") UUID mineId, @PathVariable(name = "friendsId") UUID friendsId){
 
         userService.removeFriend(mineId, friendsId);
@@ -55,6 +60,7 @@ public class UserController {
 	}
 
 	@PutMapping(value = "/friendship/update")
+	@PreAuthorize("hasAnyAuthority('USER')")
 	public ResponseEntity updateFriendshipRequest(@RequestBody UpdateFriendshipRequestRequest request){
 		userService.updateFriendshipRequest(request);
 		return ResponseEntity.ok().build();

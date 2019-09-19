@@ -50,10 +50,11 @@ public class Flight extends BaseEntity {
   @NotNull
   private Airplane airplane;
 
+  @Version
+  private Integer version;
+
   @Column(name = "rating")
   @Range(min = 0, max = MAX_RATING)
   private Double rating;
-
-
 }
 
