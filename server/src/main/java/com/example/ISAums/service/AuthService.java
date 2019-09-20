@@ -83,7 +83,7 @@ public class AuthService {
         userRepository.save(user);
 
         String appUrl = servletRequest.getRequestURI();
-     //   emailService.sendConfirmation(appUrl, user);
+        emailService.sendConfirmation(appUrl, user);
 
         return user;
     }
@@ -167,7 +167,7 @@ public class AuthService {
                 user.setPassword(bCryptPasswordEncoder.encode(request.getNewPassword()));
 
                 RentACarAdmin rentACarAdmin = rentACarAdminRepository.findByUser_Id(UUID.fromString(auth.getName()));
-                rentACarAdmin.setFirstLogin(false);
+                rentACarAdmin.setFirstLogin(true);
                 rentACarAdminRepository.save(rentACarAdmin);
 
                 return "You have successfully changed your password. You can sign in now!";

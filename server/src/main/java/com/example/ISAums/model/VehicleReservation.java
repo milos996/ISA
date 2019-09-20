@@ -39,6 +39,11 @@ public class VehicleReservation extends BaseEntity {
     @NotNull
     private Vehicle vehicle;
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_id")
+    @NotNull
+    private User user;
+
     @Version
     private Integer version;
 

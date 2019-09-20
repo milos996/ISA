@@ -19,12 +19,12 @@ import {
   selectRentACarLocationInformation
 } from "../store/rent-a-car/selectors";
 
-export default function RentACarVehiclesPage({ match, location }) {
+export default function RentACarVehiclesPage({ match }) {
   const classes = useStyles();
   const dispatch = useDispatch();
   const vehicles = useSelector(selectRentACarVehicles);
-  const [pickUpDate, setPickUpDate] = useState(location.state.startDate);
-  const [dropOffDate, setDropOffDate] = useState(location.state.endDate);
+  const [pickUpDate, setPickUpDate] = useState();
+  const [dropOffDate, setDropOffDate] = useState();
   const [seats, setSeats] = useState(null);
   const [yearOfProduction, setYearOfProduction] = useState(null);
   const [price, setPrice] = useState({

@@ -3,18 +3,18 @@ package com.example.ISAums.service;
 import com.example.ISAums.dto.request.CreateVehicleReservationRequest;
 import com.example.ISAums.exception.CustomException;
 import com.example.ISAums.exception.EntityWithIdDoesNotExist;
-import com.example.ISAums.model.AirplaneTicket;
-import com.example.ISAums.model.Flight;
-import com.example.ISAums.model.Vehicle;
-import com.example.ISAums.model.VehicleReservation;
+import com.example.ISAums.model.*;
 import com.example.ISAums.repository.*;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.security.Security;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -69,9 +69,15 @@ public class VehicleReservationService {
         int days = (int) ndays;
 
         vehicleReservation.setPrice(vehicle.getPricePerDay() * days);
-        //airplaneTicketRepository.save(airplaneTicket);
-        AirplaneTicket airplaneTicket = airplaneTicketRepository.findById(request.getAirplaneTicketId()).orElse(null);
-        vehicleReservation.setAirplaneTicket(airplaneTicket);
+
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        User user = userRepository.findById(UUID.fromString(auth.getName())).orElse(null);
+        vehicleReservation.setUser(user);
+
+        if (request.getAirplaneTicketId() != null && !request.getAirplaneTicketId().equals("undefined") && !request.getAirplaneTicketId().equals("")) {
+            AirplaneTicket airplaneTicket = airplaneTicketRepository.findById(request.getAirplaneTicketId()).orElse(null);
+            vehicleReservation.setAirplaneTicket(airplaneTicket);
+        }
 
         vehicleReservationRepository.save(vehicleReservation);
 
@@ -90,7 +96,13 @@ public class VehicleReservationService {
 
     @Transactional(readOnly = true)
     public List<VehicleReservation> get() {
-        return vehicleReservationRepository.findAll();
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+
+        logger.info("NAME: " + authentication.getName());
+
+        User user = userRepository.findById(UUID.fromString(authentication.getName())).orElse(null);
+
+        return vehicleReservationRepository.findByUserId(user.getId().toString());
     }
 
     @Transactional(rollbackFor = Exception.class, isolation = Isolation.READ_COMMITTED)

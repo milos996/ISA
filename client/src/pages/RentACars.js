@@ -54,10 +54,17 @@ export default function RentACarPage({ history, location }) {
   const [name, setName] = useState(null);
   const [city, setCity] = useState(null);
   const [state, setState] = useState(null);
-  const [pickUpDate, setPickUpDate] = useState(location.state.startDate);
-  const [dropOffDate, setDropOffDate] = useState(location.state.endDate);
+  const [pickUpDate, setPickUpDate] = useState();
+  const [dropOffDate, setDropOffDate] = useState();
 
   const [currentLocation, setCurrentLocation] = useState(null);
+
+  useEffect(() => {
+    if (location.state != undefined) {
+      setPickUpDate(location.state.pickUpDate);
+      setDropOffDate(location.state.dropOffDate);
+    }
+  });
 
   function closeModal() {
     setUpdateModalVisibility(false);
@@ -260,8 +267,8 @@ export default function RentACarPage({ history, location }) {
                     pathname: `/rent-a-cars/${val.id}/vehicles`,
                     state: {
                       pickUpDate: pickUpDate,
-                      dropOffDate: dropOffDate,
-                      airplaneTicketId: location.state.airplaneTicketId
+                      dropOffDate: dropOffDate
+                      //airplaneTicketId: location.state.airplaneTicketId
                     }
                   });
                 }}

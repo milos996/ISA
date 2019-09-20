@@ -56,11 +56,13 @@ public class RentACarController {
 
 
     @GetMapping("/{id}/income")
+    @PreAuthorize("hasAnyAuthority('RENT_A_CAR_ADMIN')")
     public ResponseEntity<List<GetRentACarVehicleIncomeResponse>> income(@PathVariable("id") String id,  @RequestParam("startDate") String startDate, @RequestParam("endDate") String endDate) throws ParseException {
         return ResponseEntity.ok(rentACarService.getIncome(id, startDate, endDate));
     }
 
     @GetMapping("/{id}/busyness")
+    @PreAuthorize("hasAnyAuthority('RENT_A_CAR_ADMIN')")
     public ResponseEntity<List<GetRentACarVehicleBusynessResponse>> busyness(@PathVariable("id") String id, @RequestParam("startDate") String startDate, @RequestParam("endDate") String endDate) throws ParseException {
         return ResponseEntity.ok(rentACarService.getBusyness(id, startDate, endDate));
     }
@@ -79,6 +81,7 @@ public class RentACarController {
 
     @PostMapping
     @RequestMapping("/rating")
+    @PreAuthorize("hasAnyAuthority('USER')")
     public ResponseEntity<List<GetVehicleResponse>> rating(@RequestBody CreateRatingRequest request) {
         return ResponseEntity.ok(VehicleConverter.toGetVehicleResponseFromVehicles(rentACarService.rate(request)));
     }

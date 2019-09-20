@@ -26,8 +26,10 @@ export default function RentACarVehicle({ vehicle, location }) {
   const info = useSelector(selectVehicleSearchInformation);
 
   useEffect(() => {
-    info.pickUpDate = location.state.pickUpDate;
-    info.dropOffDate = location.state.dropOffDate;
+    if (location != undefined) {
+      info.pickUpDate = location.state.pickUpDate;
+      info.dropOffDate = location.state.dropOffDate;
+    }
   });
 
   function handleReserve() {
@@ -44,7 +46,16 @@ export default function RentACarVehicle({ vehicle, location }) {
     }
 
     const vehicleId = vehicle.id;
-    dispatch(createVehicleReservation({ vehicleId, info }));
+    var ticketId;
+    if (location != undefined) ticketId = location.state.airplaneTicketId;
+
+    dispatch(
+      createVehicleReservation({
+        airplaneTicketId: ticketId,
+        vehicleId,
+        info
+      })
+    );
     closeModal();
   }
 

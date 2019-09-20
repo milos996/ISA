@@ -37,4 +37,8 @@ public interface VehicleReservationRepository extends JpaRepository<VehicleReser
                   "WHERE vr.vehicle_id = :vid " +
                   "AND vr.end_date >= :endDate" ,nativeQuery = true)
     List<Vehicle> isReserved(String vid, String endDate);
+
+    @Query(value= "SELECT * FROM vehicle_reservation as vr " +
+                  "WHERE vr.user_id = :userId " ,nativeQuery = true)
+    List<VehicleReservation> findByUserId(String userId);
 }

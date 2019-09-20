@@ -1,5 +1,6 @@
 package com.example.ISAums.service;
 
+import com.example.ISAums.converter.AddressConverter;
 import com.example.ISAums.dto.request.CreateRatingRequest;
 import com.example.ISAums.dto.request.CreateRentACarRequest;
 import com.example.ISAums.dto.request.UpdateRentACarRequest;
@@ -90,35 +91,16 @@ public class RentACarService {
         if (rentACarRepository.existsByName(request.getName()))
             throw new EntityAlreadyExistsException(request.getName());
 
-        Optional<Address> address = addressRepository.findById(rentACar.get().getAddress().getId());
-
-        if (request.getAddress().getStreet() != null)
-            rentACar.get().getAddress().setStreet(request.getAddress().getStreet());
-
-        if (request.getAddress().getCity() != null)
-            rentACar.get().getAddress().setCity(request.getAddress().getCity());
-
-        if (request.getAddress().getState() != null)
-            rentACar.get().getAddress().setState(request.getAddress().getState());
-
-        if (request.getAddress().getLatitude() != null)
-            rentACar.get().getAddress().setLatitude(request.getAddress().getLatitude());
-
-        if (request.getAddress().getLongitude() != null)
-            rentACar.get().getAddress().setLongitude(request.getAddress().getLongitude());
-
         if (request.getName() != null)
             rentACar.get().setName(request.getName());
 
         if (request.getDescription() != null)
             rentACar.get().setDescription(request.getDescription());
 
+        Address address = AddressConverter.toAddressFromCreateRequest(request.getAddress());
+        addressRepository.save(address);
 
-        UUID address_id = address.get().getId();
-        copyNonNullProperties(request, address.get());
-        address.get().setId(address_id);
-        addressRepository.save(address.get());
-
+        rentACar.get().setAddress(address);
         rentACarRepository.save(rentACar.get());
 
         return rentACarRepository.findAll();
@@ -173,6 +155,10 @@ public class RentACarService {
     @Transactional(rollbackFor = Exception.class)
     public List<Vehicle> rate(CreateRatingRequest request) {
         VehicleReservation vehicleReservation = vehicleReservationRepository.findById(request.getReservationId()).orElse(null);
+
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+
+        logger.info("INFO: " + authentication.getName());
 
         if (vehicleReservation == null)
             throw new EntityWithIdDoesNotExist("vehicle reservation", request.getReservationId());

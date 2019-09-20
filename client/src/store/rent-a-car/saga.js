@@ -94,7 +94,9 @@ export function* updateRentACar() {
     description: payload.description
   };
 
-  yield call(rentACarService.updateRentACar, rentACar);
+  const { data } = yield call(rentACarService.updateRentACar, rentACar);
+
+  yield put(putRentACars(data));
 }
 
 export function* deleteRentACar() {

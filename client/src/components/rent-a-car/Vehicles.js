@@ -33,8 +33,8 @@ export default function RentACarVehicles({ rentACarId, location }) {
   const [createModalVisibility, setCreateModalVisibility] = useState(false);
   const [modalStyle] = React.useState(getModalStyle);
 
-  const [pickUpDate, setPickUpDate] = useState(location.state.startDate);
-  const [dropOffDate, setDropOffDate] = useState(location.state.startDate);
+  const [pickUpDate, setPickUpDate] = useState();
+  const [dropOffDate, setDropOffDate] = useState();
   const [pickUpLocation, setPickUpLocation] = useState("");
   const [dropOffLocation, setDropOffLocation] = useState("");
   const [type, setType] = useState("");
@@ -44,13 +44,16 @@ export default function RentACarVehicles({ rentACarId, location }) {
     max: 0
   });
 
-  const [sortBy, setSortBy] = useState();
-
   function closeModal() {
     setCreateModalVisibility(false);
   }
 
   useEffect(() => {
+    if (location != undefined) {
+      setPickUpDate(location.state.pickUpDate);
+      setDropOffDate(location.state.dropOffDate);
+    }
+
     dispatch(
       fetchRentACarVehicles({
         rentACarId

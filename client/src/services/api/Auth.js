@@ -25,7 +25,7 @@ class AuthService extends HttpBaseClient {
 
     if (data.role === "RENT_A_CAR_ADMIN") {
       localStorage.setItem("firstLogin", data.rentACarAdminFirstLogin);
-      if (data.rentACarAdminFirstLogin == true)
+      if (data.rentACarAdminFirstLogin == false)
         history.push("/rent-a-car-admin/update-password");
       else history.push("/");
     } else {
