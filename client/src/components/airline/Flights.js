@@ -10,14 +10,22 @@ import { Container } from "@material-ui/core";
 import Button from "@material-ui/core/Button";
 import Modal from "@material-ui/core/Modal";
 import { makeStyles } from "@material-ui/core/styles";
-import { fetchAirlineFlights } from "../../store/airline/actions";
+import {
+  fetchAirlineFlights,
+  fetchAirlineAdmin
+} from "../../store/airline/actions";
 import { MODAL_CONTENT } from "../../constants/airline";
 import CreateFlight from "./CreateFlight";
+import { userDataSelector } from "../../store/user/selectors";
+import { selectAirlineAdmin } from "../../store/airline/selectors";
 
 export default function Flights({ airlineId }) {
   const dispatch = useDispatch();
   const classes = useStyles();
   const flights = useSelector(selectFlights);
+  const user = useSelector(userDataSelector);
+  const airlineAdmin = useSelector(selectAirlineAdmin);
+
   const [columns, setColumns] = useState([
     { title: "Departure date", field: "departure_date" },
     { title: "Return date", field: "arrival_date" },
@@ -31,6 +39,10 @@ export default function Flights({ airlineId }) {
     isVisible: false,
     value: ""
   });
+
+  useEffect(() => {
+    dispatch(fetchAirlineAdmin());
+  }, [airlineId]);
 
   useEffect(() => {
     dispatch(fetchAirlineFlights({ airlineId }));
@@ -83,19 +95,22 @@ export default function Flights({ airlineId }) {
             ))}
           </TableBody>
         </Table>
-        <Button
-          variant="contained"
-          color="primary"
-          className={classes.button}
-          onClick={() => {
-            setModalContent({
-              isVisible: true,
-              value: "create_flight"
-            });
-          }}
-        >
-          Create new flight
-        </Button>
+        {user.role === "AIRLINE_ADMIN" &&
+        airlineAdmin.airline.id === airlineId ? (
+          <Button
+            variant="contained"
+            color="primary"
+            className={classes.button}
+            onClick={() => {
+              setModalContent({
+                isVisible: true,
+                value: "create_flight"
+              });
+            }}
+          >
+            Create new flight
+          </Button>
+        ) : null}
       </Container>
     </div>
   );

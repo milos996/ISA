@@ -3,6 +3,7 @@ package com.example.ISAums.controller;
 import com.example.ISAums.dto.request.*;
 import com.example.ISAums.dto.response.GetFriendshipRequestsResponse;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 import com.example.ISAums.dto.response.GetUserResponse;
 import com.example.ISAums.dto.response.SendFriendshipRequestResponse;
@@ -36,31 +37,27 @@ public class UserController {
 	}
 
 	@PostMapping(value = "/friendshipRequest")
-	@PreAuthorize("hasAnyAuthority('USER')")
-	public ResponseEntity<SendFriendshipRequestResponse> sendFriendshipRequest(@RequestBody SendFriendshipRequestRequest request){
+	public ResponseEntity<SendFriendshipRequestResponse> sendFriendshipRequest(@AuthenticationPrincipal UUID userId, @RequestBody SendFriendshipRequestRequest request){
 
-		Friendship friendship = userService.sendFriendshipRequest(request);
+		Friendship friendship = userService.sendFriendshipRequest(userId, request);
 		return ResponseEntity.ok(toSendFriendshipRequestResponseFromFriendship(friendship));
 	}
 
 	@GetMapping(value = "/listOfFriends/{id}")
-	@PreAuthorize("hasAnyAuthority('USER')")
 	public ResponseEntity<List<GetUserResponse>> getListOfFriends(@PathVariable(name = "id") UUID user_id){
 
 		List<User> friends = userService.getListOfFriends(user_id);
 		return ResponseEntity.ok(toGetUserResponseFromUsers(friends));
 	}
 
-	@DeleteMapping(value = "/friendship/mineId={mineId}&friendsId={friendsId}")
-	@PreAuthorize("hasAnyAuthority('USER')")
-	public ResponseEntity removeFriendFromListOfFriends(@PathVariable(name = "mineId") UUID mineId, @PathVariable(name = "friendsId") UUID friendsId){
+	@DeleteMapping(value = "/friendship/friendsId={friendsId}")
+	public ResponseEntity removeFriendFromListOfFriends(@AuthenticationPrincipal UUID mineId, @PathVariable(name = "friendsId") UUID friendsId){
 
         userService.removeFriend(mineId, friendsId);
 		return ResponseEntity.ok().build();
 	}
 
 	@PutMapping(value = "/friendship/update")
-	@PreAuthorize("hasAnyAuthority('USER')")
 	public ResponseEntity updateFriendshipRequest(@RequestBody UpdateFriendshipRequestRequest request){
 		userService.updateFriendshipRequest(request);
 		return ResponseEntity.ok().build();
@@ -72,15 +69,15 @@ public class UserController {
 		return ResponseEntity.ok(toGetFriendshipRequestsResponseFromRequests(requests));
 	}
 
-	@GetMapping(value = "/search/mineId={mine_id}&userName={name}")
-	public ResponseEntity<List<GetUserResponse>> find(@PathVariable(name = "mine_id") UUID mine_id, @PathVariable(name = "name") String name){
-		List<User> users = userService.search(mine_id,name);
+	@GetMapping(value = "/search/userName={name}")
+	public ResponseEntity<List<GetUserResponse>> find(@AuthenticationPrincipal UUID mineId, @PathVariable(name = "name") String name){
+		List<User> users = userService.search(mineId, name);
 		return ResponseEntity.ok(toGetUserResponseFromUsers(users));
 	}
 
 	@PutMapping(value = "/password/update/")
-	public ResponseEntity updatePassword(@RequestBody UpdatePasswordRequest request){
-		userService.updatePassword(request.getNewPassword());
+	public ResponseEntity updatePassword(@AuthenticationPrincipal UUID userId, @RequestBody UpdatePasswordRequest request){
+		userService.updatePassword(request.getNewPassword(), userId);
 		return ResponseEntity.ok().build();
 	}
 	@GetMapping(value = "/{id}")

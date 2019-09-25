@@ -9,7 +9,8 @@ const ENDPOINTS = {
   SAVE_FLIGHT: "/flights",
   RATE_FLIGHT: "/flights/rating",
   SEARCH:
-    "/flights/search/fromDestinationCity=%s&toDestinationCity=%s&departureDate=%s&arrivalDate=%s"
+    "/flights/search/fromDestinationCity=%s&toDestinationCity=%s&departureDate=%s&arrivalDate=%s",
+  FETCH_FLIGHT: "/flights/flight/%s"
 };
 
 class FlightService extends HttpBaseClient {
@@ -47,6 +48,10 @@ class FlightService extends HttpBaseClient {
         data.arrivalDate
       )
     );
+  };
+
+  fetchFlight = id => {
+    return this.getApiClient().get(format(ENDPOINTS.FETCH_FLIGHT, id));
   };
 }
 

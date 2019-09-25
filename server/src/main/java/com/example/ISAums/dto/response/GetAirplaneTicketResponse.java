@@ -26,7 +26,7 @@ public class GetAirplaneTicketResponse {
 
     private String departureTime;
 
-    private String arrivalTime;
+    private String returnTime;
 
     private Time duration;
 

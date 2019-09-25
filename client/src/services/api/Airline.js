@@ -4,11 +4,13 @@ import { format } from "util";
 const ENDPOINTS = {
   SAVE_AIRLINE: "/airlines",
   FETCH_AIRLINE: "/airlines/%s",
-  //FETCH_RATING: "/airlines/averageRating/%s",
   RATE_AIRLINE: "/airlines/rating",
   FETCH_RATING: "/airlines/airline/%s/average-rating",
   FETCH_AIRLINES: "/airlines/all",
-  SORT_AIRLINES: "/airlines/sort?by=%s"
+  SORT_AIRLINES: "/airlines/sort?by=%s",
+  INCOME: "/airlines/%s/income?startDate=%s&endDate=%s",
+  FETCH_AIRLINE_ADMIN: "/airlines/airline-admin",
+  SOLD_TICKETS: "/airlines/%s/sold-tickets?startDate=%s&endDate=%s"
 };
 
 class AirlineService extends HttpBaseClient {
@@ -36,6 +38,27 @@ class AirlineService extends HttpBaseClient {
 
   sortAirlines = payload => {
     return this.getApiClient().get(format(ENDPOINTS.SORT_AIRLINES, payload.by));
+  };
+
+  showIncome = payload => {
+    return this.getApiClient().get(
+      format(ENDPOINTS.INCOME, payload.id, payload.startDate, payload.endDate)
+    );
+  };
+
+  fetchAirlineAdmin = () => {
+    return this.getApiClient().get(ENDPOINTS.FETCH_AIRLINE_ADMIN);
+  };
+
+  showSoldTickets = payload => {
+    return this.getApiClient().get(
+      format(
+        ENDPOINTS.SOLD_TICKETS,
+        payload.id,
+        payload.startDate,
+        payload.endDate
+      )
+    );
   };
 }
 

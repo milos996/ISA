@@ -1,7 +1,7 @@
 import React, { useEffect } from "react";
 import { Link } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
-import { makeStyles } from "@material-ui/core/styles";
+import { makeStyles, withStyles } from "@material-ui/core/styles";
 import AppBar from "@material-ui/core/AppBar";
 import Toolbar from "@material-ui/core/Toolbar";
 import Typography from "@material-ui/core/Typography";
@@ -13,9 +13,13 @@ import { history } from "../index";
 import GroupIcon from "@material-ui/icons/Group";
 import ContactMailIcon from "@material-ui/icons/ContactMail";
 import AccountBoxIcon from "@material-ui/icons/AccountBox";
+import AirlineIcon from "@material-ui/icons/AirplanemodeActive";
 import PersonAddSharpIcon from "@material-ui/icons/PersonAddSharp";
 import ExitToAppIcon from "@material-ui/icons/ExitToApp";
 import InputRoundedIcon from "@material-ui/icons/InputRounded";
+import Tooltip from "@material-ui/core/Tooltip";
+import { selectAirlineAdmin } from "../store/airline/selectors";
+import { fetchAirlineAdmin } from "../store/airline/actions";
 const primary = teal[400];
 
 export default function Navbar() {
@@ -24,6 +28,7 @@ export default function Navbar() {
   const userData = useSelector(userDataSelector);
   const dispatch = useDispatch();
   const user = useSelector(userDataSelector);
+  const airlineAdmin = useSelector(selectAirlineAdmin);
   const handleLogout = () => {
     dispatch(
       logoutUser({
@@ -33,7 +38,9 @@ export default function Navbar() {
       })
     );
   };
-
+  useEffect(() => {
+    dispatch(fetchAirlineAdmin());
+  }, [user.id]);
   return (
     <div className={classes.root}>
       <AppBar
@@ -51,24 +58,34 @@ export default function Navbar() {
           </Typography>
           {userToken ? (
             <div>
-              <Link className="button" to={`/user/${user.id}/friends`}>
-                <Button color="inherit">
-                  <GroupIcon></GroupIcon>
+              <LightTooltip title="Friends">
+                <Link className="button" to={`/user/${user.id}/friends`}>
+                  <Button color="inherit">
+                    <GroupIcon></GroupIcon>
+                  </Button>
+                </Link>
+              </LightTooltip>
+              <LightTooltip title="Invites">
+                <Link className="button" to={`/user/${user.id}/invites`}>
+                  <Button color="inherit">
+                    <ContactMailIcon></ContactMailIcon>
+                  </Button>
+                </Link>
+              </LightTooltip>
+
+              <LightTooltip title="Profile">
+                <Link className="button" to={`/user/${user.id}`}>
+                  <Button color="inherit">
+                    <AccountBoxIcon></AccountBoxIcon>
+                  </Button>
+                </Link>
+              </LightTooltip>
+
+              <LightTooltip title="Logout">
+                <Button color="inherit" onClick={handleLogout}>
+                  <ExitToAppIcon></ExitToAppIcon>
                 </Button>
-              </Link>
-              <Link className="button" to={`/user/${user.id}/invites`}>
-                <Button color="inherit">
-                  <ContactMailIcon></ContactMailIcon>
-                </Button>
-              </Link>
-              <Link className="button" to={`/user/${user.id}`}>
-                <Button color="inherit">
-                  <AccountBoxIcon></AccountBoxIcon>
-                </Button>
-              </Link>
-              <Button color="inherit" onClick={handleLogout}>
-                <ExitToAppIcon></ExitToAppIcon>
-              </Button>
+              </LightTooltip>
             </div>
           ) : (
             <div>
@@ -83,6 +100,18 @@ export default function Navbar() {
                 </Button>
               </Link>
             </div>
+          )}
+          {userToken && user.role === "AIRLINE_ADMIN" && (
+            <LightTooltip title="Airline profile">
+              <Link
+                className="button"
+                to={`/airline/${airlineAdmin.airline.id}`}
+              >
+                <Button color="inherit">
+                  <AirlineIcon></AirlineIcon>
+                </Button>
+              </Link>
+            </LightTooltip>
           )}
         </Toolbar>
       </AppBar>
@@ -104,3 +133,11 @@ const useStyles = makeStyles(theme => ({
     background: primary
   }
 }));
+const LightTooltip = withStyles(theme => ({
+  tooltip: {
+    backgroundColor: theme.palette.common.white,
+    color: "rgba(0, 0, 0, 0.87)",
+    boxShadow: theme.shadows[1],
+    fontSize: 11
+  }
+}))(Tooltip);

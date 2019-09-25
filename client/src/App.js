@@ -32,13 +32,7 @@ const App = () => {
         accessRole="HOTEL_ADMIN"
       />
 
-      <PrivateRoute
-        exact
-        path="/airline/:id"
-        component={AirlineProfile}
-        accessRole="AIRLINE_ADMIN"
-      />
-
+      <Route exact path="/airline/:id" component={AirlineProfile} />
       <Route exact path="/airlines" component={() => <h1>Airlines</h1>} />
       <Route exact path="/login" component={LoginPage} />
       <Route exact path="/hotel-reservation" component={HotelsPage} />

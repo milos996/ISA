@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { makeStyles } from "@material-ui/core/styles";
 import { useDispatch, useSelector } from "react-redux";
 import TextField from "@material-ui/core/TextField";
@@ -6,15 +6,19 @@ import Container from "@material-ui/core/Container";
 import Button from "@material-ui/core/Button";
 import { makeTicketReservation } from "../../store/airplane_ticket/actions";
 import { selectSeats } from "../../store/airplane_ticket/selectors";
-import { putSelectedSeats } from "../../store/airplane_ticket/actions";
+import {
+  putSelectedSeats,
+  fetchFlight
+} from "../../store/airplane_ticket/actions";
 import { Link } from "react-router-dom";
 import { REQUEST_TYPE } from "../../constants/user";
+import { selectSelectedFlight } from "../../store/airplane_ticket/selectors";
 
 export default function ChooseSeats({ match, history }) {
   const classes = useStyles();
   const dispatch = useDispatch();
   const selectedSeats = useSelector(selectSeats);
-
+  const selectedFlight = useSelector(selectSelectedFlight);
   const [choosenSeatCoordinates, setChoosenSeatCoordinates] = useState({
     segmentNumber: 0,
     rowNumber: 0,
@@ -26,6 +30,10 @@ export default function ChooseSeats({ match, history }) {
     flightID: match.params.flight_id,
     invitedUsers: null
   });
+
+  useEffect(() => {
+    dispatch(fetchFlight(match.params.flight_id));
+  }, [match.params.flight_id]);
 
   function handleChooseButton() {
     dispatch(putSelectedSeats(choosenSeatCoordinates));
@@ -64,12 +72,14 @@ export default function ChooseSeats({ match, history }) {
       <h2>Choose one or more seat ({selectedSeats.length})</h2>
 
       <TextField
-        label="Segment number"
+        label="Segment number "
         margin="normal"
         type="number"
         className={classes.textField}
         onChange={handleChangeSeatCoordinates}
         inputProps={{
+          min: "1",
+          max: String(selectedFlight.airplane.numberOfSegments),
           name: "segmentNumber",
           id: "segment-num"
         }}
@@ -82,6 +92,8 @@ export default function ChooseSeats({ match, history }) {
         className={classes.textField}
         onChange={handleChangeSeatCoordinates}
         inputProps={{
+          min: "1",
+          max: String(selectedFlight.airplane.numberOfColumnsPerSegment),
           name: "columnNumber",
           id: "column-num"
         }}
@@ -94,6 +106,8 @@ export default function ChooseSeats({ match, history }) {
         className={classes.textField}
         onChange={handleChangeSeatCoordinates}
         inputProps={{
+          min: "1",
+          max: String(selectedFlight.airplane.numberOfRows),
           name: "rowNumber",
           id: "row-num"
         }}

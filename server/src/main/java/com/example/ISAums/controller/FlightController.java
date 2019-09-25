@@ -78,6 +78,12 @@ public class FlightController {
         return ResponseEntity.ok(toGetAirlineDestinationResponseFromDestinations(destinations));
     }
 
+    @GetMapping(value = "/flight/{id}")
+    public ResponseEntity<GetFlightOfAirlineResponse> getFlight(@PathVariable(name = "id") UUID id){
+        Flight flight = flightService.findFlightById(id);
+        return ResponseEntity.ok(toGetFlightResponseFromFlight(flight));
+    }
+
     @PostMapping
     @RequestMapping("/rating")
     public ResponseEntity<GetFlightAverageRatingResponse> rating(@RequestBody CreateRatingRequest request) {

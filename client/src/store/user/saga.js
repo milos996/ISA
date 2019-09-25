@@ -64,21 +64,17 @@ export function* saveUserData() {
 
 export function* savePassword() {
   const { payload } = yield take(SAVE_NEW_PASSWORD);
-  yield call(userService.savePassword, payload.password, payload.userId);
+  yield call(userService.savePassword, payload.requestNewPassword);
 }
 
 export function* sendFriendshipRequest() {
   const { payload } = yield take(SEND_FRIENDSHIP_REQUEST);
-  yield call(
-    userService.sendFriendshipRequest,
-    payload.senderUserId,
-    payload.invitedUserId
-  );
+  yield call(userService.sendFriendshipRequest, payload.invitedUserId);
 }
 
 export function* removeFriend() {
   const { payload } = yield take(REMOVE_FRIEND);
-  yield call(userService.removeFriend, payload.userId, payload.friendsId);
+  yield call(userService.removeFriend, payload.friendsId);
 }
 
 export function* fetchUsersWithoutEntity() {

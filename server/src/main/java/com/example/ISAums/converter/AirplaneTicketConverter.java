@@ -34,7 +34,7 @@ public class AirplaneTicketConverter {
                 .ticketId(airplaneTicket.getId())
                 .flightId(airplaneTicket.getFlight().getId())
                 .airline(airplaneTicket.getFlight().getAirplane().getAirline().getName())
-                .arrivalTime(airplaneTicket.getFlight().getArrivalTime().toString())
+                .returnTime(airplaneTicket.getFlight().getArrivalTime().toString())
                 .departureTime(airplaneTicket.getFlight().getDepartureTime().toString())
                 .duration(airplaneTicket.getFlight().getDuration())
                 .price(airplaneTicket.getFlight().getPrice())

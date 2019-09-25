@@ -21,7 +21,7 @@ export default function Friends({ userId }) {
   ]);
 
   function handleRemoveBtn(friendsId) {
-    dispatch(removeFriend({ userId, friendsId }));
+    dispatch(removeFriend({ friendsId }));
   }
 
   useEffect(() => {

@@ -10,7 +10,7 @@ import java.util.UUID;
 import java.util.stream.Collectors;
 
 public class AirlineConverter {
-
+/*
     public static GetAirlineIncomeResponse toGetAirlineIncomeResponseFromIncome(Date startDate, Date endDate, Double income){
 
         return GetAirlineIncomeResponse.builder()
@@ -18,7 +18,7 @@ public class AirlineConverter {
                 .endDate(endDate)
                 .income(income)
                 .build();
-    }
+    }*/
 
     public static GetAirlineAverageRatingResponse toGetAirlineRatingResponseFromRating(Double avgRating, UUID airlineId){
 

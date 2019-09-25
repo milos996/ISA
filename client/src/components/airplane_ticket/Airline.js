@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
 import { makeStyles } from "@material-ui/core/styles";
 import Card from "@material-ui/core/Card";
 import CardActions from "@material-ui/core/CardActions";
@@ -6,11 +7,14 @@ import CardContent from "@material-ui/core/CardContent";
 import Typography from "@material-ui/core/Typography";
 import Button from "@material-ui/core/Button";
 import Modal from "@material-ui/core/Modal";
+import CardActionArea from "@material-ui/core/CardActionArea";
 import TicketsForFastReservation from "../airline/TicketsForFastReservation";
+import { fetchAirlineDetails } from "../../store/airline/actions";
 
-export default function Airline({ airline }) {
+export default function Airline({ airline, history }) {
   const classes = useStyles();
   const [isModalVisible, setModalVisibility] = useState(false);
+  const dispatch = useDispatch();
 
   return (
     <Card className={classes.card}>
@@ -21,26 +25,36 @@ export default function Airline({ airline }) {
           <Button onClick={e => setModalVisibility(false)}>Close</Button>
         </div>
       </Modal>
-      <CardContent>
-        <Typography variant="h5" component="h2">
-          {airline.name}
-        </Typography>
-        <Typography className={classes.pos} color="textSecondary">
-          Country:{airline.address.state}
-        </Typography>
-        <Typography className={classes.pos} color="textSecondary">
-          City:{airline.address.city}
-        </Typography>
-        <Typography className={classes.pos} color="textSecondary">
-          Description:{airline.description}
-        </Typography>
-        <Typography className={classes.pos} color="textSecondary">
-          Suitcase price:{airline.checkingInSuitcasePrice}€
-        </Typography>
-        <Typography className={classes.pos} color="textSecondary">
-          Hand luggage price:{airline.handLuggagePrice}€
-        </Typography>
-      </CardContent>
+      <CardActionArea>
+        <CardContent
+          onClick={() => {
+            dispatch(fetchAirlineDetails({ airlineId: airline.id }));
+
+            history.push({
+              pathname: `/airline/${airline.id}`
+            });
+          }}
+        >
+          <Typography variant="h5" component="h2">
+            {airline.name}
+          </Typography>
+          <Typography className={classes.pos} color="textSecondary">
+            Country:{airline.address.state}
+          </Typography>
+          <Typography className={classes.pos} color="textSecondary">
+            City:{airline.address.city}
+          </Typography>
+          <Typography className={classes.pos} color="textSecondary">
+            Description:{airline.description}
+          </Typography>
+          <Typography className={classes.pos} color="textSecondary">
+            Suitcase price:{airline.checkingInSuitcasePrice}€
+          </Typography>
+          <Typography className={classes.pos} color="textSecondary">
+            Hand luggage price:{airline.handLuggagePrice}€
+          </Typography>
+        </CardContent>
+      </CardActionArea>
       <CardActions>
         <Button size="small" onClick={() => setModalVisibility(true)}>
           Tickets on discount

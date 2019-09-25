@@ -40,7 +40,7 @@ public class UserControllerTest {
                 .email("igor@gmail.com")
                 .firstName("Igor")
                 .lastName("Ilic")
-                .phone("0605050123")
+                .phoneNumber("0605050123")
                 .password("111")
                 .id(UUID.fromString("96ab9400-7089-4af8-bc54-4301a5868789"))
                 .build();

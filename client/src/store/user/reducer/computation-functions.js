@@ -1,8 +1,7 @@
 export function putUserData(state, payload) {
-  console.log(state);
   return {
     ...state,
-    payload
+    data: payload
   };
 }
 

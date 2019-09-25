@@ -5,7 +5,10 @@ import {
   PUT_AIRLINE_FLIGHTS,
   PUT_TICKETS_FOR_FAST_RESERVATION,
   PUT_AIRLINE_AIRPLANES,
-  PUT_AIRLINE_RATING
+  PUT_AIRLINE_RATING,
+  PUT_AIRLINE_INCOME,
+  PUT_AIRLINE_ADMIN,
+  PUT_SOLD_AIRLINE_TICKETS
 } from "../constants";
 
 const initialState = {
@@ -32,7 +35,14 @@ const initialState = {
   rating: {
     airlineId: 0,
     avgRating: 0
-  }
+  },
+  income: [],
+  airlineAdmin: {
+    airline: {
+      id: ""
+    }
+  },
+  soldTickets: []
 };
 
 const airlineReducer = (state = initialState, { type, payload }) => {
@@ -48,7 +58,10 @@ const actionHandler = {
   [PUT_TICKETS_FOR_FAST_RESERVATION]:
     computationFunctions.putTicketsForFastReservation,
   [PUT_AIRLINE_AIRPLANES]: computationFunctions.putAirlineAirplanes,
-  [PUT_AIRLINE_RATING]: computationFunctions.putAirlineRating
+  [PUT_AIRLINE_RATING]: computationFunctions.putAirlineRating,
+  [PUT_AIRLINE_INCOME]: computationFunctions.putIncomeData,
+  [PUT_AIRLINE_ADMIN]: computationFunctions.putAirlineAdmin,
+  [PUT_SOLD_AIRLINE_TICKETS]: computationFunctions.putSoldTicketsData
 };
 
 export default airlineReducer;

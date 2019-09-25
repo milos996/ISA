@@ -19,8 +19,34 @@ import {
   PUT_AIRLINE_RATING,
   RATE_AIRLINE,
   RATE_FLIGHT,
-  CANCEL_FLIGHT
+  CANCEL_FLIGHT,
+  SHOW_AIRLINE_INCOME,
+  PUT_AIRLINE_INCOME,
+  FETCH_AIRLINE_ADMIN,
+  PUT_AIRLINE_ADMIN,
+  SHOW_SOLD_AIRLINE_TICKETS,
+  PUT_SOLD_AIRLINE_TICKETS
 } from "./constants";
+
+export const putSoldTicketsData = payload => ({
+  type: PUT_SOLD_AIRLINE_TICKETS,
+  payload
+});
+
+export const showSoldAirlineTickets = payload => ({
+  type: SHOW_SOLD_AIRLINE_TICKETS,
+  payload
+});
+
+export const fetchAirlineAdmin = payload => ({
+  type: FETCH_AIRLINE_ADMIN,
+  payload
+});
+
+export const putIncomeData = payload => ({
+  type: PUT_AIRLINE_INCOME,
+  payload
+});
 
 export const putAirlineDetails = payload => ({
   type: PUT_AIRLINE_DETAILS,
@@ -124,5 +150,15 @@ export const rateFlight = payload => ({
 
 export const cancelFlight = payload => ({
   type: CANCEL_FLIGHT,
+  payload
+});
+
+export const showAirlineIncome = payload => ({
+  type: SHOW_AIRLINE_INCOME,
+  payload
+});
+
+export const putAirlineAdmin = payload => ({
+  type: PUT_AIRLINE_ADMIN,
   payload
 });

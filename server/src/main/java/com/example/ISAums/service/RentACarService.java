@@ -27,7 +27,6 @@ import java.util.*;
 
 import static com.example.ISAums.converter.RatingConverter.toRatingFromCreateRequest;
 import static com.example.ISAums.converter.RentACarConverter.*;
-import static com.example.ISAums.util.UtilService.copyNonNullProperties;
 
 
 @Service

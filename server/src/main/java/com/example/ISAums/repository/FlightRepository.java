@@ -16,10 +16,6 @@ public interface FlightRepository extends JpaRepository<Flight, UUID> {
             "join isa_database.destination d on ad.destination_id = d.id where a.city=?1 and d.city=?2", nativeQuery = true)
     List<UUID> search(String fromDestinationCity, String toDestinationCity);
 
-    @Query(value = "select f.id from flight f left join airplane a" +
-            " on f.airplane_id = a.id where f.departure_time = curdate()+3 and a.airline_id = ?1", nativeQuery = true)
-    List<UUID> getQuickBookingFlights(String airlineId);
-
     @Query(value = "select f.id from isa_database.flight f left join isa_database.airplane a on f.airplane_id = a.id where a.airline_id = ?1", nativeQuery = true)
     List<UUID> getFlightsByAirlineId(String airlineId);
 
