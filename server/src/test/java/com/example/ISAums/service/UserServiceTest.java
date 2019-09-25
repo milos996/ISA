@@ -35,9 +35,10 @@ public class UserServiceTest {
     @Test
     public void userInvitedForFriendshipExists() {
 
+        UUID mineId = UUID.fromString("8110d363-6576-4297-860d-b029b519a671");
+
         SendFriendshipRequestRequest request = SendFriendshipRequestRequest.builder()
                 .invitedUserId(UUID.fromString("1e271fb1-2bcb-48af-98b1-24a57f21d98a"))
-                .senderUserId(UUID.fromString("8110d363-6576-4297-860d-b029b519a671"))
                 .build();
 
         User sender = User.builder()
@@ -63,7 +64,7 @@ public class UserServiceTest {
         when(friendshipRepository.save(any(Friendship.class))).then(returnsFirstArg());
         when(userRepository.findById(UUID.fromString("1e271fb1-2bcb-48af-98b1-24a57f21d98a"))).thenReturn(java.util.Optional.ofNullable(sender));
         when(userRepository.findById(UUID.fromString("8110d363-6576-4297-860d-b029b519a671"))).thenReturn(java.util.Optional.ofNullable(invitedUser));
-        Friendship savedFriendship = userService.sendFriendshipRequest(request);
+        Friendship savedFriendship = userService.sendFriendshipRequest(mineId, request);
         assertThat(savedFriendship.getInvitedUser()).isNotNull();
     }
 
