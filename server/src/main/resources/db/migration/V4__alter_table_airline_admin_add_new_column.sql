@@ -1,1 +1,0 @@
-alter table airline_admin add is_first_login bit not null;

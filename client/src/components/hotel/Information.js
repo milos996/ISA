@@ -78,6 +78,16 @@ export default function HotelInformation({ hotelId }) {
             onClick={() =>
               setModalContent({
                 isVisible: true,
+                value: MODAL_CONTENT.REPORT
+              })
+            }
+          >
+            Report
+          </Button>
+          <Button
+            onClick={() =>
+              setModalContent({
+                isVisible: true,
                 value: MODAL_CONTENT.SERVICES
               })
             }

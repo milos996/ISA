@@ -1,26 +1,16 @@
 package com.example.ISAums.service;
-
-import com.example.ISAums.dto.request.ChooseSeatCoordinatesRequest;
 import com.example.ISAums.dto.request.CreateAirplaneTicketReservationRequest;
 import com.example.ISAums.dto.request.CreateQuickTicketBookingRequest;
-import com.example.ISAums.dto.request.GetAirlineIncomeRequest;
-import com.example.ISAums.dto.response.GetAirlineIncomeResponse;
-import com.example.ISAums.dto.response.GetSoldAirlineTicketsResponse;
 import com.example.ISAums.email_service.EmailServiceImpl;
-import com.example.ISAums.exception.CustomException;
 import com.example.ISAums.model.*;
 import com.example.ISAums.model.enumeration.GroupTripStatus;
 import com.example.ISAums.repository.*;
-import lombok.RequiredArgsConstructor;
-import lombok.Synchronized;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
 import java.util.*;
 
 @Service
-@RequiredArgsConstructor
 public class AirplaneTicketService {
 
     private final AirplaneTicketRepository airplaneTicketRepository;
@@ -29,38 +19,45 @@ public class AirplaneTicketService {
     private final UserRepository userRepository;
     private final EmailServiceImpl emailService;
 
-    @Synchronized
+    public AirplaneTicketService(AirplaneTicketRepository airplaneTicketRepository,
+                                 FlightRepository flightRepository, GroupTripRepository groupTripRepository,
+                                 UserRepository userRepository, EmailServiceImpl emailService){
+
+        this.airplaneTicketRepository = airplaneTicketRepository;
+        this.flightRepository = flightRepository;
+        this.groupTripRepository = groupTripRepository;
+        this.userRepository = userRepository;
+        this.emailService = emailService;
+    }
+
     @Transactional(rollbackFor = Exception.class)
-      public AirplaneTicket reservation(UUID userOwnerId, CreateAirplaneTicketReservationRequest request) throws Exception {
+      public void reservation(CreateAirplaneTicketReservationRequest request){
 
-        List<ChooseSeatCoordinatesRequest> seats = request.getSeats();
-
+        boolean [][][]seatConfig = request.getSeatConfiguration();
         Optional<Flight> flight = flightRepository.findById(request.getFlightID());
         Airplane airplane = flight.get().getAirplane();
 
         int numOfSegments = airplane.getNumberOfSegments();
         int numOfColumns = airplane.getNumberOfColumnsPerSegment();
         int numOfRows = airplane.getNumberOfRows();
-        boolean [][][] seatsOfAirplane = initSeatConfigurationOfFlight(flight.get(), numOfSegments, numOfRows, numOfColumns);
-        List<String> coordinatesOfSeats = new ArrayList<>();
+
         int segment = 0;
         int row = 0;
         int column = 0;
 
-        for(int i = 0 ; i < seats.size(); i++){
-            segment = seats.get(i).getSegmentNumber()-1;
-            row = seats.get(i).getRowNumber()-1;
-            column = seats.get(i).getColumnNumber()-1;
-            if(!seatsOfAirplane[segment][row][column]){
-                seatsOfAirplane[segment][row][column] = true;//flag that indicates that seat is reserved
-                coordinatesOfSeats.add(segment+":"+row+":"+column);
-            }
-            else
-                throw new Exception("Seat is already reserved!");
+       List<String> coordinatesOfSeats = new ArrayList<>();
 
+        for(segment = 0; segment < numOfSegments; segment++) {
+            for (row = 0; row < numOfRows; row++) {
+                for (column = 0; column < numOfColumns; column++) {
+
+                    if(seatConfig[segment][row][column])
+                        coordinatesOfSeats.add(segment+":"+row+":"+column); //saving coordinates of reserved seat
+                }
+            }
         }
 
-        User userOwner = userRepository.findById(userOwnerId).get();
+        User userOwner = userRepository.findById(request.getUserID()).get();
         String [] segment_row_column = coordinatesOfSeats.get(0).split(":");
 
         segment = Integer.parseInt(segment_row_column[0]);
@@ -95,7 +92,7 @@ public class AirplaneTicketService {
 
                 UUID userId = request.getInvitedUsers().get(counter);
                 Optional<User> invitedUser = userRepository.findById(userId);
-                emailService.send(userOwner.getEmail(), invitedUser.get().getEmail(), "Trip invitation", "/group-trip-confirmation-page");
+                emailService.send(userOwner.getEmail(), invitedUser.get().getEmail(), "Trip invitation", "link");
 
                 segment_row_column = coordinatesOfSeats.get(counter).split(":");
 
@@ -119,11 +116,23 @@ public class AirplaneTicketService {
         }
 
         airplaneTicketRepository.save(airplaneTicket);
-        return airplaneTicket;
     }
 
-    public List<GetAirlineIncomeResponse> getIncome(String airlineID, String startDate, String endDate) {
-      return airplaneTicketRepository.getIncome(airlineID, startDate, endDate);
+    public Double getIncome(UUID airlineID, Date startDate, Date endDate) {
+
+        List<UUID> boughtFlightIDs = airplaneTicketRepository.getBoughtFlights(String.valueOf(airlineID), startDate, endDate);
+        List<Flight> flights = new ArrayList<>(boughtFlightIDs.size());
+
+        for(int i = 0; i < boughtFlightIDs.size(); i++){
+            Optional<Flight> tmpFlight = flightRepository.findById(UUID.fromString(String.valueOf(boughtFlightIDs.get(i))));
+            flights.add(tmpFlight.get());
+        }
+
+        return flights.stream()
+                .mapToDouble(flight -> {
+                    return flight.getPrice();
+                })
+                .reduce(0, (subtotal, price) -> subtotal + price);
     }
 
     private boolean[][][] initSeatConfigurationOfFlight(Flight flight, int numOfSegments, int numOfRows, int numOfColumns){
@@ -144,9 +153,9 @@ public class AirplaneTicketService {
     }
 
     @Transactional(rollbackFor = Exception.class)
-    public AirplaneTicket createQuickTicketBooking(UUID userId, CreateQuickTicketBookingRequest request) {
+    public AirplaneTicket createQuickTicketBooking(CreateQuickTicketBookingRequest request) {
 
-        Optional<User> user = userRepository.findById(userId);
+        Optional<User> user = userRepository.findById(request.getUserId());
         Optional<Flight> flight = flightRepository.findById(request.getFlightId());
         Airplane airplane = flight.get().getAirplane();
 
@@ -187,34 +196,5 @@ public class AirplaneTicketService {
         airplaneTicketRepository.save(airplaneTicket);
 
         return airplaneTicket;
-    }
-
-    @Transactional(readOnly = true)
-    public List<AirplaneTicket> getTickets() {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-
-        User user = userRepository.findByEmail(authentication.getName());
-
-        return airplaneTicketRepository.findByUser_Id(user.getId());
-    }
-
-    @Transactional(rollbackFor = Exception.class)
-    public List<AirplaneTicket> cancel(String ticketId) {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-
-        User user = userRepository.findByEmail(authentication.getName());
-
-        AirplaneTicket airplaneTicket = airplaneTicketRepository.findById(UUID.fromString(ticketId)).orElse(null);
-
-        if (airplaneTicket.getUser().getId() != user.getId())
-            throw new CustomException("This ticket does not belong to you!");
-
-        airplaneTicketRepository.delete(airplaneTicket);
-
-        return airplaneTicketRepository.findByUser_Id(user.getId());
-    }
-
-    public List<GetSoldAirlineTicketsResponse> getSoldTickets(String id, String startDate, String endDate) {
-        return airplaneTicketRepository.getSoldTickets(id, startDate, endDate);
     }
 }

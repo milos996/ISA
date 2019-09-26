@@ -6,52 +6,25 @@ import Container from "@material-ui/core/Container";
 import Button from "@material-ui/core/Button";
 import Modal from "@material-ui/core/Modal";
 import Friends from "./Friends";
-import {
-  userDataSelector,
-  selectFriendshipRequests
-} from "../../store/user/selectors";
+import { userDataSelector } from "../../store/user/selectors";
 import {
   saveUserData,
   putUserData,
-  fetchUserData,
-  putFoundUsersData,
-  fetchFriendshipRequests
+  fetchUserData
 } from "../../store/user/actions";
 import { MODAL_CONTENT } from "../../constants/user";
 import Password from "./Password";
 import Search from "./Search";
-import { Link } from "react-router-dom";
-import { REQUEST_TYPE } from "../../constants/user";
-import FriendshipRequest from "../user/FriendshipRequest";
 
 export default function UserInformation({ userId }) {
   const dispatch = useDispatch();
   const classes = useStyles();
   const userDetails = useSelector(userDataSelector);
-  const requests = useSelector(selectFriendshipRequests);
 
   const [modalContent, setModalContent] = useState({
     isVisible: false,
     value: ""
   });
-
-  function handleCloseButton() {
-    setModalContent({
-      isVisible: false
-    });
-    resetView();
-  }
-  function resetView() {
-    dispatch(putFoundUsersData([]));
-  }
-
-  useEffect(() => {
-    dispatch(fetchUserData(userId));
-  }, [userId]);
-
-  useEffect(() => {
-    dispatch(fetchFriendshipRequests(userId));
-  }, [userId]);
 
   function handleSaveButton() {
     dispatch(saveUserData(userDetails));
@@ -65,10 +38,7 @@ export default function UserInformation({ userId }) {
             <Friends userId={userId} />
           )}
           {modalContent.value === MODAL_CONTENT.SEARCH_USERS && (
-            <Search
-              senderUserId={userId}
-              requestType={REQUEST_TYPE.FRIENDSHIP}
-            />
+            <Search senderUserId={userId} />
           )}
 
           {modalContent.value === MODAL_CONTENT.CHANGE_PASSWORD && (
@@ -79,14 +49,15 @@ export default function UserInformation({ userId }) {
                 })
               }
               userId={userDetails.id}
-              userPassword={userDetails.password}
             />
           )}
 
           <Button
-            onClick={() => {
-              handleCloseButton();
-            }}
+            onClick={e =>
+              setModalContent({
+                isVisible: false
+              })
+            }
           >
             Close
           </Button>
@@ -137,72 +108,54 @@ export default function UserInformation({ userId }) {
             label="Firstname"
             className={classes.textField}
             margin="normal"
-            value={userDetails.firstName}
+            defaultValue={userDetails.firstname}
             onChange={({ currentTarget }) => {
-              dispatch(
-                putUserData({
-                  ...userDetails,
-                  firstName: currentTarget.value
-                })
-              );
+              dispatch(putUserData({ firstname: currentTarget.value }));
             }}
           />
           <TextField
             label="Lastname"
             className={classes.textField}
             margin="normal"
-            value={userDetails.lastName}
+            defaultValue={userDetails.lastname}
             onChange={({ currentTarget }) => {
-              dispatch(
-                putUserData({ ...userDetails, lastName: currentTarget.value })
-              );
+              dispatch(putUserData({ lastname: currentTarget.value }));
             }}
           />
           <TextField
             label="Email"
             className={classes.textField}
             margin="normal"
-            value={userDetails.email}
+            defaultValue={userDetails.email}
             onChange={({ currentTarget }) => {
-              dispatch(
-                putUserData({ ...userDetails, email: currentTarget.value })
-              );
+              dispatch(putUserData({ email: currentTarget.value }));
             }}
           />
           <TextField
             label="Phone number"
             className={classes.textField}
             margin="normal"
-            value={userDetails.phoneNumber}
+            defaultValue={userDetails.phone}
             onChange={({ currentTarget }) => {
-              dispatch(
-                putUserData({
-                  ...userDetails,
-                  phoneNumber: currentTarget.value
-                })
-              );
+              dispatch(putUserData({ phone: currentTarget.value }));
             }}
           />
           <TextField
             label="City"
             className={classes.textField}
             margin="normal"
-            value={userDetails.city}
+            defaultValue={userDetails.city}
             onChange={({ currentTarget }) => {
-              dispatch(
-                putUserData({ ...userDetails, city: currentTarget.value })
-              );
+              dispatch(putUserData({ city: currentTarget.value }));
             }}
           />
           <TextField
             label="State"
             className={classes.textField}
             margin="normal"
-            value={userDetails.state}
+            defaultValue={userDetails.state}
             onChange={({ currentTarget }) => {
-              dispatch(
-                putUserData({ ...userDetails, state: currentTarget.value })
-              );
+              dispatch(putUserData({ state: currentTarget.value }));
             }}
           />
           <Button
@@ -214,15 +167,8 @@ export default function UserInformation({ userId }) {
             Save
           </Button>
         </Container>
-        {requests.length != 0 && (
-          <Container>
-            <h2>Friendship requests</h2>
-            {requests.map(request => (
-              <FriendshipRequest friendship={request} key={request.id} />
-            ))}
-          </Container>
-        )}
       </Container>
+      )}
     </div>
   );
 }

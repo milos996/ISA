@@ -12,6 +12,7 @@ public class IsAumsApplicationTests {
 
 	@Test
 	public void contextLoads() throws Exception {
+
 	}
 
 }

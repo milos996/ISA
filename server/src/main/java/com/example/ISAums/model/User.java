@@ -5,7 +5,6 @@ import javax.persistence.*;
 import com.example.ISAums.model.enumeration.Role;
 import lombok.*;
 import org.hibernate.annotations.Where;
-import org.springframework.lang.Nullable;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -69,10 +68,6 @@ public class User extends BaseEntity implements UserDetails{
 	@Column(name = "is_enabled")
 	private Boolean isEnabled;
 
-	@Nullable
-	@OneToOne(mappedBy = "user", fetch = FetchType.EAGER)
-	private HotelAdmin hotelAdmin;
-
 	@Override
 	public Collection<? extends GrantedAuthority> getAuthorities() {
 		return Collections.singletonList(new SimpleGrantedAuthority(this.getRole().toString()));
@@ -109,7 +104,5 @@ public class User extends BaseEntity implements UserDetails{
 
 	@Override
 	public boolean isEnabled() { return isEnabled; }
-
-
 
 }

@@ -20,7 +20,6 @@ public class DestinationConverter {
     public static List<GetAirlineDestinationResponse> toGetAirlineDestinationResponseFromDestinations(List<AirlineDestination> destinations){
         return destinations.stream()
                 .map(airlineDestination -> GetAirlineDestinationResponse.builder()
-                        .id(airlineDestination.getId())
                         .airline(airlineDestination.getAirline())
                         .destination(airlineDestination.getDestination())
                         .build()

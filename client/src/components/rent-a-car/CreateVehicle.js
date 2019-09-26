@@ -110,8 +110,7 @@ const useStyles = makeStyles(theme => ({
   button: {
     margin: theme.spacing(1),
     width: "30%",
-    marginLeft: "auto",
-    backgroundColor: "#008080"
+    marginLeft: "auto"
   },
   formControl: {
     margin: theme.spacing(1),

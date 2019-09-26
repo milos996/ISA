@@ -33,17 +33,4 @@ public interface RentACarRepository extends JpaRepository<RentACar, UUID> {
                    "AND (:state is null OR al.state LIKE %:state%) " +
                    "GROUP BY rac.id", nativeQuery = true)
     List<RentACar> search(String city, String state, String name, String pickUpDate, String dropOffDate);
-
-    @Query(value = "SELECT * FROM rent_a_car rac " +
-                   "ORDER BY rac.name ASC", nativeQuery =  true)
-    List<RentACar> sortByName();
-
-    @Query(value = "SELECT * FROM rent_a_car rac " +
-                   "JOIN address a ON rac.address_id = a.id " +
-                   "ORDER BY a.city ASC", nativeQuery =  true)
-    List<RentACar> sortByAddress();
-
-    @Query(value = "SELECT * FROM rent_a_car rac " +
-                   "ORDER BY rac.rating DESC", nativeQuery =  true)
-    List<RentACar> sortByRating();
 }

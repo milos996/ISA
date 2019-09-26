@@ -382,7 +382,7 @@ create table vehicle_reservation
     start_date date not null,
     end_date date not null,
     price double not null,
-    airplane_ticket_id varchar(255),
+    airplane_ticket_id varchar(255) not null,
     vehicle_id varchar(255) not null,
     constraint FK_VEHICLE_RESERVATION_AIRPLANE_TICKET
         foreign key (airplane_ticket_id) references airplane_ticket (id),

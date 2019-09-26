@@ -4,7 +4,6 @@ import com.example.ISAums.dto.request.CreateRentACarRequest;
 import com.example.ISAums.dto.response.*;
 import com.example.ISAums.model.Address;
 import com.example.ISAums.model.RentACar;
-import com.example.ISAums.model.Vehicle;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -33,7 +32,6 @@ public class RentACarConverter {
                 .id(rentACar.getId())
                 .name(rentACar.getName())
                 .description(rentACar.getDescription())
-                .rating(rentACar.getRating())
                 .address(toGetAddressResponseFromAddress(rentACar.getAddress()))
                 .build();
     }
@@ -58,7 +56,7 @@ public class RentACarConverter {
                 .name(rentACar.getName())
                 .description(rentACar.getDescription())
                 .address(AddressConverter.toGetAddressResponseFromAddress(rentACar.getAddress()))
-                .rating(rentACar.getRating())
+//                .rate(rentACar.getRate())
                 .build();
     }
 

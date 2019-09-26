@@ -1,13 +1,13 @@
 package com.example.ISAums.converter;
 
 import com.example.ISAums.dto.request.CreateHotelRequest;
-import com.example.ISAums.dto.response.*;
+import com.example.ISAums.dto.response.CreateHotelResponse;
+import com.example.ISAums.dto.response.GetHotelIncomeForCertainPeriodResponse;
+import com.example.ISAums.dto.response.GetHotelResponse;
+import com.example.ISAums.dto.response.UpdateHotelResponse;
 import com.example.ISAums.model.Address;
 import com.example.ISAums.model.Hotel;
-import com.example.ISAums.model.HotelService;
-import com.example.ISAums.model.Service;
 
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -67,29 +67,5 @@ public class HotelConverter {
                 .description(hotel.getDescription())
                 .address(hotel.getAddress())
                 .build();
-    }
-
-    public static List<AllServicesResponse> toAllServicesFromServicesAndHotelServices(List<Service> services, List<HotelService> hotelServices) {
-        List<AllServicesResponse> allServicesResponses = new ArrayList<>();
-
-        services.stream().forEach(service -> {
-            allServicesResponses.add(AllServicesResponse.builder()
-                    .id(service.getId())
-                    .selected(false)
-                    .name(service.getName())
-                    .price(0.0)
-                    .build());
-        });
-
-        hotelServices.stream().forEach(hotelService -> {
-            allServicesResponses.add(AllServicesResponse.builder()
-                    .id(hotelService.getId())
-                    .selected(true)
-                    .name(hotelService.getService().getName())
-                    .price(hotelService.getPrice())
-                    .build());
-        });
-
-        return allServicesResponses;
     }
 }

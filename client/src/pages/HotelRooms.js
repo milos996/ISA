@@ -67,11 +67,13 @@ export default function HotelRoomsPage({ match, history, location }) {
   function getPriceForReservations() {
     return (
       selectedRooms.reduce((reducer, item) => {
-        return reducer + item.priceSummer * numberOfNights;
+        return reducer + item.price * numberOfNights;
       }, 0) +
-      selectedAdditionalServices.reduce((serviceReducer, additionalService) => {
-        return serviceReducer + additionalService.price;
-      }, 0)
+      selectedAdditionalServices.reduce(
+        (serviceReducer, additionalService) =>
+          serviceReducer + additionalService.price,
+        0
+      )
     );
   }
 
@@ -84,19 +86,11 @@ export default function HotelRoomsPage({ match, history, location }) {
   function handleReserveButton() {
     dispatch(
       reserveRooms({
-        rooms: selectedRooms.map(val => val.id),
-        additionalServices: selectedAdditionalServices.map(val => val.id),
+        rooms: selectedRooms,
+        additionalServices: selectedAdditionalServices,
         date,
         numberOfNights,
-        airplaneTicketId: location.state.airplaneTicketId,
-        callback: () => {
-          history.push({
-            pathname: `/rent-a-cars`,
-            state: {
-              airplaneTicketId: location.state.airplaneTicketId
-            }
-          });
-        }
+        airplaneTicketId: "airplain"
       })
     );
   }
@@ -121,17 +115,6 @@ export default function HotelRoomsPage({ match, history, location }) {
 
   return (
     <div>
-      {userToken && (
-        <Button
-          variant="contained"
-          className={classes.button}
-          onClick={() => {
-            history.push("/");
-          }}
-        >
-          Cancel Reservation
-        </Button>
-      )}
       <Modal open={isModalVisible}>
         <div className="modal-container-2">
           <SelectServices

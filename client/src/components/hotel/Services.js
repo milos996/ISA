@@ -15,8 +15,7 @@ import {
   putChangeHotelServices,
   putAddNewService,
   saveServices,
-  fetchHotelService,
-  fetchHotelServiceAndService
+  fetchHotelService
 } from "../../store/hotel/actions";
 
 export default function Services({ closeModal, hotelId }) {
@@ -30,7 +29,7 @@ export default function Services({ closeModal, hotelId }) {
 
   useEffect(() => {
     dispatch(
-      fetchHotelServiceAndService({
+      fetchHotelService({
         hotelId
       })
     );
@@ -61,6 +60,10 @@ export default function Services({ closeModal, hotelId }) {
               }}
             />
             <TextField
+              error={
+                isNaN(hotelServices[serviceId].price) ||
+                hotelServices[serviceId].price < 0
+              }
               defaultValue={hotelServices[serviceId].price}
               onChange={e =>
                 dispatch(
@@ -70,7 +73,6 @@ export default function Services({ closeModal, hotelId }) {
                   })
                 )
               }
-              type="number"
               label="Price"
               className={classes.textField}
               margin="normal"

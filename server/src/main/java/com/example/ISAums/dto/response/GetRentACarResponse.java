@@ -27,8 +27,6 @@ public class GetRentACarResponse {
 
     private String description;
 
-    private Double rating;
-
     private GetAddressResponse address;
 
 }

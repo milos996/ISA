@@ -27,8 +27,8 @@ public class UpdateAirlineRequest{
 
     private UpdateAddressRequest address;
 
-    private Double checkingInSuitcasePrice;
+    private UpdateSeatConfigurationRequest seatConfiguration;
 
-    private Double handLuggagePrice;
+    private UpdatePricesRequest pricesRequest;
 
 }

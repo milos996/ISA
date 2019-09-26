@@ -2,7 +2,6 @@ package com.example.ISAums.converter;
 
 import com.example.ISAums.dto.request.CreateUserRequest;
 import com.example.ISAums.dto.response.*;
-import com.example.ISAums.model.AirlineAdmin;
 import com.example.ISAums.model.User;
 import com.example.ISAums.model.enumeration.Role;
 
@@ -63,23 +62,5 @@ public class UserConverter {
                 .collect(Collectors.toList());
     }
 
-    public static GetUserResponse toGetUserResponseFromUser(User user){
-        return  GetUserResponse.builder()
-                .id(user.getId())
-                .firstName(user.getFirstName())
-                .lastName(user.getLastName())
-                .email(user.getEmail())
-                .password(user.getPassword())
-                .phoneNumber(user.getPhoneNumber())
-                .city(user.getCity())
-                .state(user.getState())
-                .build();
-    }
-
-    public static GetAirlineAdminResponse toGetAirlineAdminResponseFromAdmin(AirlineAdmin airlineAdmin){
-        return GetAirlineAdminResponse.builder()
-                .airline(airlineAdmin.getAirline())
-                .build();
-    }
 }
 

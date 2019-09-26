@@ -22,5 +22,6 @@ public class CreateVehicleReservationRequest {
     @NotNull
     private CreateReservationInfoRequest info;
 
+    @NotNull
     private UUID airplaneTicketId;
 }

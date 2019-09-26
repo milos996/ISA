@@ -2,17 +2,16 @@ package com.example.ISAums.controller;
 
 
 import com.example.ISAums.dto.request.CreateHotelRequest;
-import com.example.ISAums.dto.request.CreateRatingRequest;
 import com.example.ISAums.dto.request.UpdateHotelRequest;
 import com.example.ISAums.dto.response.*;
 import com.example.ISAums.model.Hotel;
-import com.example.ISAums.model.Service;
+import com.example.ISAums.model.HotelReservation;
+import com.example.ISAums.model.enumeration.ReportType;
 import com.example.ISAums.service.HotelService;
-import com.example.ISAums.service.HotelServiceService;
-import com.example.ISAums.service.ServiceService;
+import org.apache.tomcat.jni.Local;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.lang.Nullable;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
@@ -28,14 +27,16 @@ import static com.example.ISAums.converter.HotelConverter.*;
 @RequestMapping("/hotels")
 public class HotelController {
     private final HotelService hotelService;
-    private final ServiceService serviceService;
-    private final HotelServiceService hotelServiceService;
 
-    public HotelController(HotelService hotelService, ServiceService serviceService, HotelServiceService hotelServiceService) {
+    public HotelController(HotelService hotelService) {
         this.hotelService = hotelService;
-        this.serviceService = serviceService;
-        this.hotelServiceService = hotelServiceService;
     }
+//
+//    @GetMapping
+//    public ResponseEntity<List<GetHotelResponse>> get() {
+//        List<Hotel> hotels = hotelService.getHotels();
+//        return ResponseEntity.ok(toGetHotelResponseFromHotels(hotels));
+//    }
 
     @GetMapping
     public ResponseEntity<List<GetHotelResponse>> get( @RequestParam(name = "startDate", required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME ) String startDate,
@@ -53,21 +54,18 @@ public class HotelController {
     }
 
     @PostMapping
-    @PreAuthorize("hasAnyAuthority('ADMIN')")
     public ResponseEntity<CreateHotelResponse> create(CreateHotelRequest request) {
         Hotel hotel = hotelService.createHotel(request);
         return ResponseEntity.ok(toCreateHotelResponseFromHotel(hotel));
     }
 
     @PutMapping("/{id}")
-    @PreAuthorize("hasAnyAuthority('HOTEL_ADMIN', 'ADMIN')")
     public ResponseEntity<UpdateHotelResponse> update(@Valid @PathVariable("id") UUID id, @RequestBody  UpdateHotelRequest request) {
         Hotel hotel = hotelService.updateHotel(id, request);
         return ResponseEntity.ok(toUpdateHotelResponseFromHotel(hotel));
     }
 
     @DeleteMapping("/{id}")
-    @PreAuthorize("hasAnyAuthority('ADMIN')")
     public ResponseEntity<DeleteHotelResponse> delete(@PathVariable(name = "id") UUID hotelId) {
         hotelService.deleteHotel(hotelId);
         return ResponseEntity.ok(DeleteHotelResponse.builder()
@@ -76,40 +74,20 @@ public class HotelController {
     }
 
     @GetMapping("/income")
-    @PreAuthorize("hasAnyAuthority('ADMIN', 'HOTEL_ADMIN')")
     public ResponseEntity<GetHotelIncomeForCertainPeriodResponse> getIncomeForCertainPeriod(@RequestParam(name = "startDate") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) Date startDate,
                                                                                             @RequestParam(name = "endDate") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) Date endDate){
         Double income = hotelService.getHotelIncomeForDate(startDate, endDate);
         return ResponseEntity.ok(toGetHotelIncomeFromIncome(startDate, endDate, income));
     }
 
+
+
+
+
     @GetMapping("/{id}")
-    @PreAuthorize("hasAnyAuthority('ADMIN', 'HOTEL_ADMIN')")
     public ResponseEntity<GetHotelResponse> getHotelDetails(@Valid @PathVariable(name="id") UUID hotelId) {
         Hotel hotel = hotelService.getHotel(hotelId);
         return ResponseEntity.ok(toGetHotelResponseFromHotel(hotel));
-    }
-
-    @PostMapping
-    @RequestMapping("/rating")
-    public ResponseEntity<List<GetHotelResponse>> rating(@RequestBody CreateRatingRequest request) {
-        hotelService.rate(request);
-        return null;
-    }
-
-    @GetMapping("/sort")
-    public ResponseEntity<List<GetHotelResponse>> sort( @RequestParam(name = "by", required = true) String by) {
-        return ResponseEntity.ok(toGetHotelResponseFromHotels(hotelService.sort(by)));
-    }
-
-
-    @GetMapping("/{id}/hotel-services/unselected")
-    @PreAuthorize("hasAnyAuthority('HOTEL_ADMIN')")
-    public ResponseEntity<List<AllServicesResponse>> getAllServices(@Valid @PathVariable(name = "id") UUID hotelId) {
-        List<Service> unSelectedServices = this.serviceService.getAllServicesThatHotelDontHave(hotelId);
-        List<com.example.ISAums.model.HotelService> hotelServices = this.hotelServiceService.getServices(hotelId);
-
-        return ResponseEntity.ok(toAllServicesFromServicesAndHotelServices(unSelectedServices, hotelServices));
     }
 
 }

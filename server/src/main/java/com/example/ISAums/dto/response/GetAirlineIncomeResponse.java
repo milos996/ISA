@@ -1,19 +1,21 @@
 package com.example.ISAums.dto.response;
 
-import com.example.ISAums.model.AirplaneTicket;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.data.rest.core.config.Projection;
 
-import java.sql.Time;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.NoArgsConstructor;
 
-@Projection(name = "airlineIncome", types = {AirplaneTicket.class})
-public interface GetAirlineIncomeResponse {
+import java.util.Date;
 
-    @Value("#{target.duration}")
-    Time getDuration();
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
+public class GetAirlineIncomeResponse {
 
-    @Value("#{target.income}")
-    Double getIncome();
+    private Date startDate;
 
+    private Date endDate;
+
+    private Double income;
 
 }

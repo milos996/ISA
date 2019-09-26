@@ -39,8 +39,5 @@ public class Hotel extends BaseEntity {
     @OneToOne(fetch = FetchType.EAGER)
     private Address address;
 
-    @Version
-    private Integer version;
-
 }
 

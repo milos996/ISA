@@ -10,27 +10,19 @@ import { Container } from "@material-ui/core";
 import Button from "@material-ui/core/Button";
 import Modal from "@material-ui/core/Modal";
 import { makeStyles } from "@material-ui/core/styles";
-import {
-  fetchAirlineFlights,
-  fetchAirlineAdmin
-} from "../../store/airline/actions";
+import { fetchAirlineFlights } from "../../store/airline/actions";
 import { MODAL_CONTENT } from "../../constants/airline";
 import CreateFlight from "./CreateFlight";
-import { userDataSelector } from "../../store/user/selectors";
-import { selectAirlineAdmin } from "../../store/airline/selectors";
 
 export default function Flights({ airlineId }) {
   const dispatch = useDispatch();
   const classes = useStyles();
   const flights = useSelector(selectFlights);
-  const user = useSelector(userDataSelector);
-  const airlineAdmin = useSelector(selectAirlineAdmin);
-
   const [columns, setColumns] = useState([
-    { title: "Departure date", field: "departure_date" },
-    { title: "Return date", field: "arrival_date" },
+    { title: "Departure time", field: "departure_time" },
+    { title: "Arrival time", field: "arrival_time" },
     { title: "Duration", field: "duration" },
-    { title: "Length(km)", field: "length" },
+    { title: "Length", field: "length" },
     { title: "Price($)", field: "price" },
     { title: "Destination", field: "destination" }
   ]);
@@ -39,10 +31,6 @@ export default function Flights({ airlineId }) {
     isVisible: false,
     value: ""
   });
-
-  useEffect(() => {
-    dispatch(fetchAirlineAdmin());
-  }, [airlineId]);
 
   useEffect(() => {
     dispatch(fetchAirlineFlights({ airlineId }));
@@ -81,36 +69,41 @@ export default function Flights({ airlineId }) {
             </TableRow>
           </TableHead>
           <TableBody>
-            {flights.map(flight => (
-              <TableRow key={flight.id}>
-                <TableCell align="left">{flight.departureTime}</TableCell>
-                <TableCell align="left">{flight.arrivalTime}</TableCell>
-                <TableCell align="left">{flight.duration}</TableCell>
-                <TableCell align="left">{flight.length}</TableCell>
-                <TableCell align="left">{flight.price}</TableCell>
+            {flights.map(flight_rating => (
+              <TableRow key={flight_rating.flight.id}>
                 <TableCell align="left">
-                  {flight.airlineDestination.destination.city}
+                  {flight_rating.flight.departureTime}
+                </TableCell>
+                <TableCell align="left">
+                  {flight_rating.flight.arrivalTime}
+                </TableCell>
+                <TableCell align="left">
+                  {flight_rating.flight.duration}
+                </TableCell>
+                <TableCell align="left">
+                  {flight_rating.flight.length}
+                </TableCell>
+                <TableCell align="left">{flight_rating.flight.price}</TableCell>
+                <TableCell align="left">
+                  {flight_rating.flight.airlineDestination.destination.city}
                 </TableCell>
               </TableRow>
             ))}
           </TableBody>
         </Table>
-        {user.role === "AIRLINE_ADMIN" &&
-        airlineAdmin.airline.id === airlineId ? (
-          <Button
-            variant="contained"
-            color="primary"
-            className={classes.button}
-            onClick={() => {
-              setModalContent({
-                isVisible: true,
-                value: "create_flight"
-              });
-            }}
-          >
-            Create new flight
-          </Button>
-        ) : null}
+        <Button
+          variant="contained"
+          color="primary"
+          className={classes.button}
+          onClick={() => {
+            setModalContent({
+              isVisible: true,
+              value: "create_flight"
+            });
+          }}
+        >
+          Create new flight
+        </Button>
       </Container>
     </div>
   );

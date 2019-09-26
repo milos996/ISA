@@ -23,6 +23,6 @@ public class RentACarAdmin extends BaseEntity {
     @JoinColumn(name = "rent_a_car_id")
     private RentACar rentACar;
 
-    @Column(name = "is_not_first_login")
-    private boolean isNotFirstLogin;
+    @Column(name = "is_first_login")
+    private boolean isFirstLogin;
 }

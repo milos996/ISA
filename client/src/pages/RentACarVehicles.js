@@ -19,7 +19,7 @@ import {
   selectRentACarLocationInformation
 } from "../store/rent-a-car/selectors";
 
-export default function RentACarVehiclesPage({ match }) {
+export default function RentACarVehiclesPage({ match, history }) {
   const classes = useStyles();
   const dispatch = useDispatch();
   const vehicles = useSelector(selectRentACarVehicles);
@@ -35,7 +35,7 @@ export default function RentACarVehiclesPage({ match }) {
   const [selectedVehicle, setSelectedVehicle] = useState();
 
   function handleSearchButton() {
-    dispatch(fetchRentACarVehicles());
+    // dispatch(fetchRentACarVehicles());
   }
 
   useEffect(() => {
@@ -147,6 +147,11 @@ export default function RentACarVehiclesPage({ match }) {
             image={vehicle}
             title={`${val.brand} - ${val.model}`}
             description={"OP"}
+            // cardClick={() => {
+            //   setSelectedVehicle(currState =>
+            //     addRemoveItemFromList(currState, val)
+            //   );
+            // }}
           />
         ))}
       </div>

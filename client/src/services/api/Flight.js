@@ -2,57 +2,31 @@ import HttpBaseClient from "../HttpBaseClient";
 import { format } from "util";
 
 const ENDPOINTS = {
-  FETCH_DESTINATION: "/flights/flightDestination/%s",
-  FETCH_FLIGHTS: "/flights/%s",
-  FETCH_TICKETS_FOR_FAST_RESERVATION: "/flights/quickBooking/%s",
-  FETCH_DESTINATIONS: "/flights/destinations/%s",
-  SAVE_FLIGHT: "/flights",
-  RATE_FLIGHT: "/flights/rating",
-  SEARCH:
-    "/flights/search/fromDestinationCity=%s&toDestinationCity=%s&departureDate=%s&arrivalDate=%s",
-  FETCH_FLIGHT: "/flights/flight/%s"
-};
+    FETCH_DESTINATION: "/flights/flightDestination/%s",
+    FETCH_FLIGHTS: "/flights/%s",
+    FETCH_TICKETS_FOR_FAST_RESERVATION: "/flights/quickBooking/%s",
+    FETCH_DESTINATIONS: "/flights/destinations/%s",
+    SAVE_FLIGHT: "/flights"
+}
 
-class FlightService extends HttpBaseClient {
-  fetchFlights = airlineId => {
-    return this.getApiClient().get(format(ENDPOINTS.FETCH_FLIGHTS, airlineId));
-  };
+class FlightService extends HttpBaseClient{
 
-  fetchTicketsForFastReservation = airlineId => {
-    return this.getApiClient().get(
-      format(ENDPOINTS.FETCH_TICKETS_FOR_FAST_RESERVATION, airlineId)
-    );
-  };
+    fetchFlights = airlineId => {
+        return this.getApiClient().get(format(ENDPOINTS.FETCH_FLIGHTS, airlineId));
+    }
 
-  fetchDestinations = airlineId => {
-    return this.getApiClient().get(
-      format(ENDPOINTS.FETCH_DESTINATIONS, airlineId)
-    );
-  };
+    fetchTicketsForFastReservation = airlineId => {
+        return this.getApiClient().get(format(ENDPOINTS.FETCH_TICKETS_FOR_FAST_RESERVATION, airlineId));
+    }
 
-  save = flight => {
-    this.getApiClient().post(ENDPOINTS.SAVE_FLIGHT, flight);
-  };
+    fetchDestinations = airlineId => {
+        return this.getApiClient().get(format(ENDPOINTS.FETCH_DESTINATIONS, airlineId));
+    }
 
-  rateFlight = rateData => {
-    return this.getApiClient().post(ENDPOINTS.RATE_FLIGHT, rateData);
-  };
-
-  search = data => {
-    return this.getApiClient().get(
-      format(
-        ENDPOINTS.SEARCH,
-        data.fromDestination,
-        data.toDestination,
-        data.departureDate,
-        data.arrivalDate
-      )
-    );
-  };
-
-  fetchFlight = id => {
-    return this.getApiClient().get(format(ENDPOINTS.FETCH_FLIGHT, id));
-  };
+    save = flight => {
+        this.getApiClient().post(ENDPOINTS.SAVE_FLIGHT, flight);
+    }
 }
 
 export default new FlightService();
+

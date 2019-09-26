@@ -1,16 +1,11 @@
 package com.example.ISAums.controller;
 
-import com.example.ISAums.config.CustomProperties;
 import com.example.ISAums.converter.VehicleConverter;
 import com.example.ISAums.dto.request.CreateRentACarVehicleRequest;
 import com.example.ISAums.dto.request.CreateVehicleRequest;
 import com.example.ISAums.dto.response.GetVehicleResponse;
 import com.example.ISAums.model.Vehicle;
 import com.example.ISAums.service.VehicleService;
-import org.junit.After;
-import org.junit.AfterClass;
-import org.junit.Before;
-import org.junit.BeforeClass;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -19,23 +14,15 @@ import org.mockito.Mock;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.context.annotation.Bean;
-import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.test.annotation.Rollback;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.setup.MockMvcBuilders;
-import org.springframework.web.context.WebApplicationContext;
 
-import javax.transaction.Transactional;
-import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
 import static java.util.Collections.singletonList;
-import static org.hamcrest.CoreMatchers.hasItem;
 import static org.hamcrest.collection.IsCollectionWithSize.hasSize;
 import static org.hamcrest.core.Is.is;
 import static org.mockito.BDDMockito.given;
@@ -43,56 +30,49 @@ import static org.springframework.http.MediaType.APPLICATION_JSON;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.user;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 
 @RunWith(SpringRunner.class)
 @WebMvcTest(VehicleController.class)
 class VehicleControllerTest {
 
-    private static final String URL_PREFIX = "/vehicles";
-
-    private MediaType contentType = new MediaType(MediaType.APPLICATION_JSON.getType(),
-            MediaType.APPLICATION_JSON.getSubtype(), Charset.forName("utf8"));
-
+    @Autowired
     private MockMvc mockMvc;
 
-    @Autowired
-    private WebApplicationContext webApplicationContext;
+    @MockBean
+    private VehicleController vehicleController;
 
-    @BeforeClass
-    public static void setUpBeforeClass() throws Exception {
+    @BeforeEach
+    void setUp() {
     }
 
-    @AfterClass
-    public static void tearDownAfterClass() throws Exception {
+    @AfterEach
+    void tearDown() {
     }
-
-    @Before
-    public void setUp() throws Exception {
-        this.mockMvc = MockMvcBuilders.webAppContextSetup(webApplicationContext).build();
-    }
-
-    @After
-    public void tearDown() throws Exception {
-    }
-       // given(vehicleController.getVehicles().getBody()).willReturn(allVehicles);
 
     @Test
-    public void getVehicles() throws Exception {
-        mockMvc.perform(org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get(URL_PREFIX)).andExpect(status().isOk())
-                .andExpect(content().contentType(contentType))
-                .andExpect(jsonPath("$.[*].id").value(hasItem("59e5334d-4ebd-4874-b17e-81498477cb80")))
-                .andExpect(jsonPath("$.[*].id").value(hasItem("c776dd4a-946e-433e-aa18-6beb04b214ad")));
+    void getVehicles() throws Exception {
+        GetVehicleResponse vehicle = new GetVehicleResponse();
+        vehicle.setNumberOfSeats(4);
+
+        List<GetVehicleResponse> allVehicles = singletonList(vehicle);
+
+        given(vehicleController.getVehicles().getBody()).willReturn(allVehicles);
+
+        mockMvc.perform(get("")
+                .contentType(APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$", hasSize(1)))
+                .andExpect(jsonPath("$[0].numberOfSeats", is(vehicle.getNumberOfSeats())));
     }
 
-    @Transactional
-    @Rollback(true)
     @Test
-    public void create() throws Exception {
+    void create() throws Exception {
         CreateRentACarVehicleRequest vehicle = CreateRentACarVehicleRequest
                 .builder()
-                .rentACarId(UUID.fromString("f15b983a-ca3e-45cc-852c-4e7805110366"))
+                .rentACarId(UUID.fromString("1d7e8588-3b19-4f2b-b77b-3026e2007362"))
                 .vehicle(CreateVehicleRequest
                         .builder()
                         .brand("Mercedes")
@@ -104,6 +84,9 @@ class VehicleControllerTest {
                         .build())
                 .build();
 
+        List<GetVehicleResponse> allVehicles =  new ArrayList<>();
+
+        given(vehicleController.create(vehicle).getBody()).willReturn(allVehicles);
         mockMvc.perform(post("", vehicle)
                 .contentType(APPLICATION_JSON))
                 .andExpect(status().isOk())

@@ -12,13 +12,13 @@ export function changeHotelServices(
   state,
   { id = null, price, shouldDelete = false }
 ) {
-  const { [id]: serviceWithId } = state.services;
+  const { [id]: serviceWithId, ...restState } = state.services;
 
   if (shouldDelete) {
     return {
       ...state,
       services: {
-        ...state.services,
+        ...restState,
         [id]: {
           ...serviceWithId,
           selected: false
@@ -30,7 +30,7 @@ export function changeHotelServices(
   return {
     ...state,
     services: {
-      ...state.services,
+      ...restState,
       [id]: {
         ...serviceWithId,
         price
@@ -81,14 +81,11 @@ export function putHotelLocationInformation(state, payload) {
 }
 
 export function deleteRoomWithId(state, roomId) {
-  const index = state.rooms.findIndex(val => val.id === roomId);
+  const { [roomId]: deleteRoom, ...restRooms } = state.rooms;
 
   return {
     ...state,
-    rooms: [
-      ...state.rooms.slice(0, index),
-      ...state.rooms.slice(index + 1, state.rooms.length)
-    ]
+    rooms: restRooms
   };
 }
 
@@ -107,21 +104,12 @@ export function putHotelRooms(state, rooms) {
 }
 
 export function putRoomDetailsChange(state, { id, data }) {
-  const index = state.rooms.findIndex(val => val.id === id);
-
   return {
     ...state,
     rooms: [
-      ...state.rooms.slice(0, index),
+      ...state.rooms.slice(0, id),
       { ...data, id },
-      ...state.rooms.slice(index + 1, state.rooms.length)
+      ...state.rooms.slice(id + 1, state.rooms.length)
     ]
-  };
-}
-
-export function putNewRoom(state, newRoom) {
-  return {
-    ...state,
-    rooms: [...state.rooms, newRoom]
   };
 }

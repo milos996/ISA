@@ -1,10 +1,11 @@
 package com.example.ISAums.dto.response;
 
-import com.example.ISAums.model.AirlineDestination;
-import com.example.ISAums.model.Airplane;
 import lombok.Builder;
 import lombok.Data;
+
 import java.sql.Time;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.UUID;
 
 @Data
@@ -13,17 +14,13 @@ public class FlightForQuickBookingResponse {
 
     private UUID id;
 
-    private String departureTime;
+    private LocalDateTime departureTime;
 
-    private String arrivalTime;
+    private LocalDateTime arrivalTime;
 
     private Time duration;
 
     private Double length;
 
     private Double price;
-
-    private AirlineDestination airlineDestination;
-
-    private Airplane airplane;
 }

@@ -17,9 +17,9 @@ public class GetFlightOfAirlineResponse {
 
     private UUID id;
 
-    private String departureTime;
+    private LocalDateTime departureTime;
 
-    private String arrivalTime;
+    private LocalDateTime arrivalTime;
 
     private Time duration;
 

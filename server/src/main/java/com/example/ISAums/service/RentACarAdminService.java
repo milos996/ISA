@@ -8,7 +8,6 @@ import com.example.ISAums.model.User;
 import com.example.ISAums.repository.AddressRepository;
 import com.example.ISAums.repository.RentACarAdminRepository;
 import com.example.ISAums.repository.UserRepository;
-import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.AnonymousAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -20,11 +19,16 @@ import java.util.UUID;
 import static com.example.ISAums.util.UtilService.copyNonNullProperties;
 
 @Service
-@RequiredArgsConstructor
 public class RentACarAdminService {
     private final UserRepository userRepository;
     private final RentACarAdminRepository rentACarAdminRepository;
     private final AddressRepository addressRepository;
+
+    public RentACarAdminService(UserRepository userRepository, RentACarAdminRepository rentACarAdminRepository, AddressRepository addressRepository) {
+        this.userRepository = userRepository;
+        this.rentACarAdminRepository = rentACarAdminRepository;
+        this.addressRepository = addressRepository;
+    }
 
     @Transactional(rollbackFor = Exception.class)
     public RentACarAdmin update(UpdateRentACarAdminRequest request) {

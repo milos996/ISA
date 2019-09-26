@@ -12,7 +12,6 @@ import com.example.ISAums.model.RentACarLocation;
 import com.example.ISAums.repository.AgencyLocationRepository;
 import com.example.ISAums.repository.RentACarLocationRepository;
 import com.example.ISAums.repository.RentACarRepository;
-import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
@@ -25,13 +24,18 @@ import static com.example.ISAums.converter.RentACarLocationConverter.*;
 
 
 @Service
-@RequiredArgsConstructor
 public class RentACarLocationService {
     private static final Logger logger = LoggerFactory.getLogger(RentACarLocationService.class);
 
     private final RentACarLocationRepository rentACarLocationRepository;
     private final RentACarRepository rentACarRepository;
     private final AgencyLocationRepository agencyLocationRepository;
+
+    public RentACarLocationService(RentACarLocationRepository rentACarLocationRepository, RentACarRepository rentACarRepository, AgencyLocationRepository agencyLocationRepository) {
+        this.rentACarLocationRepository = rentACarLocationRepository;
+        this.rentACarRepository = rentACarRepository;
+        this.agencyLocationRepository = agencyLocationRepository;
+    }
 
     @Transactional(readOnly = true)
     public List<RentACarLocation> findAll() {
@@ -113,6 +117,18 @@ public class RentACarLocationService {
             pickUpDate = null;
         if (dropOffDate.equals("null"))
             dropOffDate = null;
+
+//        Map<RentACar, List<AgencyLocation>> offices = new HashMap<>();
+//        UUID current = rentACarLocations.get(0).getRentACar().getId();
+//        List<AgencyLocation> agencyLocations = new ArrayList<>();
+//        for (RentACarLocation racl : rentACarLocations) {
+//            if (racl.getRentACar().getId().equals(current)) {
+//                agencyLocations.add(racl.getAgencyLocation());
+//                offices.put(racl.getRentACar(), agencyLocations);
+//            } else {
+//                agencyLocations = new ArrayList<>();
+//            }
+//        }
 
         return rentACarLocationRepository.search(city, state, name, pickUpDate, dropOffDate);
     }

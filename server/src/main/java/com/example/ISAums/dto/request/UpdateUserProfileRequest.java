@@ -30,7 +30,7 @@ public class UpdateUserProfileRequest {
     private String password;
 
     @Size(max = PHONE_NUMBER_SIZE)
-    private String phoneNumber;
+    private String phone;
 
     @Size(max = CITY_SIZE)
     private String city;

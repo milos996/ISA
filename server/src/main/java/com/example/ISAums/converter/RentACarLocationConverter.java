@@ -29,10 +29,7 @@ public class RentACarLocationConverter {
     public static GetRentACarLocationResponse toGetRentACarLocationResponseFromRentALocation(RentACarLocation rentACarLocation) {
         return GetRentACarLocationResponse.builder()
                 .id(rentACarLocation.getId())
-                .name(rentACarLocation.getRentACar().getName())
-                .address(AddressConverter.toGetAddressResponseFromAddress(rentACarLocation.getRentACar().getAddress()))
-                .description(rentACarLocation.getRentACar().getDescription())
-                .rating(rentACarLocation.getRentACar().getRating())
+                .rentACarName(rentACarLocation.getRentACar().getName())
                 .location(rentACarLocation.getAgencyLocation().getCity() + ", " + rentACarLocation.getAgencyLocation().getState())
                 .build();
     }

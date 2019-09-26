@@ -1,7 +1,5 @@
 package com.example.ISAums.dto.response;
 
-import com.example.ISAums.model.AirlineDestination;
-import com.example.ISAums.model.Airplane;
 import lombok.*;
 import java.sql.Time;
 import java.time.LocalDateTime;
@@ -24,8 +22,4 @@ public class CreateFlightResponse {
     private Double length;
 
     private Double price;
-
-    private AirlineDestination airlineDestination;
-
-    private Airplane airplane;
 }

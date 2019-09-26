@@ -1,8 +1,5 @@
 package com.example.ISAums.controller;
 
-import com.example.ISAums.converter.RoomConverter;
-import com.example.ISAums.converter.VehicleConverter;
-import com.example.ISAums.dto.request.CreateRatingRequest;
 import com.example.ISAums.dto.request.CreateRoomRequest;
 import com.example.ISAums.dto.request.UpdateRoomRequest;
 import com.example.ISAums.dto.response.*;
@@ -10,8 +7,6 @@ import com.example.ISAums.model.Room;
 import com.example.ISAums.service.RoomService;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 import reactor.util.annotation.Nullable;
 
@@ -47,30 +42,20 @@ public class RoomController {
     }
 
     @PostMapping
-    @PreAuthorize("hasAnyAuthority('HOTEL_ADMIN')")
-    public ResponseEntity<CreateRoomResponse> create(@AuthenticationPrincipal UUID userId, @RequestBody CreateRoomRequest request) {
-        Room room = roomService.createRoom(request, userId);
+    public ResponseEntity<CreateRoomResponse> create(CreateRoomRequest request) {
+        Room room = roomService.createRoom(request);
         return ResponseEntity.ok(toCreateRoomResponseFromRoom(room));
     }
 
     @PutMapping("/{id}")
-    @PreAuthorize("hasAnyAuthority('HOTEL_ADMIN')")
     public ResponseEntity<UpdateRoomResponse> update(@Valid @PathVariable("id") UUID roomId, @RequestBody  UpdateRoomRequest request) {
         Room room = roomService.updateRoom(roomId, request);
         return ResponseEntity.ok(toUpdateRoomResponseFromRoom(room));
     }
 
     @DeleteMapping("/{id}")
-    @PreAuthorize("hasAnyAuthority('HOTEL_ADMIN')")
     public ResponseEntity<DeleteRoomResponse> delete(@PathVariable(name = "id") UUID roomId) {
         Boolean isDeleted = roomService.deleteRoom(roomId);
         return ResponseEntity.ok(toDeleteRoomResponseFromDeleteRoomRequest(roomId, isDeleted));
-    }
-
-    @PostMapping
-    @RequestMapping("/rating")
-    public ResponseEntity<List<GetRoomResponse>> rating(@RequestBody CreateRatingRequest request) {
-        roomService.rate(request);
-        return null;
     }
 }

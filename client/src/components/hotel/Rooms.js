@@ -5,7 +5,6 @@ import { Container } from "@material-ui/core";
 import { selectHotelRoomsForEdit } from "../../store/hotel/selectors";
 import HotelRoom from "./Room";
 import { fetchHotelRooms } from "../../store/hotel/actions";
-import AddRoomCard from "./AddRoomCard";
 
 export default function HotelRooms({ hotelId }) {
   const rooms = useSelector(selectHotelRoomsForEdit);
@@ -35,7 +34,6 @@ export default function HotelRooms({ hotelId }) {
         {Object.keys(rooms).map(roomId => (
           <HotelRoom key={roomId} room={rooms[roomId]} />
         ))}
-        <AddRoomCard hotelId={hotelId} />
       </div>
     </Container>
   );

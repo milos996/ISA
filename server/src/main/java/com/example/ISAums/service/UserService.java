@@ -1,16 +1,12 @@
 package com.example.ISAums.service;
 
-import com.example.ISAums.dto.request.UpdateFriendshipRequestRequest;
+import com.example.ISAums.exception.CustomException;
 import com.example.ISAums.dto.request.SendFriendshipRequestRequest;
 import com.example.ISAums.dto.request.UpdateUserProfileRequest;
-import com.example.ISAums.exception.CustomException;
 import com.example.ISAums.exception.EntityWithIdDoesNotExist;
 import com.example.ISAums.model.Friendship;
 import com.example.ISAums.model.enumeration.InvitationStatus;
 import com.example.ISAums.repository.FriendshipRepository;
-import lombok.RequiredArgsConstructor;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import com.example.ISAums.model.User;
 import com.example.ISAums.repository.UserRepository;
@@ -19,15 +15,20 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
+
 import static com.example.ISAums.util.UtilService.copyNonNullProperties;
 
 @Service
-@RequiredArgsConstructor
 public class UserService {
     private final UserRepository userRepository;
 	private final FriendshipRepository friendshipRepository;
 
-	@Transactional(rollbackFor = Exception.class)
+	public UserService(UserRepository userRepository, FriendshipRepository friendshipRepository){
+		this.userRepository = userRepository;
+		this.friendshipRepository = friendshipRepository;
+	}
+
+    @Transactional(rollbackFor = Exception.class)
     public User save(User user) {
         return userRepository.save(user);
     }
@@ -54,6 +55,10 @@ public class UserService {
 			throw new EntityWithIdDoesNotExist("User", request.getId());
 		}
 
+		if(userRepository.findByEmail(request.getEmail()) != null){
+			throw new CustomException("Email " + request.getEmail() + " already exist.");
+		}
+
 		Optional<User> user = userRepository.findById(request.getId());
 		copyNonNullProperties(request, user.get());
 		save(user.get());
@@ -73,9 +78,9 @@ public class UserService {
 		return friends;
 	}
 
-	public Friendship sendFriendshipRequest(UUID userId,  SendFriendshipRequestRequest request) {
+	public Friendship sendFriendshipRequest(SendFriendshipRequestRequest request) {
 
-        Optional<User> sender = userRepository.findById(userId);
+        Optional<User> sender = userRepository.findById(request.getSenderUserId());
         Optional<User> invitedUser = userRepository.findById(request.getInvitedUserId());
 
 		Friendship friendship = Friendship.builder()
@@ -94,56 +99,12 @@ public class UserService {
 		friendshipRepository.removeFriendship(String.valueOf(mine_id), String.valueOf(friend_id));
     }
 
-    public List<User> search(UUID mine_id, String name) {
-		List<User> allUsers = userRepository.findAllByFirstName(name);
-		List<User> usersWhichAreNotFriends = new ArrayList<>();
-
-		for (User u:allUsers) {
-			Friendship friendship = friendshipRepository.isItFriendOfMine(String.valueOf(mine_id), String.valueOf(u.getId()));
-			if(friendship == null)
-				usersWhichAreNotFriends.add(u);
-			else
-				continue;
-		}
-		return usersWhichAreNotFriends;
+    public List<User> find(String name) {
+		return userRepository.findAllByFirstName(name);
     }
 
-	public void updatePassword(String newPassword, UUID userId) {
-		Optional<User> user = userRepository.findById(userId);
-		user.get().setPassword(newPassword);
-		userRepository.save(user.get());
+	public void updatePassword(String newPassword) {
+		//...
 	}
-
-	public User findById(UUID user_id) {
-		return userRepository.findById(user_id).get();
-	}
-
-	public List<Friendship> getFriendshipRequests(UUID mine_id) {
-		return friendshipRepository.getFriendshipRequestsOfMine(String.valueOf(mine_id));
-	}
-
-	public void updateFriendshipRequest(UpdateFriendshipRequestRequest request) {
-		Optional<Friendship> friendship = friendshipRepository.findById(request.getId());
-		copyNonNullProperties(request, friendship.get());
-		friendshipRepository.save(friendship.get());
-	}
-
-	@Transactional(readOnly = true)
-	public List<User> sort(String by) {
-		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-
-		String email =  authentication.getName();
-
-		User user = userRepository.findByEmail(email);
-
-		if (by.equals("firstName"))
-			return friendshipRepository.sortByFirstName(user.getId().toString());
-		else if(by.equals("lastName"))
-			return friendshipRepository.sortByLastName(user.getId().toString());
-		else
-			throw  new CustomException("Unknown attribute!");
-
-	}
-
 
 }

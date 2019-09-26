@@ -14,14 +14,10 @@ import {
   createFastTicketReservation
 } from "../../store/airline/actions";
 
-import { userDataSelector } from "../../store/user/selectors";
-
 export default function TicketsForFastReservation({ airlineId }) {
   const dispatch = useDispatch();
   const classes = useStyles();
   const tickets = useSelector(selectTicketForFastReservation);
-  const user = useSelector(userDataSelector);
-
   const [columns, setColumns] = useState([
     { title: "Departure time", field: "departure_time" },
     { title: "Arrival time", field: "arrival_time" },
@@ -63,16 +59,15 @@ export default function TicketsForFastReservation({ airlineId }) {
                 {ticket.airlineDestination.destination.city}
               </TableCell>
               <TableCell align="left">
-               { user.role === "USER" && (
                 <Button
                   onClick={() =>
-                    dispatch(createFastTicketReservation(ticket.id))
+                    dispatch(
+                      createFastTicketReservation({ flightId: ticket.id })
+                    )
                   }
                 >
                   Reserve
                 </Button>
-               )}
-                
               </TableCell>
             </TableRow>
           ))}

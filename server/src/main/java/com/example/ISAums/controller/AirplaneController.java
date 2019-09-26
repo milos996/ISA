@@ -5,11 +5,11 @@ import com.example.ISAums.dto.response.GetAirplaneResponse;
 import com.example.ISAums.model.Airplane;
 import com.example.ISAums.service.AirplaneService;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
+
 import java.util.List;
 import java.util.UUID;
-import static com.example.ISAums.converter.AirplaneConverter.toGetAirplaneReponseFromAirplane;
+
 import static com.example.ISAums.converter.AirplaneConverter.toGetAirplaneResponseFromAirplanes;
 
 @RestController
@@ -23,11 +23,10 @@ public class AirplaneController {
     }
 
     @PutMapping
-    @PreAuthorize("hasAnyAuthority('AIRLINE_ADMIN')")
-    public ResponseEntity<GetAirplaneResponse> update(@RequestBody UpdateAirplaneRequest request){
+    public ResponseEntity update(@RequestBody UpdateAirplaneRequest request){
 
-        Airplane airplane = airplaneService.update(request);
-        return ResponseEntity.ok(toGetAirplaneReponseFromAirplane(airplane));
+        airplaneService.update(request);
+        return (ResponseEntity) ResponseEntity.noContent();
     }
 
     @GetMapping(value = "/{airlineId}")

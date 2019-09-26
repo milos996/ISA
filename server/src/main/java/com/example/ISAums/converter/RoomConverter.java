@@ -55,10 +55,10 @@ public class RoomConverter {
                 .number(request.getNumber())
                 .hotel(hotel)
                 .numberOfPeople(request.getNumberOfPeople())
-                .priceAutumn(request.getAutumnPrice())
-                .priceSpring(request.getSpringPrice())
-                .priceSummer(request.getSummerPrice())
-                .priceWinter(request.getWinterPrice())
+                .priceAutumn(request.getPriceAutumn())
+                .priceSpring(request.getPriceSpring())
+                .priceSummer(request.getPriceSummer())
+                .priceWinter(request.getPriceWinter())
                 .build();
     }
 }

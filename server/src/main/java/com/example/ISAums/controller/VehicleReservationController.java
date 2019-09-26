@@ -2,16 +2,14 @@ package com.example.ISAums.controller;
 
 import com.example.ISAums.dto.request.CreateVehicleReservationRequest;
 import com.example.ISAums.dto.response.CreateVehicleReservationResponse;
-import com.example.ISAums.dto.response.GetVehicleReservationResponse;
 import com.example.ISAums.service.VehicleReservationService;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 import static com.example.ISAums.converter.VehicleReservationConverter.toCreateVehicleReservationResponseFromVehicle;
-import static com.example.ISAums.converter.VehicleReservationConverter.toGetVehicleReservationResponseFromVehicleReservations;
 
 @RestController
 @RequestMapping("/vehicle-reservations")
@@ -24,20 +22,7 @@ public class VehicleReservationController {
     }
 
     @PostMapping
-    @PreAuthorize("hasAnyAuthority('USER')")
     public ResponseEntity<CreateVehicleReservationResponse> reserve(@RequestBody CreateVehicleReservationRequest request) {
         return ResponseEntity.ok(toCreateVehicleReservationResponseFromVehicle(vehicleReservationService.reserve(request)));
     }
-
-    @GetMapping("/user")
-    public ResponseEntity<List<GetVehicleReservationResponse>> get() {
-        return ResponseEntity.ok(toGetVehicleReservationResponseFromVehicleReservations(vehicleReservationService.get()));
-    }
-
-    @DeleteMapping("{id}")
-    @PreAuthorize("hasAnyAuthority('USER')")
-    public ResponseEntity<List<GetVehicleReservationResponse>> cancel(@PathVariable("id") String vehicleReservationId) {
-        return ResponseEntity.ok(toGetVehicleReservationResponseFromVehicleReservations(vehicleReservationService.cancel(vehicleReservationId)));
-    }
-
 }

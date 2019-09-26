@@ -47,39 +47,21 @@ public class HotelServiceService {
 
         hotelServiceRepository.deleteInBatch(hotelServices.stream()
                 .filter(hotelService -> {
-                    Predicate<ServiceRequest> predictService = e -> e.getId().equals(hotelService.getId());
-                    return request.getServices().stream().noneMatch(predictService);
+                    Predicate<ServiceRequest> predictService = e -> e.getId() == hotelService.getService().getId();
+                    return request.getServiceList().stream().noneMatch(predictService);
                 })
                 .collect(Collectors.toList())
         );
 
-        hotelServiceRepository.saveAll(hotelServices.stream()
-                .map(hotelService -> {
-                   ServiceRequest changedHotelService = request.getServices().stream()
-                           .filter(service -> service.getId().equals(hotelService.getId()) && service.getPrice() != hotelService.getPrice())
-                           .findFirst()
-                           .orElse(null);
-
-                    if (changedHotelService !=  null) {
-                        hotelService.setPrice(changedHotelService.getPrice());
-                    }
-
-                    return hotelService;
-                })
-                .collect(Collectors.toList())
-        );
-
-
-
-        return saveNonExistedHotelServices(request, hotelServices, hotel.get());
+        return saveNonExistedHotelServices(request, hotelServices, hotel);
 
     }
 
-    private List<HotelService> saveNonExistedHotelServices(CreateHotelServiceRequest request, List<HotelService> hotelServices, Hotel hotel) {
-      List<HotelService> hotelServiceList = request.getServices().stream()
+    private List<HotelService> saveNonExistedHotelServices(CreateHotelServiceRequest request, List<HotelService> hotelServices, Optional<Hotel> hotel) {
+        return hotelServiceRepository.saveAll(request.getServiceList().stream()
                 .filter(serviceRequest -> {
-                    Predicate<HotelService> predictHotelService = e -> e.getId().equals(serviceRequest.getId());
-                    return hotelServices.stream().noneMatch(predictHotelService);
+                    Predicate<HotelService> predictHotelService = e -> e.getService().getId() == serviceRequest.getId();
+                    return !hotelServices.stream().anyMatch(predictHotelService);
                 })
                 .map(filteredService -> {
 
@@ -90,19 +72,13 @@ public class HotelServiceService {
                     }
 
                     HotelService hotelService = HotelService.builder()
-                            .hotel(hotel)
+                            .hotel(hotel.get())
                             .service(service.get())
-                            .price(filteredService.getPrice())
                             .build();
 
                     return hotelService;
                 })
-                .collect(Collectors.toList());
-
-        if (hotelServiceList.isEmpty()) {
-            return hotelServices;
-        }
-
-        return hotelServiceRepository.saveAll(hotelServiceList);
+                .collect(Collectors.toList())
+        );
     }
 }

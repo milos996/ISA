@@ -14,8 +14,8 @@ const ISAMap = ({ address, setStreet = () => {}, hasClick = true }) => {
 
   const [location, setLocation] = useState({
     latlng: {
-      lat: address.latitude,
-      lng: address.longitude
+      lat: 45.275,
+      lng: 19.841
     }
   });
 
@@ -74,7 +74,7 @@ const ISAMap = ({ address, setStreet = () => {}, hasClick = true }) => {
           label="Street"
           className={classes.textField}
           margin="normal"
-          value={address.street}
+          defaultValue={address.street}
           onChange={({ currentTarget }) => setStreet(currentTarget.value)}
           InputProps={{
             readOnly: !hasClick

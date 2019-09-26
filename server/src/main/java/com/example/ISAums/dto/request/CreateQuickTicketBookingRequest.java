@@ -12,6 +12,10 @@ import java.util.UUID;
 @NoArgsConstructor
 public class CreateQuickTicketBookingRequest {
 
+    //TODO <i'll remove this when authentication is implemented>
+    @NotNull
+    private UUID userId;
+
     @NotNull
     private UUID flightId;
 

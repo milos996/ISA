@@ -1,9 +1,11 @@
 package com.example.ISAums.dto.response;
 
+import com.example.ISAums.model.Address;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+
 import java.util.UUID;
 
 @Data
@@ -22,5 +24,5 @@ public class GetAirlineResponse {
 
     private Double handLuggagePrice;
 
-    private GetAddressResponse address;
+    private Address address;
 }
