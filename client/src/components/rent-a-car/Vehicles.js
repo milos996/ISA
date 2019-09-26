@@ -8,6 +8,7 @@ import Modal from "@material-ui/core/Modal";
 import { Grid } from "@material-ui/core";
 import TextField from "@material-ui/core/TextField";
 import Button from "@material-ui/core/Button";
+import ButtonGroup from "@material-ui/core/ButtonGroup";
 import {
   KeyboardDatePicker,
   MuiPickersUtilsProvider
@@ -15,23 +16,27 @@ import {
 import DateFnsUtils from "@date-io/date-fns";
 import dateFormat from "dateformat";
 import { selectRentACarVehicles } from "../../store/rent-a-car/selectors";
+import { userDataSelector } from "../../store/user/selectors";
 import RentACarVehicle from "./Vehicle";
 import {
   fetchRentACarVehicles,
-  searchVehicles
+  fetchRentACarVehiclesOnDiscount,
+  searchVehicles,
+  sortVehicles
 } from "../../store/rent-a-car/actions";
 import CreateVehicle from "./CreateVehicle";
+import Background from "../../assets/background.jpg";
 
-export default function RentACarVehicles({ rentACarId }) {
-  const role = window.localStorage.getItem("role");
+export default function RentACarVehicles({ rentACarId, location }) {
+  const user = useSelector(userDataSelector);
   const vehicles = useSelector(selectRentACarVehicles);
   const classes = useStyles();
   const dispatch = useDispatch();
   const [createModalVisibility, setCreateModalVisibility] = useState(false);
   const [modalStyle] = React.useState(getModalStyle);
 
-  const [pickUpDate, setPickUpDate] = useState(null);
-  const [dropOffDate, setDropOffDate] = useState(null);
+  const [pickUpDate, setPickUpDate] = useState();
+  const [dropOffDate, setDropOffDate] = useState();
   const [pickUpLocation, setPickUpLocation] = useState("");
   const [dropOffLocation, setDropOffLocation] = useState("");
   const [type, setType] = useState("");
@@ -46,12 +51,26 @@ export default function RentACarVehicles({ rentACarId }) {
   }
 
   useEffect(() => {
+    if (location != undefined) {
+      setPickUpDate(location.state.pickUpDate);
+      setDropOffDate(location.state.dropOffDate);
+    }
+
     dispatch(
       fetchRentACarVehicles({
         rentACarId
       })
     );
-  }, [rentACarId]);
+
+    //TODO replace with airplane ticket start/end date
+    dispatch(
+      fetchRentACarVehiclesOnDiscount({
+        rentACarId: rentACarId,
+        pickUpDate: dateFormat(new Date(), "yyyy-mm-dd"),
+        dropOffDate: dateFormat(new Date(), "yyyy-mm-dd")
+      })
+    );
+  }, []);
 
   function handleSearch() {
     dispatch(
@@ -70,6 +89,22 @@ export default function RentACarVehicles({ rentACarId }) {
     );
   }
 
+  function handleSortByBrand() {
+    dispatch(sortVehicles({ by: "brand", rentACarId: rentACarId }));
+  }
+
+  function handleSortByModel() {
+    dispatch(sortVehicles({ by: "model", rentACarId: rentACarId }));
+  }
+
+  function handleSortByYop() {
+    dispatch(sortVehicles({ by: "yearOfProduction", rentACarId: rentACarId }));
+  }
+
+  function handleSortByRating() {
+    dispatch(sortVehicles({ by: "rating", rentACarId: rentACarId }));
+  }
+
   return (
     <Container maxWidth="xl">
       <Modal open={createModalVisibility}>
@@ -86,8 +121,8 @@ export default function RentACarVehicles({ rentACarId }) {
         <Grid item xl={2}>
           <h2>Vehicles</h2>
         </Grid>
-        {role == "RENT_A_CAR_ADMIN" ? (
-          <Grid mx={4}>
+        {user.role === "RENT_A_CAR_ADMIN" ? (
+          <Grid mx={4} className={classes.addPosition}>
             <Icon onClick={() => setCreateModalVisibility(true)}>
               add_circle
             </Icon>
@@ -202,7 +237,26 @@ export default function RentACarVehicles({ rentACarId }) {
           </Grid>
         </div>
       </Grid>
-      <Box display="flex" p={1} bgcolor="background.paper">
+      <ButtonGroup
+        size="small"
+        aria-label="small outlined button group"
+        className={classes.buttonGroupPosition}
+      >
+        <Button disabled>SORT BY</Button>
+        <Button className={classes.buttonGroup} onClick={handleSortByBrand}>
+          BRAND
+        </Button>
+        <Button className={classes.buttonGroup} onClick={handleSortByModel}>
+          MODEL
+        </Button>
+        <Button className={classes.buttonGroup} onClick={handleSortByYop}>
+          YEAR OF PRODUCTION
+        </Button>
+        <Button className={classes.buttonGroup} onClick={handleSortByRating}>
+          RATING
+        </Button>
+      </ButtonGroup>
+      <Box display="flex" p={1} className={classes.bckg}>
         {Object.keys(vehicles).map(vehicleId => (
           <RentACarVehicle key={vehicleId} vehicle={vehicles[vehicleId]} />
         ))}
@@ -231,6 +285,10 @@ const useStyles = makeStyles(theme => ({
     boxShadow: theme.shadows[5],
     padding: theme.spacing(2, 4, 3)
   },
+  bckg: {
+    backgroundImage: `url(${Background})`,
+    textAlign: "center"
+  },
   root: {
     position: "absolute",
     left: "20%",
@@ -238,11 +296,6 @@ const useStyles = makeStyles(theme => ({
     width: "60%",
     display: "flex",
     flexDirection: "column"
-  },
-  serviceRow: {
-    display: "flex",
-    flexDirection: "column",
-    width: "100%"
   },
   textField: {
     marginLeft: theme.spacing(1),
@@ -255,7 +308,18 @@ const useStyles = makeStyles(theme => ({
   button: {
     margin: theme.spacing(1),
     width: "30%",
-    marginLeft: "auto"
+    marginLeft: "auto",
+    background: "#008080",
+    color: "#FFFFFF"
+  },
+  buttonGroup: {
+    background: "#008080",
+    color: "#FFFFFF"
+  },
+  buttonGroupPosition: {
+    background: "#008080",
+    marginTop: 25,
+    marginBottom: 25
   },
   formControl: {
     margin: theme.spacing(1),
@@ -267,5 +331,11 @@ const useStyles = makeStyles(theme => ({
   listScroll: {
     maxHeight: "370px",
     overflow: "scroll"
+  },
+  addPosition: {
+    marginTop: 25
+  },
+  largeIcon: {
+    fontSize: "3em"
   }
 }));

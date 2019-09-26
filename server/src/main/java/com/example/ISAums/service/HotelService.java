@@ -1,18 +1,18 @@
 package com.example.ISAums.service;
 
-import com.example.ISAums.dto.database.DBHotel;
 import com.example.ISAums.dto.request.CreateHotelRequest;
+import com.example.ISAums.dto.request.CreateRatingRequest;
 import com.example.ISAums.dto.request.UpdateHotelRequest;
+import com.example.ISAums.exception.CustomException;
 import com.example.ISAums.exception.EntityAlreadyExistsException;
 import com.example.ISAums.exception.EntityWithIdDoesNotExist;
-import com.example.ISAums.model.Address;
-import com.example.ISAums.model.Hotel;
-import com.example.ISAums.model.HotelAdmin;
-import com.example.ISAums.model.HotelReservation;
+import com.example.ISAums.model.*;
+import com.example.ISAums.model.enumeration.RatingType;
 import com.example.ISAums.model.enumeration.ReportType;
 import com.example.ISAums.repository.AddressRepository;
 import com.example.ISAums.repository.HotelRepository;
 import com.example.ISAums.repository.HotelReservationRepository;
+import com.example.ISAums.repository.RatingRepository;
 import com.example.ISAums.util.UtilService;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -20,9 +20,9 @@ import org.springframework.transaction.annotation.Transactional;
 import javax.validation.Valid;
 import java.time.LocalDate;
 import java.util.*;
-import java.util.stream.Collectors;
 
 import static com.example.ISAums.converter.HotelConverter.toAddressFromRequest;
+import static com.example.ISAums.converter.RatingConverter.toRatingFromCreateRequest;
 import static com.example.ISAums.util.UtilService.copyNonNullProperties;
 
 @Service
@@ -30,22 +30,18 @@ public class HotelService {
     private final HotelRepository hotelRepository;
     private final AddressRepository addressRepository;
     private final HotelReservationRepository hotelReservationRepository;
+    private final RatingRepository ratingRepository;
 
-    public HotelService(HotelRepository hotelRepository, AddressRepository addressRepository, HotelReservationRepository hotelReservationRepository) {
+    public HotelService(HotelRepository hotelRepository, AddressRepository addressRepository, HotelReservationRepository hotelReservationRepository, RatingRepository ratingRepository) {
         this.hotelRepository = hotelRepository;
         this.addressRepository = addressRepository;
         this.hotelReservationRepository = hotelReservationRepository;
+        this.ratingRepository = ratingRepository;
     }
-
-//    @Transactional(readOnly = true)
-//    public List<Hotel> getHotels() {
-//        return hotelRepository.findAll();
-//    }
 
     @Transactional(readOnly = true)
     public List<Hotel> get(LocalDate startDate, LocalDate endDate, String name, String city, String state) {
         return hotelRepository.findAllByFilters(startDate, endDate, name, city, state);
-//        return hotels.stream().map(dbHotel -> Hotel.builder().build()).collect(Collectors.toList());
     }
 
     @Transactional(rollbackFor = Exception.class)
@@ -143,4 +139,39 @@ public class HotelService {
         return hotel.get();
     }
 
+    @Transactional(rollbackFor = Exception.class)
+    public void rate(CreateRatingRequest request) {
+        HotelReservation hotelReservation = hotelReservationRepository.findById(request.getReservationId()).orElse(null);
+
+        if (hotelReservation == null)
+            throw new EntityWithIdDoesNotExist("hotel reservation",request.getReservationId());
+
+//      if (hotelReservation.getEndDate().compareTo(new LocalDate()) >= 0)
+//            throw new CustomException("You did not left hotel yet!");
+
+        Hotel hotel = hotelReservation.getRoom().getHotel();
+
+//        if (ratingRepository.checkIfUserAlreadyRateEntity(userId, request.getEntityId(), RatingType.RENT_A_CAR.name()) != null)
+//            throw new CustomException("You already rate this hotel!");
+
+        Rating rating = toRatingFromCreateRequest(hotel.getId(), request, RatingType.HOTEL);
+//        rating.setUserID(userId);
+        ratingRepository.save(rating);
+
+        hotel.setRating(ratingRepository.getAverageMarkForEntity(hotel.getId().toString(), RatingType.HOTEL.name()));
+        hotelRepository.save(hotel);
+
+    }
+
+    @Transactional(readOnly = true)
+    public List<Hotel> sort(String by) {
+        if (by.equals("name"))
+            return hotelRepository.sortByName();
+        else if(by.equals("rating"))
+            return hotelRepository.sortByRating();
+        else if(by.equals("address"))
+            return hotelRepository.sortByAddress();
+        else
+            throw  new CustomException("Unknown attribute!");
+    }
 }

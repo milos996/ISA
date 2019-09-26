@@ -11,7 +11,12 @@ const ENDPOINTS = {
   ROOMS: "/rooms",
   EDIT_ROOM: "/rooms/%s",
   DELETE_ROOM: "/rooms/%s",
-  HOTELS_WITHOUT_ADMIN: "/hotels/no/admin"
+  HOTELS_WITHOUT_ADMIN: "/hotels/no/admin",
+  FETCH_HOTEL_SERVICES_AND_SERVICES: "/hotel/$s/hotel-services/unselected",
+  ROOM_RATING: "/rooms/rating",
+  HOTEL_RATING: "/hotels/rating",
+  HOTEL_RESERVATION: "/hotel-reservations",
+  HOTELS_SORT: "/hotels/sort?by=%s"
 };
 class HotelService extends HttpBaseClient {
   fetchServices = hotelId => {
@@ -19,10 +24,9 @@ class HotelService extends HttpBaseClient {
   };
 
   saveServices = (hotelId, services) => {
-    return this.getApiClient().put(
-      format(ENDPOINTS.HOTEL_SERVICES, hotelId),
+    return this.getApiClient().put(format(ENDPOINTS.HOTEL_SERVICES, hotelId), {
       services
-    );
+    });
   };
 
   fetchHotelDetails = hotelId => {
@@ -41,8 +45,6 @@ class HotelService extends HttpBaseClient {
   };
 
   saveHotel = (hotelId, newData) => {
-    console.log(hotelId, newData);
-
     return this.getApiClient().put(format(ENDPOINTS.HOTELS, hotelId), newData);
   };
 
@@ -89,13 +91,33 @@ class HotelService extends HttpBaseClient {
   };
 
   reserve = data => {
-    console.log(data);
-
-    return this.getApiClient().post(ENDPOINTS.ROOMS, data);
+    return this.getApiClient().post(ENDPOINTS.HOTEL_RESERVATION, data);
   };
 
   fetchHotelsWithoutAdmin = () => {
     return this.getApiClient().get(ENDPOINTS.HOTELS_WITHOUT_ADMIN);
+  };
+
+  fetchHotelServiceAndServices = hotelId => {
+    return this.getApiClient().get(
+      format(ENDPOINTS.FETCH_HOTEL_SERVICES_AND_SERVICES, hotelId)
+    );
+  };
+
+  addNewRoom = room => {
+    return this.getApiClient().post(ENDPOINTS.ROOMS, room);
+  };
+
+  rateRoom = rateData => {
+    return this.getApiClient().post(ENDPOINTS.ROOM_RATING, rateData);
+  };
+
+  rateHotel = rateData => {
+    return this.getApiClient().post(ENDPOINTS.HOTEL_RATING, rateData);
+  };
+
+  sortHotels = payload => {
+    return this.getApiClient().get(format(ENDPOINTS.HOTELS_SORT, payload.by));
   };
 }
 

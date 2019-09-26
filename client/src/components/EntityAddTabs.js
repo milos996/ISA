@@ -40,7 +40,7 @@ export default function EntityAddTabs() {
           <Tab label="Add Rent a car" {...a11yProps(2)} />
         </Tabs>
       </AppBar>
-      {/* <TabPanel value={currentTab} index={0}>
+      <TabPanel value={currentTab} index={0}>
         <CreateAirline />
       </TabPanel>
       <TabPanel value={currentTab} index={1}>
@@ -48,15 +48,6 @@ export default function EntityAddTabs() {
       </TabPanel>
       <TabPanel value={currentTab} index={2}>
         <CreateRentACar />
-      </TabPanel> */}
-      <TabPanel value={currentTab} index={0}>
-        <div>Item One</div>
-      </TabPanel>
-      <TabPanel value={currentTab} index={1}>
-        Item Two
-      </TabPanel>
-      <TabPanel value={currentTab} index={2}>
-        Item Three
       </TabPanel>
     </div>
   );

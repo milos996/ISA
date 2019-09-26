@@ -2,12 +2,11 @@ import React, { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { makeStyles } from "@material-ui/core/styles";
 import TextField from "@material-ui/core/TextField";
-// import { selectAirlineDetails } from "../store/airline/selectors";
+import ISAMap from "./hotel/ISAMap";
 
 export default function CreateAirline() {
   const dispatch = useDispatch();
   const classes = useStyles();
-  //   const airline = useSelector(selectAirlineDetails);
 
   const [data, setData] = useState({
     name: null,
@@ -77,6 +76,7 @@ export default function CreateAirline() {
         margin="normal"
         type="number"
       />
+      <ISAMap />
     </div>
   );
 }

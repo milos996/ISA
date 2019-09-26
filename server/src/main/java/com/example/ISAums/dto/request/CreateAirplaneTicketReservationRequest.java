@@ -14,9 +14,7 @@ import java.util.UUID;
 public class CreateAirplaneTicketReservationRequest {
 
     @NotNull
-    private UUID userID;
-
-    boolean [][][] seatConfiguration;
+    private List<ChooseSeatCoordinatesRequest> seats;
 
     @NotNull
     private UUID flightID;

@@ -62,7 +62,8 @@ const useStyles = makeStyles({
     marginTop: 15,
     marginRight: 10,
     height: 250,
-    paddingBottom: 10
+    paddingBottom: 10,
+    textAlign: "center"
   },
   media: {
     height: 140,

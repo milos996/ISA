@@ -1,19 +1,40 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { makeStyles } from "@material-ui/core/styles";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import TextField from "@material-ui/core/TextField";
-import { putAirplaneDetails, saveAirplaneDetails } from "../../store/airline/actions";
+import {
+  saveAirplaneDetails,
+  fetchAirlineAdmin
+} from "../../store/airline/actions";
 import Container from "@material-ui/core/Container";
 import Button from "@material-ui/core/Button";
-
+import { userDataSelector } from "../../store/user/selectors";
+import { selectAirlineAdmin } from "../../store/airline/selectors";
 export default function SeatConfiguration({ airplane, closeModal }) {
-
   const classes = useStyles();
   const dispatch = useDispatch();
-  const [airplaneDetails, setAirplaneDetails] = useState(airplane);
+  const user = useSelector(userDataSelector);
+  const airlineAdmin = useSelector(selectAirlineAdmin);
+  const [airplaneDetails, setAirplaneDetails] = useState({
+    id: airplane.id,
+    mark: airplane.mark,
+    numberOfRows: airplane.numberOfRows,
+    numberOfColumnsPerSegment: airplane.numberOfColumnsPerSegment,
+    numberOfSegments: airplane.numberOfSegments,
+    airline: airplane.airline
+  });
+  const isReadOnly =
+    airplaneDetails.airline.id === airlineAdmin.airline.id &&
+    user.role === "AIRLINE_ADMIN"
+      ? false
+      : true;
+
+  useEffect(() => {
+    dispatch(fetchAirlineAdmin());
+  }, [airplaneDetails.airline.id]);
 
   function handleSaveButton() {
-    dispatch(saveAirplaneDetails({ airplane }));
+    dispatch(saveAirplaneDetails(airplaneDetails));
     closeModal();
   }
 
@@ -23,19 +44,20 @@ export default function SeatConfiguration({ airplane, closeModal }) {
         root: classes.root
       }}
     >
-      
       <TextField
         label="Number of segments"
         margin="normal"
         className={classes.textField}
         defaultValue={airplane.numberOfSegments}
+        InputProps={{
+          readOnly: isReadOnly
+        }}
         onChange={({ currentTarget }) => {
           setAirplaneDetails(currState => ({
-              ...currState,
-              numberOfSegments:  Number(currentTarget.value)
-          }));        
-        }
-      }
+            ...currState,
+            numberOfSegments: Number(currentTarget.value)
+          }));
+        }}
       />
 
       <TextField
@@ -43,13 +65,15 @@ export default function SeatConfiguration({ airplane, closeModal }) {
         margin="normal"
         className={classes.textField}
         defaultValue={airplane.numberOfColumnsPerSegment}
+        InputProps={{
+          readOnly: isReadOnly
+        }}
         onChange={({ currentTarget }) => {
           setAirplaneDetails(currState => ({
-              ...currState,
-              numberOfColumnsPerSegment:  Number(currentTarget.value)
-          }));        
-        }
-      }
+            ...currState,
+            numberOfColumnsPerSegment: Number(currentTarget.value)
+          }));
+        }}
       />
 
       <TextField
@@ -57,23 +81,27 @@ export default function SeatConfiguration({ airplane, closeModal }) {
         margin="normal"
         className={classes.textField}
         defaultValue={airplane.numberOfRows}
+        InputProps={{
+          readOnly: isReadOnly
+        }}
         onChange={({ currentTarget }) => {
           setAirplaneDetails(currState => ({
-              ...currState,
-              numberOfRows:  Number(currentTarget.value)
-          }));        
-        }
-      }
+            ...currState,
+            numberOfRows: Number(currentTarget.value)
+          }));
+        }}
       />
-      
-      <Button
-        variant="contained"
-        color="primary"
-        className={classes.button}
-        onClick={handleSaveButton}
-      >
-        Save
-      </Button>
+      {user.role === "AIRLINE_ADMIN" &&
+      airlineAdmin.airline.id === airplaneDetails.airline.id ? (
+        <Button
+          variant="contained"
+          color="primary"
+          className={classes.button}
+          onClick={handleSaveButton}
+        >
+          Save
+        </Button>
+      ) : null}
     </Container>
   );
 }

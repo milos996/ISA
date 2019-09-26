@@ -1,44 +1,40 @@
 package com.example.ISAums.service;
 
+import com.example.ISAums.dto.request.CreateRatingRequest;
 import com.example.ISAums.dto.request.UpdateAirlineRequest;
 import com.example.ISAums.dto.request.UpdateSeatConfigurationRequest;
+import com.example.ISAums.dto.response.GetUserResponse;
+import com.example.ISAums.exception.CustomException;
 import com.example.ISAums.exception.EntityAlreadyExistsException;
 import com.example.ISAums.exception.EntityWithIdDoesNotExist;
-import com.example.ISAums.model.Address;
-import com.example.ISAums.model.Airline;
-import com.example.ISAums.model.Airplane;
+import com.example.ISAums.model.*;
 import com.example.ISAums.model.enumeration.RatingType;
 import com.example.ISAums.repository.*;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
+
+import static com.example.ISAums.converter.RatingConverter.toRatingFromCreateRequest;
 import static com.example.ISAums.util.UtilService.copyNonNullProperties;
 
 @Service
+@RequiredArgsConstructor
 public class AirlineService {
 
     private final RatingRepository ratingRepository;
     private final AirlineRepository airlineRepository;
     private final AddressRepository addressRepository;
     private final AirplaneRepository airplaneRepository;
-
-    public AirlineService(RatingRepository ratingRepository,
-                          AirlineRepository airlineRepository,
-                          AddressRepository addressRepository,
-                          AirplaneRepository airplaneRepository){
-
-        this.ratingRepository = ratingRepository;
-        this.airlineRepository = airlineRepository;
-        this.addressRepository = addressRepository;
-        this.airplaneRepository = airplaneRepository;
-    }
+    private final AirplaneTicketRepository airplaneTicketRepository;
+    private final AirlineAdminRepository airlineAdminRepository;
 
     public Double getAverageRating(UUID airlineId) {
 
         double sum = 0;
-        List<Integer> marks = ratingRepository.getMarksByEntityId(String.valueOf(airlineId), RatingType.AIRLINE);
+        List<Integer> marks = ratingRepository.getMarksByEntityId(String.valueOf(airlineId) , RatingType.AIRLINE.name());
 
         for(int i : marks)
             sum += i;
@@ -47,7 +43,7 @@ public class AirlineService {
     }
 
     @Transactional(rollbackFor = Exception.class)
-    public void update(UpdateAirlineRequest request){
+    public Airline update(UpdateAirlineRequest request){
 
         Airline tmpAirline = airlineRepository.getAnotherWithThisName(request.getName(), String.valueOf(request.getId()));
 
@@ -64,15 +60,12 @@ public class AirlineService {
         copyNonNullProperties(request.getAddress(), address.get());
         addressRepository.save(address.get());
 
-        updateSeatConfiguration(request.getSeatConfiguration(), request.getId());
-
         Optional<Airline> airline = airlineRepository.findById(request.getId());
-        airline.get().setCheckingInSuitcasePrice(request.getPricesRequest().getCheckingInSuitcasePrice());
-        airline.get().setHandLuggagePrice(request.getPricesRequest().getHandLuggagePrice());
+        airline.get().setCheckingInSuitcasePrice(request.getCheckingInSuitcasePrice());
+        airline.get().setHandLuggagePrice(request.getHandLuggagePrice());
+        copyNonNullProperties(request, airline.get(), "address");
 
-        copyNonNullProperties(request, airline.get(), "address", "seatConfiguration", "pricesRequest");
-
-        airlineRepository.save(airline.get());
+        return airlineRepository.save(airline.get());
     }
 
     private void updateSeatConfiguration(UpdateSeatConfigurationRequest request, UUID airlineId){
@@ -89,5 +82,49 @@ public class AirlineService {
 
     public Airline getAirline(String airlineId) {
         return airlineRepository.findById(UUID.fromString(airlineId)).get();
+    }
+
+    @Transactional(rollbackFor = Exception.class)
+    public void rate(CreateRatingRequest request) {
+        AirplaneTicket airplaneTicket = airplaneTicketRepository.getOne(request.getReservationId());
+
+        if (airplaneTicket == null)
+            throw new EntityWithIdDoesNotExist("airplane ticket",request.getReservationId());
+
+        Airline airline = airplaneTicket.getFlight().getAirplane().getAirline();
+        if (ratingRepository.checkIfUserAlreadyRateEntity("1a8591af-7141-4ecf-aee4-a4963b56db31", airline.getId().toString(), RatingType.AIRLINE.name()) != null)
+            throw new CustomException("You already rate this airline!");
+
+        Rating rating = toRatingFromCreateRequest(airline.getId(), request, RatingType.AIRLINE);
+        rating.setUserID(UUID.fromString("1a8591af-7141-4ecf-aee4-a4963b56db31"));
+        ratingRepository.save(rating);
+
+        airline.setRating(ratingRepository.getAverageMarkForEntity(airline.getId().toString(), RatingType.AIRLINE.name()));
+        airlineRepository.save(airline);
+    }
+
+    @Transactional(readOnly = true)
+    public List<Airline> sort(String by) {
+        if (by.equals("name"))
+            return airlineRepository.sortByName();
+        else if (by.equals("handLuggage"))
+            return airlineRepository.sortByHandLuggagePrice();
+        else if (by.equals("suitcasePrice"))
+            return airlineRepository.sortBySuitcasePrice();
+        else if (by.equals("rating"))
+            return airlineRepository.sortByRating();
+        else if (by.equals("address"))
+            return airlineRepository.sortByAddress();
+        else
+            throw new CustomException("Unknown attribute!");
+
+    }
+
+    public List<Airline> getAll() {
+        return airlineRepository.findAll();
+    }
+
+    public AirlineAdmin getAirlineAdmin(UUID id) {
+        return airlineAdminRepository.findByUser_Id(id);
     }
 }

@@ -45,4 +45,8 @@ public class HotelReservation extends BaseEntity {
     @OneToMany(fetch = FetchType.LAZY)
     @JoinColumn(name = "additional_service")
     private List<HotelService> additionalServices;
+
+
+    @Version
+    private Integer version;
 }

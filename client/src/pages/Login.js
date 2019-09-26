@@ -5,7 +5,7 @@ import CssBaseline from "@material-ui/core/CssBaseline";
 import TextField from "@material-ui/core/TextField";
 import Link from "@material-ui/core/Link";
 import Grid from "@material-ui/core/Grid";
-import LockOutlinedIcon from "@material-ui/icons/LockOutlined";
+import PersonRoundedIcon from "@material-ui/icons/PersonRounded";
 import Typography from "@material-ui/core/Typography";
 import { makeStyles } from "@material-ui/core/styles";
 import Container from "@material-ui/core/Container";
@@ -13,7 +13,7 @@ import { useDispatch } from "react-redux";
 import { loginUser } from "../store/user/actions";
 import { history } from "../index";
 
-const LoginPage = () => {
+const LoginPage = ({ closeModal }) => {
   const classes = useStyles();
   const dispatch = useDispatch();
   const [email, setEmail] = useState();
@@ -26,6 +26,7 @@ const LoginPage = () => {
         password,
         callback: () => {
           history.push("/");
+          closeModal();
         }
       })
     );
@@ -36,9 +37,9 @@ const LoginPage = () => {
       <CssBaseline />
       <div className={classes.paper}>
         <Avatar className={classes.avatar}>
-          <LockOutlinedIcon />
+          <PersonRoundedIcon />
         </Avatar>
-        <Typography component="h1" variant="h5">
+        <Typography component="h1" variant="h5" className={classes.label}>
           Sign in
         </Typography>
         <form className={classes.form} noValidate>
@@ -81,7 +82,7 @@ const LoginPage = () => {
           </Button>
           <Grid container>
             <Grid item>
-              <Link href="/register" variant="body2">
+              <Link href="/register" variant="body2" className={classes.label}>
                 {"Don't have an account? Sign Up"}
               </Link>
             </Grid>
@@ -106,14 +107,18 @@ const useStyles = makeStyles(theme => ({
   },
   avatar: {
     margin: theme.spacing(1),
-    backgroundColor: theme.palette.secondary.main
+    backgroundColor: "#008080"
   },
   form: {
     width: "100%", // Fix IE 11 issue.
     marginTop: theme.spacing(1)
   },
   submit: {
-    margin: theme.spacing(3, 0, 2)
+    margin: theme.spacing(3, 0, 2),
+    background: "#008080"
+  },
+  label: {
+    color: "#008080"
   }
 }));
 

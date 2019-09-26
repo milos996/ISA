@@ -6,8 +6,9 @@ import org.hibernate.validator.constraints.Range;
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import java.sql.Time;
-import java.time.LocalDate;
 import java.time.LocalDateTime;
+
+import static com.example.ISAums.util.ValidationConstraints.MAX_RATING;
 
 @Data
 @Builder
@@ -49,6 +50,11 @@ public class Flight extends BaseEntity {
   @NotNull
   private Airplane airplane;
 
+  @Version
+  private Integer version;
 
+  @Column(name = "rating")
+  @Range(min = 0, max = MAX_RATING)
+  private Double rating;
 }
 

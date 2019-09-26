@@ -5,31 +5,44 @@ import {
   DELETE_RENT_A_CAR,
   FETCH_RENT_A_CAR_DETAILS,
   FETCH_RENT_A_CAR_VEHICLES,
+  FETCH_RENT_A_CAR_VEHICLES_ON_DISCOUNT,
   FETCH_RENT_A_CAR_OFFICES,
   CREATE_OFFICE,
   DELETE_OFFICE,
   SEARCH_RENT_A_CARS,
+  SORT_RENT_A_CARS,
   FETCH_VEHICLES,
+  SORT_VEHICLES,
+  DISCOUNT_VEHICLE,
   DELETE_VEHICLE,
   SEARCH_VEHICLES,
   FETCH_RENT_A_CAR_LOCATION_INFORMATION,
   CREATE_VEHICLE,
   CREATE_VEHICLE_RESERVATION,
+  CANCEL_VEHICLE_RESERVATION,
+  RATE_VEHICLE,
   SAVE_VEHICLE_DETAILS,
-  SAVE_RENT_A_CAR_DETAILS
+  SAVE_RENT_A_CAR_DETAILS,
+  RATE_RENT_A_CAR,
+  SHOW_RENT_A_CAR_INCOME,
+  SHOW_RENT_A_CAR_BUSYNESS,
+  SHOW_AVAILABLE_RENT_A_CAR_VEHICLES
 } from "./constants";
 import {
   putRentACars,
   putRentACarDetails,
   putRentACarVehicles,
+  putRentACarVehiclesOnDiscount,
   putRentACarOffices,
-  putDeleteOfficeWithId,
   putRentACarLocationInformation,
   putVehicles,
-  putCreatedRentACarVehicle,
-  putDeleteVehicleWithId,
-  putSearchInformation
+  putSearchInformation,
+  putRentACarIncome,
+  putRentACarBusyness,
+  putAvailableRentACarVehicles
 } from "./actions";
+
+import { putUserVehiclesReservation } from "../user/actions";
 import rentACarService from "../../services/api/RentACar";
 import locationService from "../../services/LocationService";
 
@@ -45,6 +58,7 @@ export function* createRentACAr() {
     lat: payload.location.latlng.lat,
     lng: payload.location.latlng.lng
   });
+
   const address = {
     street: payload.street,
     city: location.data.geonames[0].name,
@@ -83,7 +97,9 @@ export function* updateRentACar() {
     description: payload.description
   };
 
-  yield call(rentACarService.updateRentACar, rentACar);
+  const { data } = yield call(rentACarService.updateRentACar, rentACar);
+
+  yield put(putRentACars(data));
 }
 
 export function* deleteRentACar() {
@@ -95,8 +111,36 @@ export function* deleteRentACar() {
 
 export function* fetchRentACarDetails() {
   const { payload } = yield take(FETCH_RENT_A_CAR_DETAILS);
-  const { data } = yield call(rentACarService.fetchRentACarDetails, payload.id);
+  const { data } = yield call(rentACarService.fetchRentACarDetails, payload);
+  console.log(data);
   yield put(putRentACarDetails(data));
+}
+
+//TODO refresh rate in the list
+export function* rateRentACar() {
+  const { payload } = yield take(RATE_RENT_A_CAR);
+  const { data } = yield call(rentACarService.rateRentACar, payload);
+}
+
+export function* showRentACarIncome() {
+  const { payload } = yield take(SHOW_RENT_A_CAR_INCOME);
+  const { data } = yield call(rentACarService.showRentACarIncome, payload);
+  yield put(putRentACarIncome(data));
+}
+
+export function* showRentACarBusyness() {
+  const { payload } = yield take(SHOW_RENT_A_CAR_BUSYNESS);
+  const { data } = yield call(rentACarService.showRentACarBusyness, payload);
+  yield put(putRentACarBusyness(data));
+}
+
+export function* showAvailableRentACarVehicles() {
+  const { payload } = yield take(SHOW_AVAILABLE_RENT_A_CAR_VEHICLES);
+  const { data } = yield call(
+    rentACarService.showAvailableRentACarVehicles,
+    payload
+  );
+  yield put(putAvailableRentACarVehicles(data));
 }
 
 export function* fetchRentACarLocationInformation() {
@@ -111,6 +155,15 @@ export function* fetchRentACarVehicles() {
     payload.rentACarId
   );
   yield put(putRentACarVehicles(data));
+}
+
+export function* fetchRentACarVehiclesOnDiscount() {
+  const { payload } = yield take(FETCH_RENT_A_CAR_VEHICLES_ON_DISCOUNT);
+  const { data } = yield call(
+    rentACarService.fetchRentACarVehiclesOnDiscount,
+    payload
+  );
+  yield put(putRentACarVehiclesOnDiscount(data));
 }
 
 export function* fetchRentACarOffices() {
@@ -137,6 +190,12 @@ export function* deleteRentACarOffice() {
 export function* searchRentACars() {
   const { payload } = yield take(SEARCH_RENT_A_CARS);
   const { data } = yield call(rentACarService.searchRentACars, payload);
+  yield put(putRentACars(data));
+}
+
+export function* sortRentACars() {
+  const { payload } = yield take(SORT_RENT_A_CARS);
+  const { data } = yield call(rentACarService.sortRentACars, payload);
   yield put(putRentACars(data));
 }
 
@@ -167,6 +226,12 @@ export function* searchVehicles() {
   yield put(putSearchInformation(info));
 }
 
+export function* sortVehicles() {
+  const { payload } = yield take(SORT_VEHICLES);
+  const { data } = yield call(rentACarService.sortVehicles, payload);
+  yield put(putRentACarVehicles(data));
+}
+
 export function* createVehicle() {
   const { payload } = yield take(CREATE_VEHICLE);
   const { data } = yield call(rentACarService.createRentACarVehicle, payload);
@@ -179,7 +244,30 @@ export function* deleteVehicle() {
   yield put(putRentACarVehicles(data));
 }
 
+//TODO refresh rate in the list
+export function* rateVehicle() {
+  const { payload } = yield take(RATE_VEHICLE);
+  const { data } = yield call(rentACarService.rateVehicle, payload);
+}
+
+export function* createVehicleDiscount() {
+  const { payload } = yield take(DISCOUNT_VEHICLE);
+  console.log(payload);
+  const { data } = yield call(rentACarService.createVehicleDiscount, payload);
+}
+
 export function* createVehicleReservation() {
   const { payload } = yield take(CREATE_VEHICLE_RESERVATION);
   const { data } = yield call(rentACarService.reserveVehicle, payload);
+  alert(data);
+}
+
+export function* cancelVehicleReservation() {
+  const { payload } = yield take(CANCEL_VEHICLE_RESERVATION);
+  const { data } = yield call(
+    rentACarService.cancelVehicleReservation,
+    payload
+  );
+
+  yield put(putUserVehiclesReservation(data));
 }

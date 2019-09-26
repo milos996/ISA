@@ -7,23 +7,38 @@ import CardContent from "@material-ui/core/CardContent";
 import Button from "@material-ui/core/Button";
 import Typography from "@material-ui/core/Typography";
 import DeleteIcon from "@material-ui/icons/Delete";
+import UpdateIcon from "@material-ui/icons/Update";
 import IconButton from "@material-ui/core/IconButton";
 import Modal from "@material-ui/core/Modal";
+import Rating from "react-rating";
+import StarBorderIcon from "@material-ui/icons/StarBorder";
+import StarIcon from "@material-ui/icons/Star";
+import AccessibilityIcon from "@material-ui/icons/Accessibility";
 import IsaDialog from "../UI/IsaDialog";
 import EditVehicle from "./EditVehicle";
+import DiscountVehicle from "./DiscountVehicle";
 import { deleteVehicle } from "../../store/rent-a-car/actions";
 import { selectVehicleSearchInformation } from "../../store/rent-a-car/selectors";
 import { createVehicleReservation } from "./../../store/rent-a-car/actions";
+import CardBackground from "../../assets/card_bckg.jpg";
 
-export default function RentACarVehicle({ vehicle }) {
+export default function RentACarVehicle({ vehicle, location }) {
   const role = window.localStorage.getItem("role");
   const classes = useStyles();
   const dispatch = useDispatch();
   const [modalStyle] = React.useState(getModalStyle);
   const [isEditModalVisible, setEditModalVisibility] = useState(false);
   const [isDialogForDeleteVisible, setDialogVisibility] = useState(false);
+  const [isDiscountModalVisible, setDiscountModalVisibility] = useState(false);
 
   const info = useSelector(selectVehicleSearchInformation);
+
+  useEffect(() => {
+    if (location != undefined) {
+      info.pickUpDate = location.state.pickUpDate;
+      info.dropOffDate = location.state.dropOffDate;
+    }
+  });
 
   function handleReserve() {
     if (
@@ -33,13 +48,22 @@ export default function RentACarVehicle({ vehicle }) {
       info.dropOffLocation === ""
     ) {
       alert(
-        "You need to search for vehicle first!\nSelect 'pickup-dropoff location' and 'pickup-dropoff date'"
+        "You need to search for the vehicle first!\nSelect 'pickup-dropoff location' and 'pickup-dropoff date'"
       );
       return;
     }
 
     const vehicleId = vehicle.id;
-    dispatch(createVehicleReservation({ vehicleId, info }));
+    var ticketId;
+    if (location != undefined) ticketId = location.state.airplaneTicketId;
+
+    dispatch(
+      createVehicleReservation({
+        airplaneTicketId: ticketId,
+        vehicleId,
+        info
+      })
+    );
     closeModal();
   }
 
@@ -50,6 +74,7 @@ export default function RentACarVehicle({ vehicle }) {
 
   function closeModal() {
     setEditModalVisibility(false);
+    setDiscountModalVisibility(false);
   }
 
   return (
@@ -64,46 +89,87 @@ export default function RentACarVehicle({ vehicle }) {
           <Button onClick={closeModal}>Close</Button>
         </div>
       </Modal>
+      <Modal open={isDiscountModalVisible}>
+        <div
+          className="modal-container-sm"
+          style={modalStyle}
+          className={classes.paper}
+        >
+          <DiscountVehicle vehicle={vehicle} closeModal={closeModal} />
+          <Button onClick={closeModal}>Close</Button>
+        </div>
+      </Modal>
       <CardContent>
         <Typography variant="h5" component="h2">
           {vehicle.brand}
         </Typography>
-        <Typography className={classes.pos} color="textSecondary">
-          {vehicle.model}
-        </Typography>
+        <Typography color="textSecondary">{vehicle.model}</Typography>
         <Typography variant="body2" component="p">
           <strong>
             {" "}
-            {vehicle.brand} {vehicle.model}.
+            {vehicle.type} {vehicle.brand} {vehicle.model}, from{" "}
+            {vehicle.yearOfProduction}.
           </strong>
-          <br /> Price per day for this vehicle:{" "}
-          <strong>{vehicle.pricePerDay}$</strong>. <br />
+          <div>
+            <br /> Price for this vehicle:{" "}
+            <strong>{vehicle.pricePerDay}$</strong>.
+          </div>
+          <br />
+          <Rating
+            readonly={true}
+            className={classes.rating}
+            initialRating={vehicle.numberOfSeats}
+            stop={vehicle.numberOfSeats}
+            fullSymbol={<AccessibilityIcon></AccessibilityIcon>}
+            emptySymbol={<AccessibilityIcon></AccessibilityIcon>}
+          ></Rating>
+          <br />
+          <Rating
+            readonly={true}
+            className={classes.rating}
+            initialRating={vehicle.rating}
+            stop={10}
+            emptySymbol={<StarBorderIcon></StarBorderIcon>}
+            fullSymbol={<StarIcon></StarIcon>}
+          ></Rating>
         </Typography>
+        <br />
         {role === "RENT_A_CAR_ADMIN" ? (
           <Typography variant="body2" component="p">
-            For update and more information about this vehicle click on{" "}
-            <strong>SEE MORE</strong>
+            If you want to change this vehicle click on <strong>UPDATE</strong>
           </Typography>
-        ) : (
+        ) : null}
+        {role === "USER" ? (
           <Typography variant="body2" component="p">
             If you want to reserve this vehicle click on{" "}
             <strong>RESERVE</strong>
           </Typography>
-        )}
+        ) : null}
       </CardContent>
       <CardActions>
-        <Button size="small" onClick={() => setEditModalVisibility(true)}>
-          See more
-        </Button>
         {role === "RENT_A_CAR_ADMIN" ? (
-          <IconButton
-            aria-label="delete"
-            onClick={() => {
-              setDialogVisibility(true);
-            }}
-          >
-            <DeleteIcon fontSize="small" />
-          </IconButton>
+          <div>
+            <IconButton
+              aria-label="update"
+              onClick={() => setEditModalVisibility(true)}
+            >
+              <UpdateIcon fontSize="small" />
+            </IconButton>
+            <Button
+              size="small"
+              onClick={() => setDiscountModalVisibility(true)}
+            >
+              DISCOUNT
+            </Button>
+            <IconButton
+              aria-label="delete"
+              onClick={() => {
+                setDialogVisibility(true);
+              }}
+            >
+              <DeleteIcon fontSize="small" />
+            </IconButton>
+          </div>
         ) : null}
         {role === "USER" ? (
           <Button size="small" onClick={handleReserve}>
@@ -143,13 +209,17 @@ const useStyles = makeStyles(theme => ({
     boxShadow: theme.shadows[5],
     padding: theme.spacing(2, 4, 3)
   },
+  rating: {
+    marginTop: 20
+  },
   card: {
-    width: 250,
-    height: 250,
+    width: 280,
     marginBottom: 25,
-    marginRight: 10,
-    padding: 5,
-    paddingBottom: 25
+    marginRight: 25,
+    padding: 15,
+    paddingBottom: 15,
+    backgroundImage: `url(${CardBackground})`,
+    textAlign: "center"
   },
   bullet: {
     display: "inline-block",

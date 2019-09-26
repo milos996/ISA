@@ -3,35 +3,57 @@ import {
   PUT_USER_TOKEN,
   PUT_FRIENDS_DATA,
   PUT_FOUND_USERS_DATA,
-  PUT_USERS
+  PUT_USERS,
+  PUT_USER_FLIGHTS_RESERVATION,
+  PUT_USER_HOTELS_RESERVATION,
+  PUT_USER_VEHICLES_RESERVATION,
+  PUT_USER_INVITES,
+  PUT_FRIENDSHIP_REQUESTS
 } from "../constants";
 import * as computationFunctions from "./computation-functions";
 
 const initialState = {
   data: {
-    id: "123",
-    firstname: "Uros",
-    lastname: "Kojovic",
-    email: "uros@gmail.com",
-    password: "123",
-    state: "Serbia",
-    city: "Cacak",
-    phone: "060000111"
+    id: window.localStorage.getItem("userID"),
+    firstName: "",
+    lastName: "",
+    email: "",
+    password: "",
+    state: "",
+    city: "",
+    phoneNumber: "",
+    role: window.localStorage.getItem("role")
   },
-  friends: [
+  friendshipRequests: [
     {
-      id: "1",
-      firstname: "Dejan",
-      lastname: "Dejanovic",
-      email: "dejan@gmail.com"
-    },
-    {
-      id: "2",
-      firstname: "Bojan",
-      lastname: "Bojanovic",
-      email: "bojan@gmail.com"
+      id: "",
+      invitationStatus: "",
+      invitedUser: {
+        city: "",
+        email: "",
+        firstName: "",
+        id: "",
+        lastName: "",
+        password: "",
+        phoneNumber: "",
+        state: "",
+        role: ""
+      },
+
+      sender: {
+        city: "",
+        email: "",
+        firstName: "",
+        id: "",
+        lastName: "",
+        password: "",
+        phoneNumber: "",
+        state: "",
+        role: ""
+      }
     }
   ],
+  friends: [],
   token: window.localStorage.getItem("token"),
   service: null,
   hotel: {
@@ -156,6 +178,12 @@ const initialState = {
       email: "bojan@gmail.com"
     }
   ],
+  users: [],
+  userVehiclesReservation: [],
+  userFlightsReservation: [],
+  userHotelsReservation: [],
+  userInvites: [],
+  foundUsers: [],
   users: []
 };
 
@@ -172,7 +200,14 @@ const actionHandler = {
   [PUT_USER_TOKEN]: computationFunctions.putUserToken,
   [PUT_FRIENDS_DATA]: computationFunctions.putFriendsData,
   [PUT_FOUND_USERS_DATA]: computationFunctions.putFoundUsersData,
-  [PUT_USERS]: computationFunctions.putUsers
+  [PUT_USERS]: computationFunctions.putUsers,
+  [PUT_USER_FLIGHTS_RESERVATION]:
+    computationFunctions.putUserFlightsReservation,
+  [PUT_USER_HOTELS_RESERVATION]: computationFunctions.putUserHotelsReservation,
+  [PUT_USER_VEHICLES_RESERVATION]:
+    computationFunctions.putUserVehiclesReservation,
+  [PUT_USER_INVITES]: computationFunctions.putUserInvites,
+  [PUT_FRIENDSHIP_REQUESTS]: computationFunctions.putFriendshipRequests
 };
 
 export default userReducer;

@@ -5,6 +5,7 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import java.util.UUID;
 
@@ -16,4 +17,10 @@ public class ServiceRequest {
 
     @NotNull
     private UUID id;
+
+    @NotBlank
+    private String name;
+
+    @NotNull
+    private Double price;
 }

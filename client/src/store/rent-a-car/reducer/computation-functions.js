@@ -5,14 +5,6 @@ export function putRentACars(state, rentACars) {
   };
 }
 
-export function putCreatedRentACarVehicle(state, rentACarVehicle) {
-  const { data } = state["rentACarReducer"].rentACarVehicles;
-  return {
-    ...state,
-    rentACarVehicle
-  };
-}
-
 export function putVehicleDetails(state, vehicleDetails) {
   return {
     ...state,
@@ -34,6 +26,37 @@ export function putRentACarVehicles(state, rentACarVehicles) {
   };
 }
 
+export function putRentACarVehiclesOnDiscount(
+  state,
+  rentACarVehiclesOnDiscount
+) {
+  return {
+    ...state,
+    rentACarVehiclesOnDiscount
+  };
+}
+
+export function putRentACarVehiclesIncome(state, rentACarVehiclesIncome) {
+  return {
+    ...state,
+    rentACarVehiclesIncome
+  };
+}
+
+export function putRentACarVehiclesBusyness(state, rentACarVehiclesBusyness) {
+  return {
+    ...state,
+    rentACarVehiclesBusyness
+  };
+}
+
+export function putAvailableRentACarVehicles(state, rentACarAvailableVehicles) {
+  return {
+    ...state,
+    rentACarAvailableVehicles
+  };
+}
+
 export function putRentACarOffices(state, rentACarOffices) {
   return {
     ...state,
@@ -41,10 +64,10 @@ export function putRentACarOffices(state, rentACarOffices) {
   };
 }
 
-export function putRentACarDetails(state, rentACar) {
+export function putRentACarDetails(state, rentACarDetails) {
   return {
     ...state,
-    rentACar
+    rentACarDetails
   };
 }
 
