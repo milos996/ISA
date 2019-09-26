@@ -94,7 +94,6 @@ export default function HomeAuthUserPage() {
 
 const useStyles = makeStyles(theme => ({
   root: {
-    textAlign: "center",
     marginTop: 25,
     background: `url(${Background})`
   },
