@@ -11,7 +11,7 @@ import Button from "@material-ui/core/Button";
 import ButtonGroup from "@material-ui/core/ButtonGroup";
 import Airline from "./Airline";
 
-export default function Airlines() {
+export default function Airlines({ history }) {
   const classes = useStyles();
   const dispatch = useDispatch();
   const airlines = useSelector(selectAirlines);
@@ -65,7 +65,11 @@ export default function Airlines() {
       </ButtonGroup>
       <div className="airlines-container">
         {Object.keys(airlines).map(airlineId => (
-          <Airline key={airlineId} airline={airlines[airlineId]} />
+          <Airline
+            key={airlineId}
+            airline={airlines[airlineId]}
+            history={history}
+          />
         ))}
       </div>
     </Container>

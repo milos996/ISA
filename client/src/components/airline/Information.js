@@ -5,15 +5,14 @@ import TextField from "@material-ui/core/TextField";
 import Modal from "@material-ui/core/Modal";
 import {
   selectAirlineDetails,
-  selectAirlineAirplanes
+  selectAirlineAdmin
 } from "../../store/airline/selectors";
-import { fetchAirlineAirplanes } from "../../store/airline/actions";
-import Airplane from "./Airplane";
 import {
   putAirlineDetails,
   putAirlineLocationInformation,
   saveAirlineDetails,
-  fetchAirlineDetails
+  fetchAirlineDetails,
+  fetchAirlineAdmin
 } from "../../store/airline/actions";
 import Container from "@material-ui/core/Container";
 import ISAMap from "../hotel/ISAMap";
@@ -22,17 +21,30 @@ import { MODAL_CONTENT } from "../../constants/airline";
 import Destinations from "./Destinations";
 import Flights from "./Flights";
 import TicketsForFastReservation from "./TicketsForFastReservation";
+import { userDataSelector } from "../../store/user/selectors";
+
 export default function AirlineInformation({ airlineId }) {
   const dispatch = useDispatch();
   const classes = useStyles();
   const airlineDetails = useSelector(selectAirlineDetails);
   const airlineName = airlineDetails.name;
+  const user = useSelector(userDataSelector);
+  const airlineAdmin = useSelector(selectAirlineAdmin);
 
   const [modalContent, setModalContent] = useState({
     isVisible: false,
     value: ""
   });
-  console.log(airlineDetails.address);
+
+  const isReadOnly =
+    airlineId === airlineAdmin.airline.id && user.role === "AIRLINE_ADMIN"
+      ? false
+      : true;
+
+  useEffect(() => {
+    dispatch(fetchAirlineAdmin());
+  }, [airlineId]);
+
   function setStreet(street) {
     dispatch(putAirlineLocationInformation({ street }));
   }
@@ -119,6 +131,9 @@ export default function AirlineInformation({ airlineId }) {
             className={classes.textField}
             margin="normal"
             value={airlineDetails.name}
+            InputProps={{
+              readOnly: isReadOnly
+            }}
             onChange={({ currentTarget }) => {
               dispatch(
                 putAirlineDetails({
@@ -136,6 +151,9 @@ export default function AirlineInformation({ airlineId }) {
             multiline
             rowsMax="8"
             value={airlineDetails.description}
+            InputProps={{
+              readOnly: isReadOnly
+            }}
             onChange={({ currentTarget }) => {
               dispatch(
                 putAirlineDetails({
@@ -150,6 +168,9 @@ export default function AirlineInformation({ airlineId }) {
             className={classes.textField}
             margin="normal"
             value={airlineDetails.checkingInSuitcasePrice}
+            InputProps={{
+              readOnly: isReadOnly
+            }}
             onChange={({ currentTarget }) => {
               dispatch(
                 putAirlineDetails({
@@ -164,6 +185,9 @@ export default function AirlineInformation({ airlineId }) {
             className={classes.textField}
             margin="normal"
             value={airlineDetails.handLuggagePrice}
+            InputProps={{
+              readOnly: isReadOnly
+            }}
             onChange={({ currentTarget }) => {
               dispatch(
                 putAirlineDetails({
@@ -174,15 +198,18 @@ export default function AirlineInformation({ airlineId }) {
             }}
           />
         </Container>
+        {user.role === "AIRLINE_ADMIN" &&
+        airlineId === airlineAdmin.airline.id ? (
+          <Button
+            variant="contained"
+            color="primary"
+            className={classes.button}
+            onClick={handleSaveButton}
+          >
+            Save
+          </Button>
+        ) : null}
 
-        <Button
-          variant="contained"
-          color="primary"
-          className={classes.button}
-          onClick={handleSaveButton}
-        >
-          Save
-        </Button>
         <ISAMap
           address={airlineDetails.address}
           setStreet={setStreet}

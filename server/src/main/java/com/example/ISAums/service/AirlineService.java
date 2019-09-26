@@ -3,6 +3,7 @@ package com.example.ISAums.service;
 import com.example.ISAums.dto.request.CreateRatingRequest;
 import com.example.ISAums.dto.request.UpdateAirlineRequest;
 import com.example.ISAums.dto.request.UpdateSeatConfigurationRequest;
+import com.example.ISAums.dto.response.GetUserResponse;
 import com.example.ISAums.exception.CustomException;
 import com.example.ISAums.exception.EntityAlreadyExistsException;
 import com.example.ISAums.exception.EntityWithIdDoesNotExist;
@@ -28,6 +29,7 @@ public class AirlineService {
     private final AddressRepository addressRepository;
     private final AirplaneRepository airplaneRepository;
     private final AirplaneTicketRepository airplaneTicketRepository;
+    private final AirlineAdminRepository airlineAdminRepository;
 
     public Double getAverageRating(UUID airlineId) {
 
@@ -120,5 +122,9 @@ public class AirlineService {
 
     public List<Airline> getAll() {
         return airlineRepository.findAll();
+    }
+
+    public AirlineAdmin getAirlineAdmin(UUID id) {
+        return airlineAdminRepository.findByUser_Id(id);
     }
 }

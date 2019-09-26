@@ -3,6 +3,9 @@ package com.example.ISAums.service;
 import com.example.ISAums.dto.request.ChooseSeatCoordinatesRequest;
 import com.example.ISAums.dto.request.CreateAirplaneTicketReservationRequest;
 import com.example.ISAums.dto.request.CreateQuickTicketBookingRequest;
+import com.example.ISAums.dto.request.GetAirlineIncomeRequest;
+import com.example.ISAums.dto.response.GetAirlineIncomeResponse;
+import com.example.ISAums.dto.response.GetSoldAirlineTicketsResponse;
 import com.example.ISAums.email_service.EmailServiceImpl;
 import com.example.ISAums.exception.CustomException;
 import com.example.ISAums.model.*;
@@ -119,21 +122,8 @@ public class AirplaneTicketService {
         return airplaneTicket;
     }
 
-    public Double getIncome(UUID airlineID, Date startDate, Date endDate) {
-
-        List<UUID> boughtFlightIDs = airplaneTicketRepository.getBoughtFlights(String.valueOf(airlineID), startDate, endDate);
-        List<Flight> flights = new ArrayList<>(boughtFlightIDs.size());
-
-        for(int i = 0; i < boughtFlightIDs.size(); i++){
-            Optional<Flight> tmpFlight = flightRepository.findById(UUID.fromString(String.valueOf(boughtFlightIDs.get(i))));
-            flights.add(tmpFlight.get());
-        }
-
-        return flights.stream()
-                .mapToDouble(flight -> {
-                    return flight.getPrice();
-                })
-                .reduce(0, (subtotal, price) -> subtotal + price);
+    public List<GetAirlineIncomeResponse> getIncome(String airlineID, String startDate, String endDate) {
+      return airplaneTicketRepository.getIncome(airlineID, startDate, endDate);
     }
 
     private boolean[][][] initSeatConfigurationOfFlight(Flight flight, int numOfSegments, int numOfRows, int numOfColumns){
@@ -222,5 +212,9 @@ public class AirplaneTicketService {
         airplaneTicketRepository.delete(airplaneTicket);
 
         return airplaneTicketRepository.findByUser_Id(user.getId());
+    }
+
+    public List<GetSoldAirlineTicketsResponse> getSoldTickets(String id, String startDate, String endDate) {
+        return airplaneTicketRepository.getSoldTickets(id, startDate, endDate);
     }
 }

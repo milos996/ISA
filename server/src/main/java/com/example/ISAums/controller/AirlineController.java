@@ -1,21 +1,22 @@
 package com.example.ISAums.controller;
 
 import com.example.ISAums.dto.request.CreateRatingRequest;
-import com.example.ISAums.dto.request.GetAirlineIncomeRequest;
 import com.example.ISAums.dto.request.UpdateAirlineRequest;
-import com.example.ISAums.dto.response.GetAirlineIncomeResponse;
-import com.example.ISAums.dto.response.GetAirlineAverageRatingResponse;
-import com.example.ISAums.dto.response.GetAirlineResponse;
+import com.example.ISAums.dto.response.*;
 import com.example.ISAums.model.Airline;
+import com.example.ISAums.model.AirlineAdmin;
+import com.example.ISAums.model.User;
 import com.example.ISAums.service.AirlineService;
 import com.example.ISAums.service.AirplaneTicketService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.UUID;
 import static com.example.ISAums.converter.AirlineConverter.*;
+import static com.example.ISAums.converter.UserConverter.toGetAirlineAdminResponseFromAdmin;
 
 @RestController
 @RequestMapping("/airlines")
@@ -44,23 +45,29 @@ public class AirlineController {
     }
 
     @GetMapping(value = "/{id}")
-    @PreAuthorize("hasAnyAuthority('AIRLINE_ADMIN')")
     public ResponseEntity<GetAirlineResponse> getAirline(@PathVariable(name = "id") String airlineId){
         Airline airline = airlineService.getAirline(airlineId);
         return ResponseEntity.ok(toGetAirlineResponseFromAirline(airline));
     }
 
-    @GetMapping(value = "/getAirlineIncomeForDate")
-    @PreAuthorize("hasAnyAuthority('AIRLINE_ADMIN')")
-    public ResponseEntity<GetAirlineIncomeResponse> getAirlineIncomeForDate(@RequestBody GetAirlineIncomeRequest req){
+    @GetMapping(value = "/{id}/income")
+    public ResponseEntity<List<GetAirlineIncomeResponse>> getIncome(@PathVariable("id") String id,  @RequestParam("startDate") String startDate, @RequestParam("endDate") String endDate){
 
-        Double income = airplaneTicketService.getIncome(req.getAirlineID(), req.getStartDate(), req.getEndDate());
+        return ResponseEntity.ok(airplaneTicketService.getIncome(id, startDate, endDate));
+    }
 
-        return ResponseEntity.ok(toGetAirlineIncomeResponseFromIncome(req.getStartDate(), req.getEndDate(), income));
+    @GetMapping(value = "/airline-admin")
+    public ResponseEntity<GetAirlineAdminResponse> getAirlineAdmin(@AuthenticationPrincipal UUID userId){
+       AirlineAdmin admin = airlineService.getAirlineAdmin(userId);
+        return ResponseEntity.ok(toGetAirlineAdminResponseFromAdmin(admin));
+    }
+
+    @GetMapping(value = "/{id}/sold-tickets")
+    public ResponseEntity<List<GetSoldAirlineTicketsResponse>> getSoldTickets(@PathVariable("id") String id,  @RequestParam("startDate") String startDate, @RequestParam("endDate") String endDate){
+        return ResponseEntity.ok(airplaneTicketService.getSoldTickets(id, startDate, endDate));
     }
 
     @GetMapping(value = "/airline/{id}/average-rating")
-    @PreAuthorize("hasAnyAuthority('AIRLINE_ADMIN')")
     public ResponseEntity<GetAirlineAverageRatingResponse> getAverageRating(@PathVariable(name = "id") UUID airlineId){
 
         Double averageRating = airlineService.getAverageRating(airlineId);

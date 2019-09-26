@@ -9,12 +9,10 @@ import com.example.ISAums.exception.CustomException;
 import com.example.ISAums.exception.EntityAlreadyExistsException;
 import com.example.ISAums.model.*;
 import com.example.ISAums.model.enumeration.Role;
-import com.example.ISAums.repository.AddressRepository;
-import com.example.ISAums.repository.RentACarAdminRepository;
-import com.example.ISAums.repository.VerificationTokenRepository;
-import com.example.ISAums.repository.UserRepository;
+import com.example.ISAums.repository.*;
 import com.example.ISAums.security.JwtTokenUtil;
 import com.example.ISAums.security.UserDetailsServiceImpl;
+import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -38,6 +36,7 @@ import java.util.List;
 import java.util.UUID;
 
 @Service
+@RequiredArgsConstructor
 public class AuthService {
     private static  final Logger logger = LoggerFactory.getLogger(AuthService.class);
 
@@ -50,18 +49,7 @@ public class AuthService {
     private final JwtTokenUtil jwtTokenUtil;
     private final EmailService emailService;
     private final VerificationTokenRepository verificationTokenRepository;
-
-    public AuthService(UserRepository ur, RentACarAdminRepository rentACarAdminRepository, AddressRepository addressRepository, BCryptPasswordEncoder pwEncoder, AuthenticationManager am, UserDetailsServiceImpl usd, JwtTokenUtil jtu, EmailService es, VerificationTokenRepository vtr) {
-        this.userRepository = ur;
-        this.rentACarAdminRepository = rentACarAdminRepository;
-        this.addressRepository = addressRepository;
-        this.bCryptPasswordEncoder = pwEncoder;
-        this.authenticationManager = am;
-        this.userDetailsService = usd;
-        this.jwtTokenUtil = jtu;
-        this.emailService = es;
-        this.verificationTokenRepository = vtr;
-    }
+    private final AirlineAdminRepository airlineAdminRepository;
 
     @Transactional(rollbackFor = Exception.class)
     public User register(HttpServletRequest servletRequest, CreateUserRequest request) throws IOException, MessagingException {
@@ -83,7 +71,7 @@ public class AuthService {
         userRepository.save(user);
 
         String appUrl = servletRequest.getRequestURI();
-        emailService.sendConfirmation(appUrl, user);
+       // emailService.sendConfirmation(appUrl, user);
 
         return user;
     }
@@ -170,6 +158,9 @@ public class AuthService {
                 rentACarAdmin.setNotFirstLogin(false);
                 rentACarAdminRepository.save(rentACarAdmin);
 
+                AirlineAdmin airlineAdmin = airlineAdminRepository.findByUser_Id(UUID.fromString(auth.getName()));
+                airlineAdmin.setFirstLogin(true);
+                airlineAdminRepository.save(airlineAdmin);
                 return "You have successfully changed your password. You can sign in now!";
             }
         } catch (AuthenticationException e) {

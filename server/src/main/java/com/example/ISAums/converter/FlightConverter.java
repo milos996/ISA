@@ -91,4 +91,17 @@ public class FlightConverter {
                         .build()
                 ).collect(Collectors.toList());
     }
+
+    public static GetFlightOfAirlineResponse toGetFlightResponseFromFlight(Flight flight){
+        return GetFlightOfAirlineResponse.builder()
+                .airlineDestination(flight.getAirlineDestination())
+                .airplane(flight.getAirplane())
+                .arrivalTime(flight.getArrivalTime().toLocalDate().toString())
+                .departureTime(flight.getDepartureTime().toLocalDate().toString())
+                .duration(flight.getDuration())
+                .length(flight.getLength())
+                .price(flight.getPrice())
+                .id(flight.getId())
+                .build();
+    }
 }

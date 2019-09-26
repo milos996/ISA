@@ -21,3 +21,10 @@ export function putSelectedSeats(state, payload) {
     selectedSeats: seats
   };
 }
+
+export function putSelectedFlight(state, payload) {
+  return {
+    ...state,
+    selectedFlight: payload
+  };
+}

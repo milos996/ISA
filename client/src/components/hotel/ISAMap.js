@@ -74,7 +74,7 @@ const ISAMap = ({ address, setStreet = () => {}, hasClick = true }) => {
           label="Street"
           className={classes.textField}
           margin="normal"
-          defaultValue={address.street}
+          value={address.street}
           onChange={({ currentTarget }) => setStreet(currentTarget.value)}
           InputProps={{
             readOnly: !hasClick

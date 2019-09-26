@@ -36,7 +36,7 @@ export default function FlightsReservation() {
   const columns = [
     { title: "Airline", field: "airline" },
     { title: "Departure time", field: "departureTime" },
-    { title: "Arrival time", field: "arrivalTime" },
+    { title: "Return time", field: "returnTime" },
     { title: "Duration", field: "duration" },
     { title: "Price", field: "price" },
     { title: "Airline rating", field: "airlineRating" },

@@ -1,17 +1,20 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { makeStyles } from "@material-ui/core/styles";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import TextField from "@material-ui/core/TextField";
 import {
-  putAirplaneDetails,
-  saveAirplaneDetails
+  saveAirplaneDetails,
+  fetchAirlineAdmin
 } from "../../store/airline/actions";
 import Container from "@material-ui/core/Container";
 import Button from "@material-ui/core/Button";
-
+import { userDataSelector } from "../../store/user/selectors";
+import { selectAirlineAdmin } from "../../store/airline/selectors";
 export default function SeatConfiguration({ airplane, closeModal }) {
   const classes = useStyles();
   const dispatch = useDispatch();
+  const user = useSelector(userDataSelector);
+  const airlineAdmin = useSelector(selectAirlineAdmin);
   const [airplaneDetails, setAirplaneDetails] = useState({
     id: airplane.id,
     mark: airplane.mark,
@@ -20,6 +23,15 @@ export default function SeatConfiguration({ airplane, closeModal }) {
     numberOfSegments: airplane.numberOfSegments,
     airline: airplane.airline
   });
+  const isReadOnly =
+    airplaneDetails.airline.id === airlineAdmin.airline.id &&
+    user.role === "AIRLINE_ADMIN"
+      ? false
+      : true;
+
+  useEffect(() => {
+    dispatch(fetchAirlineAdmin());
+  }, [airplaneDetails.airline.id]);
 
   function handleSaveButton() {
     dispatch(saveAirplaneDetails(airplaneDetails));
@@ -37,6 +49,9 @@ export default function SeatConfiguration({ airplane, closeModal }) {
         margin="normal"
         className={classes.textField}
         defaultValue={airplane.numberOfSegments}
+        InputProps={{
+          readOnly: isReadOnly
+        }}
         onChange={({ currentTarget }) => {
           setAirplaneDetails(currState => ({
             ...currState,
@@ -50,6 +65,9 @@ export default function SeatConfiguration({ airplane, closeModal }) {
         margin="normal"
         className={classes.textField}
         defaultValue={airplane.numberOfColumnsPerSegment}
+        InputProps={{
+          readOnly: isReadOnly
+        }}
         onChange={({ currentTarget }) => {
           setAirplaneDetails(currState => ({
             ...currState,
@@ -63,6 +81,9 @@ export default function SeatConfiguration({ airplane, closeModal }) {
         margin="normal"
         className={classes.textField}
         defaultValue={airplane.numberOfRows}
+        InputProps={{
+          readOnly: isReadOnly
+        }}
         onChange={({ currentTarget }) => {
           setAirplaneDetails(currState => ({
             ...currState,
@@ -70,15 +91,17 @@ export default function SeatConfiguration({ airplane, closeModal }) {
           }));
         }}
       />
-
-      <Button
-        variant="contained"
-        color="primary"
-        className={classes.button}
-        onClick={handleSaveButton}
-      >
-        Save
-      </Button>
+      {user.role === "AIRLINE_ADMIN" &&
+      airlineAdmin.airline.id === airplaneDetails.airline.id ? (
+        <Button
+          variant="contained"
+          color="primary"
+          className={classes.button}
+          onClick={handleSaveButton}
+        >
+          Save
+        </Button>
+      ) : null}
     </Container>
   );
 }

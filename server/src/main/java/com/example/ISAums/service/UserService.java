@@ -73,9 +73,9 @@ public class UserService {
 		return friends;
 	}
 
-	public Friendship sendFriendshipRequest(SendFriendshipRequestRequest request) {
+	public Friendship sendFriendshipRequest(UUID userId,  SendFriendshipRequestRequest request) {
 
-        Optional<User> sender = userRepository.findById(request.getSenderUserId());
+        Optional<User> sender = userRepository.findById(userId);
         Optional<User> invitedUser = userRepository.findById(request.getInvitedUserId());
 
 		Friendship friendship = Friendship.builder()
@@ -108,8 +108,10 @@ public class UserService {
 		return usersWhichAreNotFriends;
     }
 
-	public void updatePassword(String newPassword) {
-		//...
+	public void updatePassword(String newPassword, UUID userId) {
+		Optional<User> user = userRepository.findById(userId);
+		user.get().setPassword(newPassword);
+		userRepository.save(user.get());
 	}
 
 	public User findById(UUID user_id) {

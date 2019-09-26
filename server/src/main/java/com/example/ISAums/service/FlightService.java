@@ -213,4 +213,8 @@ public class FlightService {
         flight.setRating(ratingRepository.getAverageMarkForEntity(flight.getId().toString(), RatingType.FLIGHT.name()));
         flightRepository.save(flight);
     }
+
+    public Flight findFlightById(UUID id) {
+        return flightRepository.findById(id).get();
+    }
 }

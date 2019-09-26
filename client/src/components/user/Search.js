@@ -12,9 +12,8 @@ export default function Search({ match, senderUserId, requestType }) {
   const dispatch = useDispatch();
   const classes = useStyles();
   const foundUsers = useSelector(foundFriendsSelector);
-  
+
   const [search, setSearch] = useState({
-    mineId: senderUserId,
     name: ""
   });
   function handleSearchButton() {
@@ -22,15 +21,11 @@ export default function Search({ match, senderUserId, requestType }) {
   }
 
   function handleChange(value) {
-    setSearch(oldValues => ({
-      ...oldValues,
-      name: value
-    }));
+    setSearch({ name: value });
   }
   function handleSendFriendshipButton(invitedUserId) {
     dispatch(
       sendFriendshipRequest({
-        senderUserId: senderUserId,
         invitedUserId: invitedUserId
       })
     );

@@ -12,7 +12,11 @@ import {
   FETCH_AIRLINE_RATING,
   RATE_AIRLINE,
   RATE_FLIGHT,
-  CANCEL_FLIGHT
+  CANCEL_FLIGHT,
+  SHOW_AIRLINE_INCOME,
+  FETCH_AIRLINE_ADMIN,
+  SHOW_SOLD_AIRLINE_TICKETS,
+  PUT_SOLD_AIRLINE_TICKETS
 } from "./constants";
 import airlineService from "../../services/api/Airline";
 import flightService from "../../services/api/Flight";
@@ -26,7 +30,10 @@ import {
   putTicketsForFastReservation,
   putAirlineAirplanes,
   putAirlineRating,
-  putAirplaneDetails
+  putAirplaneDetails,
+  putIncomeData,
+  putAirlineAdmin,
+  putSoldTicketsData
 } from "./actions";
 
 export function* saveAirline() {
@@ -127,4 +134,22 @@ export function* fetchAirlineAirplanes() {
     payload.airlineId
   );
   yield put(putAirlineAirplanes(data));
+}
+
+export function* showAirlineIncome() {
+  const { payload } = yield take(SHOW_AIRLINE_INCOME);
+  const { data } = yield call(airlineService.showIncome, payload);
+  yield put(putIncomeData(data));
+}
+
+export function* fetchAirlineAdmin() {
+  yield take(FETCH_AIRLINE_ADMIN);
+  const { data } = yield call(airlineService.fetchAirlineAdmin);
+  yield put(putAirlineAdmin(data));
+}
+
+export function* showSoldAirlineTickets() {
+  const { payload } = yield take(SHOW_SOLD_AIRLINE_TICKETS);
+  const { data } = yield call(airlineService.showSoldTickets, payload);
+  yield put(putSoldTicketsData(data));
 }

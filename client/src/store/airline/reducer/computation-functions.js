@@ -42,3 +42,28 @@ export function putAirlineRating(state, payload) {
     }
   };
 }
+
+export function putIncomeData(state, payload) {
+  return {
+    ...state,
+    income: payload
+  };
+}
+
+export function putAirlineAdmin(state, payload) {
+  return {
+    ...state,
+    airlineAdmin: payload
+  };
+}
+
+export function putSoldTicketsData(state, payload) {
+  console.log({
+    ...state,
+    soldTickets: payload
+  });
+  return {
+    ...state,
+    soldTickets: payload
+  };
+}
