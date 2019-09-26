@@ -59,7 +59,7 @@ class VehicleControllerTest {
 
         List<GetVehicleResponse> allVehicles = singletonList(vehicle);
 
-        given(vehicleController.getVehicles().getBody()).willReturn(allVehicles);
+        //given(vehicleController.getVehicles().getBody()).willReturn(allVehicles);
 
         mockMvc.perform(get("")
                 .contentType(APPLICATION_JSON))
