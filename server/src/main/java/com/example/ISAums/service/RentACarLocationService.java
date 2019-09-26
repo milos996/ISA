@@ -114,18 +114,6 @@ public class RentACarLocationService {
         if (dropOffDate.equals("null"))
             dropOffDate = null;
 
-//        Map<RentACar, List<AgencyLocation>> offices = new HashMap<>();
-//        UUID current = rentACarLocations.get(0).getRentACar().getId();
-//        List<AgencyLocation> agencyLocations = new ArrayList<>();
-//        for (RentACarLocation racl : rentACarLocations) {
-//            if (racl.getRentACar().getId().equals(current)) {
-//                agencyLocations.add(racl.getAgencyLocation());
-//                offices.put(racl.getRentACar(), agencyLocations);
-//            } else {
-//                agencyLocations = new ArrayList<>();
-//            }
-//        }
-
         return rentACarLocationRepository.search(city, state, name, pickUpDate, dropOffDate);
     }
 }

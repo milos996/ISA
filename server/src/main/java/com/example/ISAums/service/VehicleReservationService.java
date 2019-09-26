@@ -84,21 +84,9 @@ public class VehicleReservationService {
         return vehicle;
     }
 
-    private String format(Date date) {
-        SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
-        return formatter.format(date);
-    }
-
-    private Date toDate(String sdate) throws ParseException {
-        Date date=new SimpleDateFormat("dd/MM/yyyy").parse(sdate);
-        return date;
-    }
-
     @Transactional(readOnly = true)
     public List<VehicleReservation> get() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-
-        logger.info("NAME: " + authentication.getName());
 
         User user = userRepository.findById(UUID.fromString(authentication.getName())).orElse(null);
 
@@ -122,4 +110,15 @@ public class VehicleReservationService {
 
         return vehicleReservationRepository.findAll();
     }
+
+    private String format(Date date) {
+        SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
+        return formatter.format(date);
+    }
+
+    private Date toDate(String sdate) throws ParseException {
+        Date date=new SimpleDateFormat("dd/MM/yyyy").parse(sdate);
+        return date;
+    }
+
 }

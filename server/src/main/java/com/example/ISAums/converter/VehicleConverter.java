@@ -87,7 +87,7 @@ public class VehicleConverter {
                 .collect(Collectors.toList());
     }
 
-    public static GetQuickVehicleResponse toGetQuickVehicleResponseFromVehicle(Vehicle vehicle, int days)  {
+    public static GetQuickVehicleResponse toGetQuickVehicleResponseFromVehicle(Vehicle vehicle, String pickpUpDate, String dropOffDate, int days)  {
         return GetQuickVehicleResponse
                 .builder()
                 .id(vehicle.getId())
@@ -97,7 +97,10 @@ public class VehicleConverter {
                 .rating(vehicle.getRating())
                 .type(vehicle.getType())
                 .yearOfProduction(vehicle.getYearOfProduction())
-                .pricePerDay(vehicle.getPricePerDay() * days)
+                .price(vehicle.getPricePerDay() * days)
+                .rentACar(vehicle.getRentACar().getName())
+                .pickUpDate(pickpUpDate)
+                .dropOffDate(dropOffDate)
                 .build();
     }
 
@@ -105,11 +108,29 @@ public class VehicleConverter {
         int days = getNumberOfDays(pickUpDate, dropOffDate);
 
         return vehicles.stream()
-                .map(vehicle -> toGetQuickVehicleResponseFromVehicle(vehicle, days))
+                .map(vehicle -> toGetQuickVehicleResponseFromVehicle(vehicle, pickUpDate, dropOffDate, days))
                 .collect(Collectors.toList());
     }
 
-    private static int getNumberOfDays(String pickUpDate, String dropOffDate) throws ParseException {
+    public static List<GetRentACarAvailableResponse> toGetRentACarAvailableResponseFromVehicles(List<Vehicle> vehicles) {
+        return  vehicles.stream()
+                .map(vehicle -> toGetRentACarAvailableResponseFromVehicle(vehicle))
+                .collect(Collectors.toList());
+    }
+
+    public static GetRentACarAvailableResponse toGetRentACarAvailableResponseFromVehicle(Vehicle vehicle) {
+        return GetRentACarAvailableResponse
+                .builder()
+                .brand(vehicle.getBrand())
+                .model(vehicle.getModel())
+                .numberOfSeats(vehicle.getNumberOfPeople())
+                .yearOfProduction(vehicle.getYearOfProduction())
+                .rentACarName(vehicle.getRentACar().getName())
+                .build();
+    }
+
+
+        private static int getNumberOfDays(String pickUpDate, String dropOffDate) throws ParseException {
         Date pickUp =new SimpleDateFormat("yyyy-mm-dd").parse(pickUpDate);
         Date dropOff =new SimpleDateFormat("yyyy-mm-dd").parse(dropOffDate);
         long diff = dropOff.getTime() - pickUp.getTime();

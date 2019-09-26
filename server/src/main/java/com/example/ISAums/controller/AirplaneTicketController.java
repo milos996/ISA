@@ -49,4 +49,8 @@ public class AirplaneTicketController {
         return ResponseEntity.ok(AirplaneTicketConverter.toGetAirplaneTicketResponseFromTickets(airplaneTicketService.getTickets()));
     }
 
+    @DeleteMapping(value = "/{id}")
+    public ResponseEntity<List<GetAirplaneTicketResponse>> cancel(@PathVariable("id") String ticketId){
+        return ResponseEntity.ok(AirplaneTicketConverter.toGetAirplaneTicketResponseFromTickets(airplaneTicketService.cancel(ticketId)));
+    }
 }

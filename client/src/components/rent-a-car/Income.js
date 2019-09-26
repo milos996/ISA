@@ -40,7 +40,7 @@ export default function Income({ closeModal }) {
   return (
     <Container
       classes={{
-        root: classes.serviceRow
+        root: classes.horizontal
       }}
     >
       <Grid container spacing={3}>
@@ -135,7 +135,7 @@ const useStyles = makeStyles(theme => ({
     display: "flex",
     flexDirection: "column"
   },
-  serviceRow: {
+  horizontal: {
     display: "flex",
     flexDirection: "column",
     width: "100%"

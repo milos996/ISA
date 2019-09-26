@@ -7,13 +7,20 @@ import CardContent from "@material-ui/core/CardContent";
 import Button from "@material-ui/core/Button";
 import Typography from "@material-ui/core/Typography";
 import DeleteIcon from "@material-ui/icons/Delete";
+import UpdateIcon from "@material-ui/icons/Update";
 import IconButton from "@material-ui/core/IconButton";
 import Modal from "@material-ui/core/Modal";
+import Rating from "react-rating";
+import StarBorderIcon from "@material-ui/icons/StarBorder";
+import StarIcon from "@material-ui/icons/Star";
+import AccessibilityIcon from "@material-ui/icons/Accessibility";
 import IsaDialog from "../UI/IsaDialog";
 import EditVehicle from "./EditVehicle";
+import DiscountVehicle from "./DiscountVehicle";
 import { deleteVehicle } from "../../store/rent-a-car/actions";
 import { selectVehicleSearchInformation } from "../../store/rent-a-car/selectors";
 import { createVehicleReservation } from "./../../store/rent-a-car/actions";
+import CardBackground from "../../assets/card_bckg.jpg";
 
 export default function RentACarVehicle({ vehicle, location }) {
   const role = window.localStorage.getItem("role");
@@ -22,6 +29,7 @@ export default function RentACarVehicle({ vehicle, location }) {
   const [modalStyle] = React.useState(getModalStyle);
   const [isEditModalVisible, setEditModalVisibility] = useState(false);
   const [isDialogForDeleteVisible, setDialogVisibility] = useState(false);
+  const [isDiscountModalVisible, setDiscountModalVisibility] = useState(false);
 
   const info = useSelector(selectVehicleSearchInformation);
 
@@ -66,6 +74,7 @@ export default function RentACarVehicle({ vehicle, location }) {
 
   function closeModal() {
     setEditModalVisibility(false);
+    setDiscountModalVisibility(false);
   }
 
   return (
@@ -77,6 +86,16 @@ export default function RentACarVehicle({ vehicle, location }) {
           className={classes.paper}
         >
           <EditVehicle vehicle={vehicle} closeModal={closeModal} />
+          <Button onClick={closeModal}>Close</Button>
+        </div>
+      </Modal>
+      <Modal open={isDiscountModalVisible}>
+        <div
+          className="modal-container-sm"
+          style={modalStyle}
+          className={classes.paper}
+        >
+          <DiscountVehicle vehicle={vehicle} closeModal={closeModal} />
           <Button onClick={closeModal}>Close</Button>
         </div>
       </Modal>
@@ -96,27 +115,51 @@ export default function RentACarVehicle({ vehicle, location }) {
             <strong>{vehicle.pricePerDay}$</strong>.
           </div>
           <br />
-          For {vehicle.numberOfSeats} people.
-          <br /> Rating: <strong>{vehicle.rating}</strong>
+          <Rating
+            readonly={true}
+            className={classes.rating}
+            initialRating={vehicle.numberOfSeats}
+            stop={vehicle.numberOfSeats}
+            fullSymbol={<AccessibilityIcon></AccessibilityIcon>}
+            emptySymbol={<AccessibilityIcon></AccessibilityIcon>}
+          ></Rating>
+          <br />
+          <Rating
+            readonly={true}
+            className={classes.rating}
+            initialRating={vehicle.rating}
+            stop={10}
+            emptySymbol={<StarBorderIcon></StarBorderIcon>}
+            fullSymbol={<StarIcon></StarIcon>}
+          ></Rating>
         </Typography>
         <br />
         {role === "RENT_A_CAR_ADMIN" ? (
           <Typography variant="body2" component="p">
-            For update and more information about this vehicle click on{" "}
-            <strong>UPDATE</strong>
+            If you want to change this vehicle click on <strong>UPDATE</strong>
           </Typography>
-        ) : (
+        ) : null}
+        {role === "USER" ? (
           <Typography variant="body2" component="p">
             If you want to reserve this vehicle click on{" "}
             <strong>RESERVE</strong>
           </Typography>
-        )}
+        ) : null}
       </CardContent>
       <CardActions>
         {role === "RENT_A_CAR_ADMIN" ? (
           <div>
-            <Button size="small" onClick={() => setEditModalVisibility(true)}>
-              UPDATE
+            <IconButton
+              aria-label="update"
+              onClick={() => setEditModalVisibility(true)}
+            >
+              <UpdateIcon fontSize="small" />
+            </IconButton>
+            <Button
+              size="small"
+              onClick={() => setDiscountModalVisibility(true)}
+            >
+              DISCOUNT
             </Button>
             <IconButton
               aria-label="delete"
@@ -166,13 +209,17 @@ const useStyles = makeStyles(theme => ({
     boxShadow: theme.shadows[5],
     padding: theme.spacing(2, 4, 3)
   },
+  rating: {
+    marginTop: 20
+  },
   card: {
-    width: 250,
-    height: 350,
+    width: 280,
     marginBottom: 25,
     marginRight: 25,
     padding: 15,
-    paddingBottom: 15
+    paddingBottom: 15,
+    backgroundImage: `url(${CardBackground})`,
+    textAlign: "center"
   },
   bullet: {
     display: "inline-block",

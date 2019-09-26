@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import { useDispatch } from "react-redux";
 import { makeStyles } from "@material-ui/core/styles";
 import ExpansionPanel from "@material-ui/core/ExpansionPanel";
+import Container from "@material-ui/core/Container";
 import ExpansionPanelDetails from "@material-ui/core/ExpansionPanelDetails";
 import ExpansionPanelSummary from "@material-ui/core/ExpansionPanelSummary";
 import Typography from "@material-ui/core/Typography";
@@ -14,6 +15,7 @@ import {
   fetchUserVehiclesReservation,
   fetchUserFlightsReservation
 } from "../store/user/actions";
+import Background from "../assets/background.jpg";
 
 export default function HomeAuthUserPage() {
   const email = window.localStorage.getItem("email");
@@ -32,7 +34,7 @@ export default function HomeAuthUserPage() {
   });
 
   return (
-    <div className={classes.root}>
+    <Container className={classes.root}>
       <ExpansionPanel
         expanded={expanded === "vehiclesReservation"}
         onChange={handleChange("vehiclesReservation")}
@@ -86,15 +88,15 @@ export default function HomeAuthUserPage() {
           <FlightsReservation></FlightsReservation>
         </ExpansionPanelDetails>
       </ExpansionPanel>
-    </div>
+    </Container>
   );
 }
 
 const useStyles = makeStyles(theme => ({
   root: {
-    marginTop: "2%",
-    marginRight: 40,
-    marginLeft: 30
+    textAlign: "center",
+    marginTop: 25,
+    background: `url(${Background})`
   },
   heading: {
     fontSize: theme.typography.pxToRem(15),

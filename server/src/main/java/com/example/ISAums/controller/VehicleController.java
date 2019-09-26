@@ -92,8 +92,4 @@ public class VehicleController {
         return ResponseEntity.ok(toGetVehicleResponseFromVehicles(vehicleService.sort(by, rentACarId)));
     }
 
-    @GetMapping("/quick")
-    public ResponseEntity<List<GetQuickVehicleResponse>> quick(@RequestParam(name = "pickUpDate", required = true) String pickUpDate, @RequestParam(name = "dropOffDate", required = true) String dropOffDate) throws ParseException {
-        return ResponseEntity.ok(toGetQuickVehicleResponseFromVehicles(vehicleService.getQuick(pickUpDate, dropOffDate), pickUpDate, dropOffDate));
-    }
 }

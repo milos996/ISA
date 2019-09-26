@@ -11,13 +11,14 @@ import { selectRentACarOffices } from "../../store/rent-a-car/selectors";
 import RentACarOffice from "./Office";
 import { fetchRentACarOffices } from "../../store/rent-a-car/actions";
 import CreateOffice from "./CreateOffice";
+import Background from "../../assets/background.jpg";
 
 export default function RentACarOffices({ rentACarId, closeModal }) {
   const role = window.localStorage.getItem("role");
   const offices = useSelector(selectRentACarOffices);
   const classes = useStyles();
-  const dispatch = useDispatch();
   const [modalStyle] = React.useState(getModalStyle);
+  const dispatch = useDispatch();
   const [createModalVisibility, setCreateModalVisibility] = useState(false);
 
   useEffect(() => {
@@ -33,7 +34,7 @@ export default function RentACarOffices({ rentACarId, closeModal }) {
   }
 
   return (
-    <Container maxWidth="xl">
+    <Container maxWidth="xl" className={classes.horizontal}>
       <Modal open={createModalVisibility}>
         <div
           className="modal-container-sm"
@@ -49,7 +50,7 @@ export default function RentACarOffices({ rentACarId, closeModal }) {
         <Grid item xs={2}>
           <h2>Agency locations</h2>
         </Grid>
-        <Grid item xs={1}>
+        <Grid item xs={1} className={classes.button}>
           {role === "RENT_A_CAR_ADMIN" ? (
             <Icon onClick={() => setCreateModalVisibility(true)}>
               add_circle
@@ -57,7 +58,7 @@ export default function RentACarOffices({ rentACarId, closeModal }) {
           ) : null}
         </Grid>
       </Grid>
-      <Box display="row" p={1} bgcolor="background.paper">
+      <Box display="row" p={1} className={classes.horizontal}>
         {Object.keys(offices).map(officeId => (
           <RentACarOffice key={officeId} office={offices[officeId]} />
         ))}
@@ -89,5 +90,13 @@ const useStyles = makeStyles(theme => ({
   root: {
     display: "flex",
     flexDirection: "column"
+  },
+  horizontal: {
+    display: "flex",
+    flexDirection: "column",
+    backgroundImage: `url(${Background})`
+  },
+  button: {
+    marginTop: 15
   }
 }));

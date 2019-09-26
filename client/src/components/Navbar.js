@@ -1,6 +1,7 @@
-import React, { useEffect } from "react";
+import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
+import Modal from "@material-ui/core/Modal";
 import { makeStyles } from "@material-ui/core/styles";
 import AppBar from "@material-ui/core/AppBar";
 import Toolbar from "@material-ui/core/Toolbar";
@@ -16,14 +17,26 @@ import AccountBoxIcon from "@material-ui/icons/AccountBox";
 import PersonAddSharpIcon from "@material-ui/icons/PersonAddSharp";
 import ExitToAppIcon from "@material-ui/icons/ExitToApp";
 import InputRoundedIcon from "@material-ui/icons/InputRounded";
+import RegistrationPage from "../pages/Registration";
+import LoginPage from "../pages/Login";
+
 const primary = teal[400];
 
 export default function Navbar() {
   const classes = useStyles();
+  const [modalStyle] = useState(getModalStyle);
   const userToken = useSelector(userTokenSelector);
   const userData = useSelector(userDataSelector);
   const dispatch = useDispatch();
   const user = useSelector(userDataSelector);
+
+  const [
+    registrationModalVisibility,
+    setRegistrationModalVisibility
+  ] = useState(false);
+
+  const [loginModalVisibility, setLoginModalVisibility] = useState(false);
+
   const handleLogout = () => {
     dispatch(
       logoutUser({
@@ -34,8 +47,25 @@ export default function Navbar() {
     );
   };
 
+  function closeModal() {
+    setRegistrationModalVisibility(false);
+    setLoginModalVisibility(false);
+  }
+
   return (
     <div className={classes.root}>
+      <Modal open={registrationModalVisibility} className={classes.modal}>
+        <div style={modalStyle} className={classes.paper}>
+          <RegistrationPage closeModal={closeModal} />
+          <Button onClick={closeModal}>Close</Button>
+        </div>
+      </Modal>
+      <Modal open={loginModalVisibility} className={classes.modal}>
+        <div style={modalStyle} className={classes.loginPaper}>
+          <LoginPage closeModal={closeModal} />
+          <Button onClick={closeModal}>Close</Button>
+        </div>
+      </Modal>
       <AppBar
         position="static"
         color="primary"
@@ -46,7 +76,7 @@ export default function Navbar() {
         <Toolbar>
           <Typography variant="h6" className={classes.title}>
             <Link className="button" to="">
-              UMS Ticket, reservations management
+              <img src={require("../assets/umslogo.png")} height="48"></img>
             </Link>
           </Typography>
           {userToken ? (
@@ -72,16 +102,18 @@ export default function Navbar() {
             </div>
           ) : (
             <div>
-              <Link className="button" to="/register" tooltip="Registration">
-                <Button color="inherit">
-                  <PersonAddSharpIcon></PersonAddSharpIcon>
-                </Button>
-              </Link>
-              <Link className="button" to="/login">
-                <Button color="inherit">
-                  <InputRoundedIcon></InputRoundedIcon>
-                </Button>
-              </Link>
+              <Button
+                color="inherit"
+                onClick={() => setRegistrationModalVisibility(true)}
+              >
+                <PersonAddSharpIcon></PersonAddSharpIcon>
+              </Button>
+              <Button
+                color="inherit"
+                onClick={() => setLoginModalVisibility(true)}
+              >
+                <InputRoundedIcon></InputRoundedIcon>
+              </Button>
             </div>
           )}
         </Toolbar>
@@ -102,5 +134,39 @@ const useStyles = makeStyles(theme => ({
   },
   primaryColor: {
     background: primary
+  },
+  paper: {
+    position: "absolute",
+    width: "40%",
+    height: "90%",
+    backgroundColor: theme.palette.background.paper,
+    border: "2px solid #5bc0de",
+    boxShadow: theme.shadows[5],
+    padding: theme.spacing(2, 4, 3)
+  },
+  loginPaper: {
+    position: "absolute",
+    width: "40%",
+    height: "70%",
+    backgroundColor: theme.palette.background.paper,
+    border: "2px solid #5bc0de",
+    boxShadow: theme.shadows[5],
+    padding: theme.spacing(2, 4, 3)
+  },
+  modal: {
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "center"
   }
 }));
+
+function getModalStyle() {
+  const top = 50;
+  const left = 50;
+
+  return {
+    top: `${top}%`,
+    left: `${left}%`,
+    transform: `translate(-${top}%, -${left}%)`
+  };
+}

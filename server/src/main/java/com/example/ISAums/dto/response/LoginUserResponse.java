@@ -17,7 +17,7 @@ public class LoginUserResponse {
 
     private String token;
 
-    private boolean isRentACarAdminFirstLogin;
+    private boolean isNotFirstLogin;
 
     private String role;
 }

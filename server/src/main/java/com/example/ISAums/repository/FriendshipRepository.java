@@ -23,4 +23,18 @@ public interface FriendshipRepository extends JpaRepository<Friendship, UUID> {
 
     @Query(value = "select * from isa_database.friendship f where f.user_invited_id = ?1 and f.invitation_status = 'PENDING'", nativeQuery = true)
     List<Friendship> getFriendshipRequestsOfMine(String mine_id);
+
+    @Query(value = "select u.id  from friendship f left join user u on u.id = (case when f.user_sender_id = ?1 then f.user_invited_id " +
+            "when f.user_invited_id = ?1 then f.user_sender_id  end) where u.id != ?1 and f.invitation_status = 'ACCEPTED'", nativeQuery = true)
+    List<User> sortByFirstName(String username);
+
+    @Query(value = "SELECT u.id  FROM friendship f " +
+                   "LEFT JOIN USER u ON u.id = " +
+                   "(CASE WHEN f.user_sender_id = :userId THEN f.user_invited_id " +
+                   "WHEN f.user_invited_id = :userId THEN f.user_sender_id  END) " +
+                   "WHERE u.id != :userId " +
+                   "AND f.invitation_status = 'ACCEPTED'" +
+                   "ORDER BY ", nativeQuery = true)
+    List<User> sortByLastName(String userId);
+
 }

@@ -56,12 +56,7 @@ public class RentACarService {
     @Transactional(rollbackFor = Exception.class)
     public List<RentACar> create(CreateRentACarRequest request) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-
-        RentACarAdmin rentACarAdmin = null;
-        if (!(authentication instanceof AnonymousAuthenticationToken)) {
-            rentACarAdmin = rentACarAdminRepository.findByUser_Id(UUID.fromString(authentication.getName()));
-        }
-        rentACarAdmin = rentACarAdminRepository.findByUser_Id(UUID.fromString("39d00866-4289-4066-9019-04530d04ee5e"));
+        RentACarAdmin rentACarAdmin = rentACarAdminRepository.findByUser_Id(UUID.fromString(authentication.getName()));
 
         if (rentACarRepository.existsByName(request.getName()))
             throw new EntityAlreadyExistsException(request.getName());
@@ -178,7 +173,19 @@ public class RentACarService {
         rentACar.setRating(ratingRepository.getAverageMarkForEntity(rentACar.getId().toString(), RatingType.RENT_A_CAR.name()));
         rentACarRepository.save(rentACar);
 
-        return vehicleRepository.findByRentACar_Id(rentACar.getId());
+        Date date = new Date();
+        String currentDate = formatDate(date);
+
+        return vehicleRepository.findRentACarVehicles(rentACar.getId().toString(), currentDate);
+    }
+
+    @Transactional(readOnly = true)
+    public List<Vehicle> getAvailability(String rentACarId, String startDate, String endDate, boolean available) {
+
+        if (available == true)
+            return vehicleRepository.findAllAvailable(rentACarId, startDate, endDate);
+        else
+            return vehicleRepository.findAllUnavailable(rentACarId, startDate, endDate);
     }
 
 
@@ -206,6 +213,12 @@ public class RentACarService {
             return rentACarRepository.sortByRating();
         else
             throw  new CustomException("Unknown attribute!");
-
     }
+
+    private String formatDate(Date date) {
+        SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
+        return formatter.format(date);
+    }
+
+
 }

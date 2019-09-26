@@ -27,6 +27,15 @@ public interface VehicleRepository extends JpaRepository<Vehicle, UUID> {
                    "AND v.rent_a_car_id = :rentACarId", nativeQuery = true)
     List<Vehicle> search(String rentACarId, String pickUpDate, String dropOffDate, String pickUpLocation, String dropOffLocation, String type, int seats, double startRange, double endRange, int cityCount);
 
+    @Query(value = "SELECT * FROM vehicle v " +
+                   "JOIN discount d ON v.id = d.entity_id " +
+                   "WHERE d.start_date BETWEEN :startDate AND :endDate " +
+                   "AND d.end_date BETWEEN :startDate AND :endDate " +
+                   "AND d.entity_type = 'VEHICLE' " +
+                   "AND v.rent_a_car_id = :rentACarId " +
+                   "GROUP BY d.entity_id", nativeQuery = true)
+    List<Vehicle> findVehiclesOnDiscount(String startDate, String endDate, String rentACarId);
+
     @Query(value = "SELECT DISTINCT * " +
                    "FROM vehicle v " +
                    "WHERE v.id NOT IN " +
@@ -36,7 +45,15 @@ public interface VehicleRepository extends JpaRepository<Vehicle, UUID> {
                    "AND v.id = :vid", nativeQuery = true)
     List<Vehicle> checkAvailability(String vid, String pickUpDate, String dropOffDate);
 
-    List<Vehicle> findByRentACar_Id(UUID rentUuid);
+    @Query(value = "SELECT * FROM vehicle v " +
+                   "WHERE v.id NOT IN " +
+                   "(SELECT d.entity_id FROM discount as d " +
+                   "WHERE d.start_date BETWEEN :currentDate AND :currentDate " +
+                   "OR d.end_date BETWEEN :currentDate AND :currentDate " +
+                   "AND d.entity_type = 'VEHICLE'" +
+                   "GROUP BY d.entity_id) " +
+                   "AND v.rent_a_car_id = :rentACarId", nativeQuery = true)
+    List<Vehicle> findRentACarVehicles(String rentACarId, String currentDate);
 
     @Query(value = "SELECT * FROM vehicle v WHERE v.rent_a_car_id = :rentACarId " +
                    "ORDER BY v.brand  ASC ", nativeQuery =  true)
@@ -53,4 +70,22 @@ public interface VehicleRepository extends JpaRepository<Vehicle, UUID> {
     @Query(value = "SELECT * FROM vehicle v WHERE v.rent_a_car_id = :rentACarId " +
                    "ORDER BY v.rating DESC", nativeQuery =  true)
     List<Vehicle> sortByRating(String rentACarId);
+
+    @Query(value = "SELECT DISTINCT * " +
+                   "FROM vehicle v " +
+                   "WHERE v.id NOT IN " +
+                   "(SELECT vr.vehicle_id FROM vehicle_reservation AS vr " +
+                   "WHERE (vr.start_date <= :endDate AND vr.end_date >= :startDate) " +
+                   "OR (vr.start_date >= :endDate AND vr.end_date <= :startDate)) " +
+                   "AND v.rent_a_car_id = :rentACarId", nativeQuery = true)
+    List<Vehicle> findAllAvailable(String rentACarId, String startDate, String endDate);
+
+    @Query(value = "SELECT DISTINCT * " +
+                   "FROM vehicle v " +
+                   "WHERE v.id IN " +
+                   "(SELECT vr.vehicle_id FROM vehicle_reservation AS vr " +
+                   "WHERE (vr.start_date <= :endDate AND vr.end_date >= :startDate) " +
+                   "OR (vr.start_date >= :endDate AND vr.end_date <= :startDate)) " +
+                   "AND v.rent_a_car_id = :rentACarId", nativeQuery = true)
+    List<Vehicle> findAllUnavailable(String rentACarId, String startDate, String endDate);
 }

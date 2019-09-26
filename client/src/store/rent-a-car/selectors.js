@@ -7,7 +7,7 @@ export const selectRentACars = state => {
 };
 
 export const selectRentACarDetails = state => {
-  return state[reducer].rentACar;
+  return state[reducer].rentACarDetails;
 };
 
 export const selectVehicleSearchInformation = state => {
@@ -22,12 +22,20 @@ export const selectRentACarVehicles = state => {
   return state[reducer].rentACarVehicles;
 };
 
+export const selectRentACarVehiclesOnDiscount = state => {
+  return state[reducer].rentACarVehiclesOnDiscount;
+};
+
 export const selectRentACarVehiclesIncome = state => {
   return state[reducer].rentACarVehiclesIncome;
 };
 
 export const selectRentACarVehiclesBusyness = state => {
   return state[reducer].rentACarVehiclesBusyness;
+};
+
+export const selectRentACarAvailableVehicles = state => {
+  return state[reducer].rentACarAvailableVehicles;
 };
 
 export const selectRentACarOffices = state => {

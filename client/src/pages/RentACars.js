@@ -1,29 +1,40 @@
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { makeStyles } from "@material-ui/core/styles";
-import NavigationCards from "../components/UI/NavigationCards";
 import TextField from "@material-ui/core/TextField";
 import Button from "@material-ui/core/Button";
 import ButtonGroup from "@material-ui/core/ButtonGroup";
+import { Container } from "@material-ui/core";
+import Card from "@material-ui/core/Card";
+import CardHeader from "@material-ui/core/CardHeader";
+import CardMedia from "@material-ui/core/CardMedia";
+import CardActions from "@material-ui/core/CardActions";
+import CardContent from "@material-ui/core/CardContent";
+import Typography from "@material-ui/core/Typography";
+import Rating from "react-rating";
+import StarBorderIcon from "@material-ui/icons/StarBorder";
+import StarIcon from "@material-ui/icons/Star";
 import DateFnsUtils from "@date-io/date-fns";
 import {
   KeyboardDatePicker,
   MuiPickersUtilsProvider
 } from "@material-ui/pickers";
-import Grid from "@material-ui/core/Grid";
 import dateFormat from "dateformat";
 import Modal from "@material-ui/core/Modal";
 import CreateRentACar from "../components/rent-a-car/CreateRentACar";
 import EditRentACar from "../components/rent-a-car/EditRentACar";
 import RentACarIncome from "../components/rent-a-car/Income";
 import RentACarBusyness from "../components/rent-a-car/Busyness";
-import vehicle from "../assets/car.png";
+import RentACarAvailability from "../components/rent-a-car/Availability";
+import vehicle from "../assets/vehicle.png";
+import Background from "../assets/background.jpg";
 import ISAMap from "../components/hotel/ISAMap";
 import {
   fetchRentACars,
   searchRentACars,
   sortRentACars,
   fetchRentACarDetails,
+  fetchRentACarOffices,
   fetchVehicles,
   fetchRentACarLocationInformation
 } from "../store/rent-a-car/actions";
@@ -48,7 +59,10 @@ export default function RentACarPage({ history, location }) {
     showBusynessModalVisibility,
     setShowBusynessModalVisibility
   ] = useState(false);
-
+  const [
+    showAvailabilityModalVisibility,
+    setShowAvailabilityModalVisibility
+  ] = useState(false);
   const selected = useSelector(selectRentACarDetails);
 
   const [name, setName] = useState(null);
@@ -71,6 +85,7 @@ export default function RentACarPage({ history, location }) {
     setCreateModalVisibility(false);
     setShowIncomeModalVisibility(false);
     setShowBusynessModalVisibility(false);
+    setShowAvailabilityModalVisibility(false);
   }
 
   function handleUpdate() {
@@ -78,10 +93,9 @@ export default function RentACarPage({ history, location }) {
     else setUpdateModalVisibility(true);
   }
 
-  function handleMouseEnter(id) {
-    const selected = rentACars.find(val => val.id === id);
-    dispatch(fetchRentACarDetails(selected));
-    setCurrentLocation(selected.address);
+  function handleShowLocation(index) {
+    dispatch(fetchRentACarDetails(rentACars[index].id));
+    setCurrentLocation(rentACars[index].address);
   }
 
   function handleSearch() {
@@ -96,7 +110,7 @@ export default function RentACarPage({ history, location }) {
     );
   }
 
-  function handleShowIncome() {
+  function handleShowIncome(val, index) {
     if (selected.name === undefined) alert("Please select rent a car first");
     else setShowIncomeModalVisibility(true);
   }
@@ -104,6 +118,11 @@ export default function RentACarPage({ history, location }) {
   function handleShowBusyness() {
     if (selected.name === undefined) alert("Please select rent a car first");
     else setShowBusynessModalVisibility(true);
+  }
+
+  function handleShowAvailability() {
+    if (selected.name === undefined) alert("Please select rent a car first");
+    else setShowAvailabilityModalVisibility(true);
   }
 
   function handleSortByName() {
@@ -127,7 +146,7 @@ export default function RentACarPage({ history, location }) {
   }, []);
 
   return (
-    <div>
+    <Container className={classes.vertical} maxWidth="xl" maxHeight="xl">
       <Modal open={createModalVisibility}>
         <div style={modalStyle} className={classes.paper}>
           <CreateRentACar closeModal={closeModal} />
@@ -156,8 +175,14 @@ export default function RentACarPage({ history, location }) {
           <Button onClick={closeModal}>Close</Button>
         </div>
       </Modal>
-      <Grid container spacing={3}>
-        <Grid item xs={12}>
+      <Modal open={showAvailabilityModalVisibility}>
+        <div style={modalStyle} className={classes.paper}>
+          <RentACarAvailability closeModal={closeModal} />
+          <Button onClick={closeModal}>Close</Button>
+        </div>
+      </Modal>
+      <Container className={classes.vertical}>
+        <Container className={classes.horizontal}>
           <TextField
             required
             label="Name"
@@ -223,95 +248,138 @@ export default function RentACarPage({ history, location }) {
           >
             Search
           </Button>
-          <ButtonGroup
-            size="small"
-            aria-label="small outlined button group"
-            className={classes.button}
-          >
-            <Button disabled>SORT BY</Button>
-            <Button onClick={handleSortByName}>NAME</Button>
-            <Button onClick={handleSortByAddress}>ADDRESS</Button>
-            <Button onClick={handleSortByRating}>RATING</Button>
+        </Container>
+        <Container>
+          <ButtonGroup size="small" aria-label="small outlined button group">
+            <Button className={classes.buttonGroup} disabled>
+              SORT BY
+            </Button>
+            <Button className={classes.buttonGroup} onClick={handleSortByName}>
+              NAME
+            </Button>
+            <Button
+              className={classes.buttonGroup}
+              onClick={handleSortByAddress}
+            >
+              ADDRESS
+            </Button>
+            <Button
+              className={classes.buttonGroup}
+              onClick={handleSortByRating}
+            >
+              RATING
+            </Button>
           </ButtonGroup>
-
           {user.role === "RENT_A_CAR_ADMIN" ? (
-            <div>
-              <Button
-                variant="contained"
-                color="primary"
-                className={classes.button}
-                onClick={() => setCreateModalVisibility(true)}
-              >
-                Create
-              </Button>
-            </div>
+            <Button
+              variant="contained"
+              color="primary"
+              className={classes.button}
+              onClick={() => setCreateModalVisibility(true)}
+            >
+              Create
+            </Button>
           ) : null}
-        </Grid>
-
-        <Grid item xs={3} sm={3}>
-          {rentACars.map((val, index) => (
-            <div>
-              <NavigationCards
-                onMouseEnter={handleMouseEnter}
-                id={val.id}
-                key={val.id}
-                image={vehicle}
-                title={val.name}
-                description={val.description + ", Rating:" + val.rating}
-                tooltip={val.description}
-                cardClick={() => {
-                  dispatch(
-                    fetchRentACarLocationInformation(rentACars[index].address)
-                  );
-                  history.push({
-                    pathname: `/rent-a-cars/${val.id}/vehicles`,
-                    state: {
-                      pickUpDate: pickUpDate,
-                      dropOffDate: dropOffDate
-                      //airplaneTicketId: location.state.airplaneTicketId
-                    }
-                  });
-                }}
-              />
-
-              {user.role === "RENT_A_CAR_ADMIN" ? (
-                <div>
-                  <Button
-                    variant="contained"
-                    color="primary"
-                    className={classes.button}
-                    onClick={handleUpdate}
+        </Container>
+      </Container>
+      {rentACars.map((rac, index) => (
+        <Container className={classes.horizontal}>
+          <Card
+            className={classes.card}
+            key={index}
+            tooltip={rac.description}
+            onMouseEnter={() => {
+              handleShowLocation(index);
+            }}
+          >
+            <CardHeader title={rac.name}></CardHeader>
+            <CardMedia
+              className={classes.media}
+              image={vehicle}
+              onMouseEnter={() => {
+                handleShowLocation(index);
+              }}
+              onClick={() => {
+                dispatch(fetchRentACarLocationInformation(rac.address));
+                history.push({
+                  pathname: `/rent-a-cars/${rac.id}/vehicles`,
+                  state: {
+                    pickUpDate: pickUpDate,
+                    dropOffDate: dropOffDate
+                    //airplaneTicketId: location.state.airplaneTicketId
+                  }
+                });
+              }}
+            />
+            <CardContent className={classes.content}>
+              <Typography className={classes.description}>
+                {rac.description}
+              </Typography>
+              <Typography>
+                <Rating
+                  readonly={true}
+                  className={classes.rating}
+                  initialRating={rac.rating}
+                  stop={10}
+                  fractions={100}
+                  emptySymbol={<StarBorderIcon></StarBorderIcon>}
+                  fullSymbol={<StarIcon></StarIcon>}
+                ></Rating>
+              </Typography>
+              <br />
+            </CardContent>
+            {user.role === "RENT_A_CAR_ADMIN" ? (
+              <CardActions>
+                <Container className={classes.buttonGroupBckg}>
+                  <ButtonGroup
+                    size="small"
+                    aria-label="small outlined button group"
                   >
-                    Update
-                  </Button>
-                  <Button
-                    variant="contained"
-                    color="primary"
-                    className={classes.button}
-                    onClick={handleShowIncome}
-                  >
-                    Income
-                  </Button>
-                  <Button
-                    variant="contained"
-                    color="primary"
-                    className={classes.button}
-                    onClick={handleShowBusyness}
-                  >
-                    Busyness
-                  </Button>
-                </div>
-              ) : null}
-            </div>
-          ))}
-        </Grid>
-        <Grid item xs={12} sm={9}>
-          {currentLocation && (
-            <ISAMap address={currentLocation} hasClick={false} />
-          )}
-        </Grid>
-      </Grid>
-    </div>
+                    <Button
+                      variant="contained"
+                      color="primary"
+                      className={classes.buttonGroup}
+                      onClick={handleUpdate}
+                    >
+                      Update
+                    </Button>
+                    <Button
+                      variant="contained"
+                      color="primary"
+                      className={classes.buttonGroup}
+                      onClick={handleShowIncome}
+                    >
+                      Income
+                    </Button>
+                    <Button
+                      variant="contained"
+                      color="primary"
+                      className={classes.buttonGroup}
+                      onClick={handleShowBusyness}
+                    >
+                      Busyness
+                    </Button>
+                    <Button
+                      variant="contained"
+                      color="primary"
+                      className={classes.buttonGroup}
+                      onClick={handleShowAvailability}
+                    >
+                      Availability
+                    </Button>
+                  </ButtonGroup>
+                </Container>
+              </CardActions>
+            ) : null}
+          </Card>
+          <ISAMap
+            className={classes.border}
+            address={rentACars[index].address}
+            hasClick={false}
+          />
+        </Container>
+      ))}
+    </Container>
   );
 }
 
@@ -335,23 +403,57 @@ const useStyles = makeStyles(theme => ({
     boxShadow: theme.shadows[5],
     padding: theme.spacing(2, 4, 3)
   },
-  container: {
+  card: {
+    marginTop: "9.5%",
+    backgroundColor: theme.palette.background.paper,
+    border: "2px solid #008080",
+    boxShadow: theme.shadows[5],
+    padding: theme.spacing(1, 1, 1),
+    height: "70%"
+  },
+  media: {
+    height: 128,
+    backgroundSize: "contain"
+  },
+  content: {
+    marginTop: "7%"
+  },
+  description: {
+    marginLeft: 20,
+    marginBottom: 10
+  },
+  rating: {
+    marginLeft: 20
+  },
+  vertical: {
     display: "flex",
-    flexWrap: "wrap"
+    flexDirection: "column",
+    background: `url(${Background})`
+  },
+  horizontal: {
+    display: "flex",
+    flexDirection: "row",
+    paddingBottom: 20,
+    background: `url(${Background})`
   },
   textField: {
     marginLeft: theme.spacing(1),
     marginRight: theme.spacing(1),
     width: 200
   },
-  dense: {
-    marginTop: 19
-  },
-  menu: {
-    width: 200
-  },
   button: {
-    margin: theme.spacing(1),
-    background: "#008080"
+    background: "#008080",
+    marginBottom: 25,
+    marginLeft: 25,
+    marginTop: 20,
+    height: 35
+  },
+  buttonGroup: {
+    background: "#008080",
+    color: "#FFFFFF"
+  },
+  buttonGroupBckg: {
+    background: "#FFFFFF",
+    color: "#FFFFFF"
   }
 }));

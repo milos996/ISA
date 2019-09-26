@@ -16,4 +16,6 @@ public interface AirplaneTicketRepository extends JpaRepository<AirplaneTicket, 
     List<UUID> getBoughtFlights(String airlineID, Date startDate, Date endDate);
 
     List<AirplaneTicket> findAllByFlightId(UUID flightId);
+
+    List<AirplaneTicket> findByUser_Id(UUID id);
 }

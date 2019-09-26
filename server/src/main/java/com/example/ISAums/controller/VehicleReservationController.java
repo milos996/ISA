@@ -39,4 +39,5 @@ public class VehicleReservationController {
     public ResponseEntity<List<GetVehicleReservationResponse>> cancel(@PathVariable("id") String vehicleReservationId) {
         return ResponseEntity.ok(toGetVehicleReservationResponseFromVehicleReservations(vehicleReservationService.cancel(vehicleReservationId)));
     }
+
 }

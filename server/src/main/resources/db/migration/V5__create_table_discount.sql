@@ -7,6 +7,6 @@ create table discount
     entity_id varchar(255) not null,
     entity_type varchar(255) not null,
     rate double not null,
-    constraint UK_
+    constraint UK_START_END_DATE_ENTITY_ID_TYPE
         unique (start_date, end_date, entity_id, entity_type)
 );

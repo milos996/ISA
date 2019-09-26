@@ -5,10 +5,7 @@ import com.example.ISAums.dto.request.CreateRentACarVehicleRequest;
 import com.example.ISAums.dto.request.UpdateVehicleRequest;
 import com.example.ISAums.exception.CustomException;
 import com.example.ISAums.exception.EntityWithIdDoesNotExist;
-import com.example.ISAums.model.Rating;
-import com.example.ISAums.model.RentACar;
-import com.example.ISAums.model.Vehicle;
-import com.example.ISAums.model.VehicleReservation;
+import com.example.ISAums.model.*;
 import com.example.ISAums.model.enumeration.RatingType;
 import com.example.ISAums.repository.*;
 import lombok.RequiredArgsConstructor;
@@ -46,7 +43,9 @@ public class VehicleService {
 
         vehicleRepository.save(vehicle);
 
-        return vehicleRepository.findByRentACar_Id(request.getRentACarId());
+        String currentDate = formatDate(new Date());
+
+        return vehicleRepository.findRentACarVehicles(request.getRentACarId().toString(), currentDate);
     }
 
     @Transactional(readOnly = true)
@@ -79,8 +78,6 @@ public class VehicleService {
         if (request.getType() != null)
             vehicle.setType(request.getType());
 
-
-
         //copyNonNullProperties(request, vehicle.get());
 
         vehicleRepository.save(vehicle);
@@ -95,8 +92,7 @@ public class VehicleService {
         if(vehicle == null)
             throw new EntityWithIdDoesNotExist("Vehicle", vehicleId);
 
-        Date date = new Date();
-        String endDate = formatDate(date);
+        String endDate = formatDate(new Date());
 
         List<Vehicle> reserved = vehicleReservationRepository.isReserved(vehicleId.toString(), endDate);
 
@@ -107,7 +103,7 @@ public class VehicleService {
 
         vehicleRepository.delete(vehicle);
 
-        return vehicleRepository.findByRentACar_Id(rentACarId);
+        return vehicleRepository.findRentACarVehicles(rentACarId.toString(), endDate);
     }
 
     @Transactional(readOnly = true)
@@ -176,7 +172,10 @@ public class VehicleService {
         vehicle.setRating(ratingRepository.getAverageMarkForEntity(vehicle.getId().toString(), RatingType.VEHICLE.name()));
         vehicleRepository.save(vehicle);
 
-        return vehicleRepository.findByRentACar_Id(vehicle.getRentACar().getId());
+        Date date = new Date();
+        String currentDate = formatDate(date);
+
+        return vehicleRepository.findRentACarVehicles(vehicle.getRentACar().getId().toString(), currentDate);
     }
 
     @Transactional(readOnly = true)
@@ -195,12 +194,20 @@ public class VehicleService {
     }
 
     @Transactional(readOnly = true)
-    public List<Vehicle> getQuick(String pickUpDate, String dropOffDate) {
-        return null;
+    public List<Vehicle> getQuick(String pickUpDate, String dropOffDate, String rentACarId) {
+        return vehicleRepository.findVehiclesOnDiscount(pickUpDate, dropOffDate, rentACarId);
+    }
+
+    @Transactional(readOnly = true)
+    public List<Vehicle> findByRentACar_Id(UUID rentACarId) {
+        String currentDate = formatDate(new Date());
+        return vehicleRepository.findRentACarVehicles(rentACarId.toString(), currentDate);
     }
 
     private String formatDate(Date date) {
         SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
         return formatter.format(date);
     }
+
+
 }

@@ -26,7 +26,11 @@ public class GetQuickVehicleResponse {
 
     private Double rating;
 
-    private Double pricePerDay;
+    private Double price;
 
     private String rentACar;
+
+    private String pickUpDate;
+
+    private String dropOffDate;
 }
