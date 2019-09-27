@@ -10,7 +10,7 @@ const ENDPOINTS = {
   USER_ACCEPT_INVITE: "/users/%s/invites/accept",
   USER_DECLINE_INVITE: "/users/%s/invites/decline",
   REMOVE_FRIEND: "/users/friendship/friendsId=%s",
-  FRIENDSHIP: "/users/friendshipRequest",
+  FRIENDSHIP: "/users/friendship-request",
   SEARCH: "/users/search/userName=%s",
   USERS_WITHOUT_ENTITY: "/users/no/entity",
   FETCH: "/users/%s",
@@ -31,7 +31,7 @@ class UserService extends HttpBaseClient {
   };
 
   sendFriendshipRequest = invitedUserId => {
-    return this.getApiClient().post(ENDPOINTS.FRIENDSHIP, invitedUserId);
+    return this.getApiClient().post(ENDPOINTS.FRIENDSHIP, { invitedUserId });
   };
 
   removeFriend = friendsId => {

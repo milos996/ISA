@@ -15,3 +15,5 @@ export const SORT_AIRLINES = "sort_airlines";
 export const FETCH_FLIGHT = "fetch_flight";
 
 export const PUT_SELECTED_FLIGHT = "put_selected_flight";
+
+export const CLEAR_SELECTED_SEATS = "clear_selected_seats";

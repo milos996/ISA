@@ -61,11 +61,13 @@ public class FlightService {
         return flight;
     }
 
+    @Transactional(readOnly = true)
     public List<Flight> getFlightsForDestination(UUID destinationId) {
 
        return flightRepository.getFlightsForDestination(String.valueOf(destinationId));
     }
 
+    @Transactional(readOnly = true)
     public List<Flight> searchFlights(String fromDestinationCity, String toDestinationCity, String departureDate, String arrivalDate) {
 
         List<UUID> flightIDs = flightRepository.search(fromDestinationCity, toDestinationCity);
@@ -94,6 +96,7 @@ public class FlightService {
         return sum/marks.size();
     }
 
+    @Transactional(readOnly = true)
     public List<GetFlightAverageRatingResponse> getFlightsWithRatings(List<Flight> flights){
 
         List<GetFlightAverageRatingResponse> flightWithRatings = new ArrayList<>(flights.size());
@@ -119,6 +122,7 @@ public class FlightService {
         return flightWithRatings;
     }
 
+    @Transactional(readOnly = true)
     public List<Flight> getQuickBooking(UUID airlineId) {
 
         List<UUID> flightIDs = flightRepository.getFlightsByAirlineId(String.valueOf(airlineId));
@@ -145,27 +149,6 @@ public class FlightService {
         return  flights;
     }
 
-    @Transactional(rollbackFor = Exception.class)
-    public Flight update(UpdateFlightRequest request) {
-
-        if(!flightRepository.existsById(request.getId())){
-            throw new EntityWithIdDoesNotExist("Flight", request.getId());
-        }
-
-        Optional<Flight> flight = flightRepository.findById(request.getId());
-        UUID airlineDestinationId = flight.get().getAirlineDestination().getId();
-
-        if(!String.valueOf(airlineDestinationId).equals(String.valueOf(request.getAirlineDestinationId()))){
-
-            Optional<AirlineDestination> tmpAirlineDestination = airlineDestinationRepository.findById(request.getAirlineDestinationId());
-            flight.get().setAirlineDestination(tmpAirlineDestination.get());
-        }
-
-        copyNonNullProperties(request, flight.get(), "airlineDestination", "airplane");
-        flightRepository.save(flight.get());
-
-        return flight.get();
-    }
 
     public List<Flight> getFlightsOfAirline(UUID airlineId) {
 
@@ -180,6 +163,7 @@ public class FlightService {
         return flights;
     }
 
+    @Transactional(readOnly = true)
     public List<AirlineDestination> getDestinations(UUID airlineId) {
 
         List<UUID> airlineDestinationIDs = flightRepository.getAirlineDestinations(String.valueOf(airlineId));
@@ -214,6 +198,7 @@ public class FlightService {
         flightRepository.save(flight);
     }
 
+    @Transactional(readOnly = true)
     public Flight findFlightById(UUID id) {
         return flightRepository.findById(id).get();
     }

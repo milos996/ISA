@@ -1,8 +1,12 @@
 package com.example.ISAums.repository;
 import com.example.ISAums.model.Flight;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Lock;
 import org.springframework.data.jpa.repository.Query;
+
+import javax.persistence.LockModeType;
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 public interface FlightRepository extends JpaRepository<Flight, UUID> {
@@ -22,4 +26,5 @@ public interface FlightRepository extends JpaRepository<Flight, UUID> {
     @Query(value = "select f.airline_destination_id from isa_database.flight f join isa_database.airplane a on f.airplane_id = a.id where a.airline_id = ?1", nativeQuery = true)
     List<UUID> getAirlineDestinations(String airlineId);
 
+    Optional<Flight> findById(UUID id);
 }

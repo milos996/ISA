@@ -109,7 +109,7 @@ export default function CreateFlight({ closeModal, airlineId }) {
           id="datetime-local"
           label="Choose departure date"
           type="datetime-local"
-          defaultValue="2017-05-24T10:30"
+          defaultValue="2019-09-26T10:30"
           className={classes.textField}
           InputLabelProps={{
             shrink: true
@@ -127,7 +127,7 @@ export default function CreateFlight({ closeModal, airlineId }) {
           id="datetime-local"
           label="Choose return date"
           type="datetime-local"
-          defaultValue="2017-05-24T10:30"
+          defaultValue="2019-09-26T10:30"
           className={classes.textField}
           InputLabelProps={{
             shrink: true
@@ -141,7 +141,7 @@ export default function CreateFlight({ closeModal, airlineId }) {
         />
       </form>
 
-      <FormControl className={classes.formControl}>
+      <FormControl variant="filled" className={classes.formControl}>
         <InputLabel htmlFor="destination-simple">Destination</InputLabel>
         <Select
           value={selectedDestinationValue}
@@ -188,10 +188,12 @@ export default function CreateFlight({ closeModal, airlineId }) {
         label="Duration"
         className={classes.textField}
         margin="normal"
+        type="duration"
+        defaultValue="00:00:00"
         onChange={({ currentTarget }) => {
           setNewFlightDetails(currState => ({
             ...currState,
-            duration: Number(currentTarget.value)
+            duration: currentTarget.value
           }));
         }}
       />

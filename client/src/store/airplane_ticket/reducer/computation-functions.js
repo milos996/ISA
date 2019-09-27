@@ -22,6 +22,17 @@ export function putSelectedSeats(state, payload) {
   };
 }
 
+export function clearSelectedSeats(state, payload) {
+  console.log({
+    ...state,
+    selectedSeats: payload
+  });
+  return {
+    ...state,
+    selectedSeats: payload
+  };
+}
+
 export function putSelectedFlight(state, payload) {
   return {
     ...state,

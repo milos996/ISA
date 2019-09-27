@@ -31,14 +31,6 @@ public class FlightController {
         return ResponseEntity.ok(toCreateFlightResponseFromFlight(flight));
     }
 
-    @PutMapping
-    public ResponseEntity<UpdateFlightResponse> update(@RequestBody UpdateFlightRequest request){
-
-        Flight flight = flightService.update(request);
-
-        return ResponseEntity.ok(toUpdateFlightResponseFromFlight(flight));
-    }
-
     @GetMapping(value = "/destination/{id}")
     public ResponseEntity<List<GetFlightForDestinationResponse>> getFlightsForDestination(@PathVariable(name = "id") UUID destinationId){
 

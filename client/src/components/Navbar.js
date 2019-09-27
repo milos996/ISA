@@ -56,6 +56,20 @@ export default function Navbar() {
               UMS Ticket, reservations management
             </Link>
           </Typography>
+
+          {userToken && user.role === "AIRLINE_ADMIN" && (
+            <LightTooltip title="Airline profile">
+              <Link
+                className="button"
+                to={`/airline/${airlineAdmin.airline.id}`}
+              >
+                <Button color="inherit">
+                  <AirlineIcon></AirlineIcon>
+                </Button>
+              </Link>
+            </LightTooltip>
+          )}
+
           {userToken ? (
             <div>
               <LightTooltip title="Friends">
@@ -100,18 +114,6 @@ export default function Navbar() {
                 </Button>
               </Link>
             </div>
-          )}
-          {userToken && user.role === "AIRLINE_ADMIN" && (
-            <LightTooltip title="Airline profile">
-              <Link
-                className="button"
-                to={`/airline/${airlineAdmin.airline.id}`}
-              >
-                <Button color="inherit">
-                  <AirlineIcon></AirlineIcon>
-                </Button>
-              </Link>
-            </LightTooltip>
           )}
         </Toolbar>
       </AppBar>

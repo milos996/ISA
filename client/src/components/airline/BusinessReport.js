@@ -98,7 +98,8 @@ export default function BuisinessReport({ airlineId }) {
         value={airlineRating.avgRating}
       />
 
-      {user.role === "AIRLINE_ADMIN" && airlineAdmin.airline.id === airlineId ? (
+      {user.role === "AIRLINE_ADMIN" &&
+      airlineAdmin.airline.id === airlineId ? (
         <div>
           <Button
             variant="contained"
@@ -141,7 +142,9 @@ export default function BuisinessReport({ airlineId }) {
               <TableCell align="left">
                 {flight.airlineDestination.destination.city}
               </TableCell>
-              <TableCell align="left">{flight.avgRating}</TableCell>
+              <TableCell align="left">
+                {flight.avgRating === "NaN" ? "/" : flight.avgRating}
+              </TableCell>
             </TableRow>
           ))}
         </TableBody>

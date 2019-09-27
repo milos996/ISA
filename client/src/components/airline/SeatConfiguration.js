@@ -23,11 +23,15 @@ export default function SeatConfiguration({ airplane, closeModal }) {
     numberOfSegments: airplane.numberOfSegments,
     airline: airplane.airline
   });
-  const isReadOnly =
-    airplaneDetails.airline.id === airlineAdmin.airline.id &&
-    user.role === "AIRLINE_ADMIN"
-      ? false
-      : true;
+  var isReadOnly = true;
+
+  if (airlineAdmin != "") {
+    isReadOnly =
+      airplane.airline.id === airlineAdmin.airline.id &&
+      user.role === "AIRLINE_ADMIN"
+        ? false
+        : true;
+  }
 
   useEffect(() => {
     dispatch(fetchAirlineAdmin());

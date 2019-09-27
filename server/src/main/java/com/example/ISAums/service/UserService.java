@@ -57,10 +57,12 @@ public class UserService {
 
 		return user.get();
 	}
+
+	@Transactional(readOnly = true)
 	public List<User> getListOfFriends(UUID user_id){
 
 		List<UUID> ids = friendshipRepository.getFriends(user_id.toString());
-		List<User> friends = new ArrayList<User>(ids.size());
+		List<User> friends = new ArrayList<>(ids.size());
 
 		for(int i = 0; i < ids.size(); i++){
 			Optional<User> tmp = userRepository.findById(UUID.fromString(String.valueOf(ids.get(i))));
@@ -70,6 +72,7 @@ public class UserService {
 		return friends;
 	}
 
+	@Transactional(rollbackFor = Exception.class)
 	public Friendship sendFriendshipRequest(UUID userId,  SendFriendshipRequestRequest request) {
 
         Optional<User> sender = userRepository.findById(userId);
@@ -91,7 +94,8 @@ public class UserService {
 		friendshipRepository.removeFriendship(String.valueOf(mine_id), String.valueOf(friend_id));
     }
 
-    public List<User> search(UUID mine_id, String name) {
+	@Transactional(readOnly = true)
+	public List<User> search(UUID mine_id, String name) {
 		List<User> allUsers = userRepository.findAllByFirstName(name);
 		List<User> usersWhichAreNotFriends = new ArrayList<>();
 
@@ -105,20 +109,24 @@ public class UserService {
 		return usersWhichAreNotFriends;
     }
 
+	@Transactional(rollbackFor = Exception.class)
 	public void updatePassword(String newPassword, UUID userId) {
 		Optional<User> user = userRepository.findById(userId);
 		user.get().setPassword(newPassword);
 		userRepository.save(user.get());
 	}
 
+	@Transactional(readOnly = true)
 	public User findById(UUID user_id) {
 		return userRepository.findById(user_id).get();
 	}
 
+	@Transactional(readOnly = true)
 	public List<Friendship> getFriendshipRequests(UUID mine_id) {
 		return friendshipRepository.getFriendshipRequestsOfMine(String.valueOf(mine_id));
 	}
 
+	@Transactional(rollbackFor = Exception.class)
 	public void updateFriendshipRequest(UpdateFriendshipRequestRequest request) {
 		Optional<Friendship> friendship = friendshipRepository.findById(request.getId());
 		copyNonNullProperties(request, friendship.get());

@@ -1,5 +1,10 @@
 import airlineService from "../../services/api/Airline";
-import { putAirlines, putSearchResults, putSelectedFlight } from "./actions";
+import {
+  putAirlines,
+  putSearchResults,
+  putSelectedFlight,
+  putErrorMessage
+} from "./actions";
 import { take, put, call } from "redux-saga/effects";
 import {
   FETCH_AIRLINES,

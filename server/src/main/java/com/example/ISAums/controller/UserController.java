@@ -36,7 +36,7 @@ public class UserController {
 		return ResponseEntity.ok(toUpdateUserProfileResponseFromUser(user));
 	}
 
-	@PostMapping(value = "/friendshipRequest")
+	@PostMapping(value = "/friendship-request")
 	public ResponseEntity<SendFriendshipRequestResponse> sendFriendshipRequest(@AuthenticationPrincipal UUID userId, @RequestBody SendFriendshipRequestRequest request){
 
 		Friendship friendship = userService.sendFriendshipRequest(userId, request);

@@ -7,13 +7,21 @@ const ENDPOINTS = {
 
 class AirplaneTicketService extends HttpBaseClient {
   createFastTicketReservation = flightId => {
-    return this.getApiClient().post(ENDPOINTS.FAST_TICKET_RESERVATION, {
-      flightId
-    });
+    return this.getApiClient()
+      .post(ENDPOINTS.FAST_TICKET_RESERVATION, {
+        flightId
+      })
+      .catch(error => {
+        alert("Flight is filled");
+      });
   };
 
   reserve = ticket => {
-    return this.getApiClient().post(ENDPOINTS.RESERVE, ticket);
+    return this.getApiClient()
+      .post(ENDPOINTS.RESERVE, ticket)
+      .catch(error => {
+        alert("Seat is already reserved");
+      });
   };
 }
 
