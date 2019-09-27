@@ -25,4 +25,6 @@ public interface AirplaneTicketRepository extends JpaRepository<AirplaneTicket, 
             "flight.airplane_id = airplane.id join isa_database.airline airline on airplane.airline_id = airline.id " +
             "where airline.id = :airlineID and ticket.time_created between :startDate and :endDate group by ticket.id", nativeQuery = true)
     List<GetSoldAirlineTicketsResponse> getSoldTickets(String airlineID, String startDate, String endDate);
+
+    List<AirplaneTicket> findByUser_Id(UUID id);
 }
