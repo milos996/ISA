@@ -64,6 +64,10 @@ export default function Navbar() {
     setLoginModalVisibility(false);
   }
 
+  useEffect(() => {
+    dispatch(fetchAirlineAdmin());
+  }, []);
+
   return (
     <div className={classes.root}>
       <Modal open={registrationModalVisibility} className={classes.modal}>
@@ -91,21 +95,7 @@ export default function Navbar() {
               <img src={require("../assets/umslogo.png")} height="48"></img>
             </Link>
           </Typography>
-
-          {userToken && user.role === "AIRLINE_ADMIN" && (
-            <LightTooltip title="Airline profile">
-              <Link
-                className="button"
-                to={`/airline/${airlineAdmin.airline.id}`}
-              >
-                <Button color="inherit">
-                  <AirlineIcon></AirlineIcon>
-                </Button>
-              </Link>
-            </LightTooltip>
-          )}
-
-          {userToken ? (
+          {userToken != null ? (
             <div>
               <LightTooltip title="Friends">
                 <Link className="button" to={`/user/${user.id}/friends`}>
@@ -151,6 +141,18 @@ export default function Navbar() {
                 <InputRoundedIcon></InputRoundedIcon>
               </Button>
             </div>
+          )}
+          {userToken != null && user.role === "AIRLINE_ADMIN" && (
+            <LightTooltip title="Airline profile">
+              <Link
+                className="button"
+                to={`/airline/${airlineAdmin.airline.id}`}
+              >
+                <Button color="inherit">
+                  <AirlineIcon></AirlineIcon>
+                </Button>
+              </Link>
+            </LightTooltip>
           )}
         </Toolbar>
       </AppBar>

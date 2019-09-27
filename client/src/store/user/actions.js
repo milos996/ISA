@@ -28,7 +28,8 @@ import {
   FETCH_FRIENDS_DATA,
   FETCH_FRIENDSHIP_REQUESTS,
   PUT_FRIENDSHIP_REQUESTS,
-  UPDATE_FRIENDSHIP_REQUEST
+  UPDATE_FRIENDSHIP_REQUEST,
+  PUT_LOGGED
 } from "./constants";
 
 export const registerUser = payload => ({
@@ -38,6 +39,11 @@ export const registerUser = payload => ({
 
 export const loginUser = payload => ({
   type: LOGIN,
+  payload
+});
+
+export const putLogged = payload => ({
+  type: PUT_LOGGED,
   payload
 });
 

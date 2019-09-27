@@ -5,6 +5,8 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.Size;
 import java.util.List;
 import java.util.UUID;
 
@@ -88,4 +90,6 @@ public interface VehicleRepository extends JpaRepository<Vehicle, UUID> {
                    "OR (vr.start_date >= :endDate AND vr.end_date <= :startDate)) " +
                    "AND v.rent_a_car_id = :rentACarId", nativeQuery = true)
     List<Vehicle> findAllUnavailable(String rentACarId, String startDate, String endDate);
+
+    Vehicle findByBrandAndModel(String brand, String model);
 }

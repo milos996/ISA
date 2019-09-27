@@ -67,3 +67,10 @@ export function putFriendshipRequests(state, payload) {
     friendshipRequests: payload
   };
 }
+
+export function putLogged(state, logged) {
+  return {
+    ...state,
+    logged
+  };
+}

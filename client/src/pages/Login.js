@@ -25,7 +25,7 @@ const LoginPage = ({ closeModal }) => {
         email,
         password,
         callback: () => {
-          history.push("/");
+          window.location.reload();
           closeModal();
         }
       })
