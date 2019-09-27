@@ -25,7 +25,7 @@ export default function Friends({ userId }) {
   }
 
   useEffect(() => {
-    dispatch(fetchFriendsData(user.id));
+    dispatch(fetchFriendsData());
   });
 
   return (

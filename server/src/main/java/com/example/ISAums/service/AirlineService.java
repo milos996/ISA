@@ -12,6 +12,7 @@ import com.example.ISAums.model.enumeration.RatingType;
 import com.example.ISAums.repository.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 import java.util.Optional;
@@ -19,6 +20,7 @@ import java.util.UUID;
 
 import static com.example.ISAums.converter.RatingConverter.toRatingFromCreateRequest;
 import static com.example.ISAums.util.UtilService.copyNonNullProperties;
+import static org.springframework.transaction.annotation.Isolation.READ_COMMITTED;
 
 @Service
 @RequiredArgsConstructor
@@ -68,7 +70,8 @@ public class AirlineService {
         return airlineRepository.save(airline.get());
     }
 
-    private void updateSeatConfiguration(UpdateSeatConfigurationRequest request, UUID airlineId){
+    @Transactional(rollbackFor = Exception.class)
+    public void updateSeatConfiguration(UpdateSeatConfigurationRequest request, UUID airlineId){
 
         List<Airplane> airplane = airplaneRepository.findAllByAirlineId(airlineId);
 
@@ -79,7 +82,7 @@ public class AirlineService {
             airplaneRepository.save(airplane.get(i));
         }
     }
-
+    @Transactional(readOnly = true, isolation = READ_COMMITTED)
     public Airline getAirline(String airlineId) {
         return airlineRepository.findById(UUID.fromString(airlineId)).get();
     }
@@ -119,11 +122,12 @@ public class AirlineService {
             throw new CustomException("Unknown attribute!");
 
     }
-
+    @Transactional(readOnly = true)
     public List<Airline> getAll() {
         return airlineRepository.findAll();
     }
 
+    @Transactional(readOnly = true)
     public AirlineAdmin getAirlineAdmin(UUID id) {
         return airlineAdminRepository.findByUser_Id(id);
     }

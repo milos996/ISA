@@ -2,7 +2,8 @@ import {
   PUT_AIRLINES,
   PUT_SEARCH_RESULTS,
   PUT_SELECTED_SEATS,
-  PUT_SELECTED_FLIGHT
+  PUT_SELECTED_FLIGHT,
+  CLEAR_SELECTED_SEATS
 } from "../constants";
 import * as computationFunctions from "./computation-functions";
 
@@ -35,7 +36,8 @@ const actionHandler = {
   [PUT_AIRLINES]: computationFunctions.putAirlines,
   [PUT_SEARCH_RESULTS]: computationFunctions.putSearchResults,
   [PUT_SELECTED_SEATS]: computationFunctions.putSelectedSeats,
-  [PUT_SELECTED_FLIGHT]: computationFunctions.putSelectedFlight
+  [PUT_SELECTED_FLIGHT]: computationFunctions.putSelectedFlight,
+  [CLEAR_SELECTED_SEATS]: computationFunctions.clearSelectedSeats
 };
 
 export default airplaneTicketReducer;

@@ -3,45 +3,49 @@ package com.example.ISAums.service;
 import com.example.ISAums.dto.request.ChooseSeatCoordinatesRequest;
 import com.example.ISAums.dto.request.CreateAirplaneTicketReservationRequest;
 import com.example.ISAums.dto.request.CreateQuickTicketBookingRequest;
-import com.example.ISAums.dto.request.GetAirlineIncomeRequest;
 import com.example.ISAums.dto.response.GetAirlineIncomeResponse;
 import com.example.ISAums.dto.response.GetSoldAirlineTicketsResponse;
 import com.example.ISAums.email_service.EmailServiceImpl;
+import com.example.ISAums.exception.FlightIsFullException;
+import com.example.ISAums.exception.SeatIsAlreadyReservedException;
 import com.example.ISAums.exception.CustomException;
 import com.example.ISAums.model.*;
 import com.example.ISAums.model.enumeration.GroupTripStatus;
 import com.example.ISAums.repository.*;
 import lombok.RequiredArgsConstructor;
-import lombok.Synchronized;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import java.util.*;
+import javax.persistence.EntityManagerFactory;
+import javax.persistence.EntityManager;
+import javax.persistence.LockModeType;
 
 @Service
 @RequiredArgsConstructor
 public class AirplaneTicketService {
 
     private final AirplaneTicketRepository airplaneTicketRepository;
-    private final FlightRepository flightRepository;
     private final GroupTripRepository groupTripRepository;
     private final UserRepository userRepository;
     private final EmailServiceImpl emailService;
+    private final EntityManagerFactory factory;
 
-    @Synchronized
-    @Transactional(rollbackFor = Exception.class)
-      public AirplaneTicket reservation(UUID userOwnerId, CreateAirplaneTicketReservationRequest request) throws Exception {
+      @Transactional(rollbackFor = Exception.class)
+      public AirplaneTicket reservation(UUID userOwnerId, CreateAirplaneTicketReservationRequest request) throws SeatIsAlreadyReservedException{
 
+        EntityManager em = factory.createEntityManager();
+        em.getTransaction().begin();
+
+        Flight flight = em.find(Flight.class, request.getFlightID(), LockModeType.PESSIMISTIC_WRITE);
         List<ChooseSeatCoordinatesRequest> seats = request.getSeats();
-
-        Optional<Flight> flight = flightRepository.findById(request.getFlightID());
-        Airplane airplane = flight.get().getAirplane();
+        Airplane airplane = flight.getAirplane();
 
         int numOfSegments = airplane.getNumberOfSegments();
         int numOfColumns = airplane.getNumberOfColumnsPerSegment();
         int numOfRows = airplane.getNumberOfRows();
-        boolean [][][] seatsOfAirplane = initSeatConfigurationOfFlight(flight.get(), numOfSegments, numOfRows, numOfColumns);
+        boolean [][][] seatsOfAirplane = initSeatConfigurationOfFlight(flight, numOfSegments, numOfRows, numOfColumns);
         List<String> coordinatesOfSeats = new ArrayList<>();
         int segment = 0;
         int row = 0;
@@ -56,8 +60,7 @@ public class AirplaneTicketService {
                 coordinatesOfSeats.add(segment+":"+row+":"+column);
             }
             else
-                throw new Exception("Seat is already reserved!");
-
+                throw new SeatIsAlreadyReservedException("Seat is already reserved", segment+1, column+1, row+1);
         }
 
         User userOwner = userRepository.findById(userOwnerId).get();
@@ -68,7 +71,7 @@ public class AirplaneTicketService {
         column = Integer.parseInt(segment_row_column[2]);
 
         AirplaneTicket airplaneTicket = AirplaneTicket.builder()
-                .flight(flight.get())
+                .flight(flight)
                 .user(userOwner)
                 .groupTrip(null)
                 .groupTripStatus(null)
@@ -104,7 +107,7 @@ public class AirplaneTicketService {
                 column = Integer.parseInt(segment_row_column[2]);
 
                 AirplaneTicket airplaneTicketInvited = AirplaneTicket.builder()
-                        .flight(flight.get())
+                        .flight(flight)
                         .user(invitedUser.get())
                         .groupTrip(groupTrip)
                         .groupTripStatus(GroupTripStatus.PENDING)
@@ -119,11 +122,15 @@ public class AirplaneTicketService {
         }
 
         airplaneTicketRepository.save(airplaneTicket);
+        em.getTransaction().commit();
+        em.close();
+
         return airplaneTicket;
     }
 
+    @Transactional(readOnly = true)
     public List<GetAirlineIncomeResponse> getIncome(String airlineID, String startDate, String endDate) {
-      return airplaneTicketRepository.getIncome(airlineID, startDate, endDate);
+        return airplaneTicketRepository.getIncome(airlineID, startDate, endDate);
     }
 
     private boolean[][][] initSeatConfigurationOfFlight(Flight flight, int numOfSegments, int numOfRows, int numOfColumns){
@@ -143,41 +150,49 @@ public class AirplaneTicketService {
         return  seatsOfAirplane;
     }
 
-    @Transactional(rollbackFor = Exception.class)
-    public AirplaneTicket createQuickTicketBooking(UUID userId, CreateQuickTicketBookingRequest request) {
+    @Transactional(rollbackFor = FlightIsFullException.class)
+    public AirplaneTicket createQuickTicketBooking(UUID userId, CreateQuickTicketBookingRequest request) throws FlightIsFullException {
 
+        EntityManager em = factory.createEntityManager();
+        em.getTransaction().begin();
+
+        Flight flight = em.find(Flight.class, request.getFlightId(), LockModeType.PESSIMISTIC_WRITE);
         Optional<User> user = userRepository.findById(userId);
-        Optional<Flight> flight = flightRepository.findById(request.getFlightId());
-        Airplane airplane = flight.get().getAirplane();
+        Airplane airplane = flight.getAirplane();
 
         int numOfSegments = airplane.getNumberOfSegments();
         int numOfColumns = airplane.getNumberOfColumnsPerSegment();
         int numOfRows = airplane.getNumberOfRows();
 
-        boolean [][][] seatsOfAirplane = initSeatConfigurationOfFlight(flight.get(), numOfSegments, numOfRows, numOfColumns);
+        boolean [][][] seatsOfAirplane = initSeatConfigurationOfFlight(flight, numOfSegments, numOfRows, numOfColumns);
 
         int segment = 0;
         int row = 0;
         int column = 0;
+        boolean isFlightFilled = true;
 
         segment_loop:
         for(segment = 0; segment < numOfSegments; segment++){
             for(row = 0; row < numOfRows; row++){
                 for(column = 0; column < numOfColumns; column++){
 
-                    if(!seatsOfAirplane[segment][row][column])
+                    if(!seatsOfAirplane[segment][row][column]){
+                        isFlightFilled = false;
                         break segment_loop;
-
+                    }
                 }
             }
         }
+
+        if(isFlightFilled)
+            throw new FlightIsFullException("Flight is filled");
 
         seatsOfAirplane[segment][row][column] = true;
 
         AirplaneTicket airplaneTicket = AirplaneTicket.builder()
                 .groupTrip(null)
                 .groupTripStatus(null)
-                .flight(flight.get())
+                .flight(flight)
                 .numberOfSegment(++segment)
                 .numberOfColumn(++column)
                 .numberOfRow(++row)
@@ -185,6 +200,8 @@ public class AirplaneTicketService {
                 .build();
 
         airplaneTicketRepository.save(airplaneTicket);
+        em.getTransaction().commit();
+        em.close();
 
         return airplaneTicket;
     }
@@ -214,6 +231,7 @@ public class AirplaneTicketService {
         return airplaneTicketRepository.findByUser_Id(user.getId());
     }
 
+    @Transactional(readOnly = true)
     public List<GetSoldAirlineTicketsResponse> getSoldTickets(String id, String startDate, String endDate) {
         return airplaneTicketRepository.getSoldTickets(id, startDate, endDate);
     }

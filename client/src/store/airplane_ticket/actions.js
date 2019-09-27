@@ -7,8 +7,14 @@ import {
   PUT_SELECTED_SEATS,
   SORT_AIRLINES,
   FETCH_FLIGHT,
-  PUT_SELECTED_FLIGHT
+  PUT_SELECTED_FLIGHT,
+  CLEAR_SELECTED_SEATS
 } from "./constants";
+
+export const clearSelectedSeats = payload => ({
+  type: CLEAR_SELECTED_SEATS,
+  payload
+});
 
 export const putSelectedFlight = payload => ({
   type: PUT_SELECTED_FLIGHT,

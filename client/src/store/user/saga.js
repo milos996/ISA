@@ -150,7 +150,7 @@ export function* fetchUserData() {
 
 export function* fetchFriendsData() {
   const { payload } = yield take(FETCH_FRIENDS_DATA);
-  const { data } = yield call(userService.fetchFriends, payload);
+  const { data } = yield call(userService.fetchFriends);
   yield put(putFriendsData(data));
 }
 

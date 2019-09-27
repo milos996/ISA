@@ -18,7 +18,7 @@ public interface FriendshipRepository extends JpaRepository<Friendship, UUID> {
     @Query(value = "delete from friendship where friendship.user_sender_id = ?1 and friendship.user_invited_id = ?2 or friendship.user_sender_id = ?2 and friendship.user_invited_id = ?1", nativeQuery = true)
     void removeFriendship(String mine_id, String friend_id);
 
-    @Query(value = "select * from isa_database.friendship f where f.user_sender_id = ?1 and f.user_invited_id = ?2 or f.user_sender_id = ?2 and f.user_invited_id = ?1 and f.invitation_status != \"REJECTED\"", nativeQuery = true)
+    @Query(value = "select * from isa_database.friendship f where f.invitation_status != \"REJECTED\" and f.user_sender_id = ?1 and f.user_invited_id = ?2 or f.user_sender_id = ?2 and f.user_invited_id = ?1", nativeQuery = true)
     Friendship isItFriendOfMine(String mineId, String userId);
 
     @Query(value = "select * from isa_database.friendship f where f.user_invited_id = ?1 and f.invitation_status = 'PENDING'", nativeQuery = true)

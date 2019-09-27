@@ -3,14 +3,14 @@ import { format } from "util";
 
 const ENDPOINTS = {
   SAVE_USER: "/users",
-  FETCH_FRIENDS: "/users/listOfFriends/%s",
+  FETCH_FRIENDS: "/users/list-of-friends",
   SAVE_PASSWORD: "/auth/password/update",
   FETCH_BY_NAME: "/users/find/%s",
   USER_INVITES: "/users/%s/invites",
   USER_ACCEPT_INVITE: "/users/%s/invites/accept",
   USER_DECLINE_INVITE: "/users/%s/invites/decline",
   REMOVE_FRIEND: "/users/friendship/friendsId=%s",
-  FRIENDSHIP: "/users/friendshipRequest",
+  FRIENDSHIP: "/users/friendship-request",
   SEARCH: "/users/search/userName=%s",
   USERS_WITHOUT_ENTITY: "/users/no/entity",
   FETCH: "/users/%s",
@@ -23,15 +23,15 @@ class UserService extends HttpBaseClient {
     return this.getApiClient().put(ENDPOINTS.SAVE_USER, userData);
   };
 
-  fetchFriends = userId => {
-    return this.getApiClient().get(format(ENDPOINTS.FETCH_FRIENDS, userId));
+  fetchFriends = () => {
+    return this.getApiClient().get(ENDPOINTS.FETCH_FRIENDS);
   };
   savePassword = request => {
     return this.getApiClient().put(ENDPOINTS.SAVE_PASSWORD, request);
   };
 
   sendFriendshipRequest = invitedUserId => {
-    return this.getApiClient().post(ENDPOINTS.FRIENDSHIP, invitedUserId);
+    return this.getApiClient().post(ENDPOINTS.FRIENDSHIP, { invitedUserId });
   };
 
   removeFriend = friendsId => {

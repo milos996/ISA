@@ -114,7 +114,7 @@ export default function AirlineIncome() {
         />
         <VictoryBar
           data={income}
-          x="duration"
+          x="ticket"
           y="income"
           barWidth={20}
           style={{ data: { fill: "#008080" } }}

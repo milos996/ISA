@@ -4,13 +4,11 @@ import com.example.ISAums.model.AirplaneTicket;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.rest.core.config.Projection;
 
-import java.sql.Time;
-
 @Projection(name = "airlineIncome", types = {AirplaneTicket.class})
 public interface GetAirlineIncomeResponse {
 
-    @Value("#{target.duration}")
-    Time getDuration();
+    @Value("#{'(' + target.t_segment + ', ' + target.t_row + ', ' + target.t_column + ')'}")
+    String getTicket();
 
     @Value("#{target.income}")
     Double getIncome();
