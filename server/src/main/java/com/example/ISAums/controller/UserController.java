@@ -43,10 +43,10 @@ public class UserController {
 		return ResponseEntity.ok(toSendFriendshipRequestResponseFromFriendship(friendship));
 	}
 
-	@GetMapping(value = "/listOfFriends/{id}")
-	public ResponseEntity<List<GetUserResponse>> getListOfFriends(@PathVariable(name = "id") UUID user_id){
+	@GetMapping(value = "/list-of-friends")
+	public ResponseEntity<List<GetUserResponse>> getListOfFriends(@AuthenticationPrincipal UUID userId){
 
-		List<User> friends = userService.getListOfFriends(user_id);
+		List<User> friends = userService.getListOfFriends(userId);
 		return ResponseEntity.ok(toGetUserResponseFromUsers(friends));
 	}
 

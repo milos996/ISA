@@ -3,7 +3,7 @@ import { format } from "util";
 
 const ENDPOINTS = {
   SAVE_USER: "/users",
-  FETCH_FRIENDS: "/users/listOfFriends/%s",
+  FETCH_FRIENDS: "/users/list-of-friends",
   SAVE_PASSWORD: "/auth/password/update",
   FETCH_BY_NAME: "/users/find/%s",
   USER_INVITES: "/users/%s/invites",
@@ -23,8 +23,8 @@ class UserService extends HttpBaseClient {
     return this.getApiClient().put(ENDPOINTS.SAVE_USER, userData);
   };
 
-  fetchFriends = userId => {
-    return this.getApiClient().get(format(ENDPOINTS.FETCH_FRIENDS, userId));
+  fetchFriends = () => {
+    return this.getApiClient().get(ENDPOINTS.FETCH_FRIENDS);
   };
   savePassword = request => {
     return this.getApiClient().put(ENDPOINTS.SAVE_PASSWORD, request);
