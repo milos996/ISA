@@ -1,6 +1,6 @@
-import React from "react";
-import HotelInformation from "../components/hotel/Information";
-import HotelRooms from "../components/hotel/Rooms";
+import React from 'react';
+import HotelInformation from '../components/hotel/Information';
+import HotelRooms from '../components/hotel/Rooms';
 
 export default function HotelProfilePage({ match }) {
   return (

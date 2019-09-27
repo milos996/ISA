@@ -1,10 +1,10 @@
-import HttpBaseClient from "../HttpBaseClient";
-import { history } from "../../index";
+import HttpBaseClient from '../HttpBaseClient';
+import { history } from '../../index';
 
 const ENDPOINTS = {
-  AUTH_REGISTRATION: "/auth/registration",
-  AUTH_LOGIN: "/auth/login",
-  RENT_A_CAR_ADMIN_PASSWORD_CHANGE: "/auth/password/update"
+  AUTH_REGISTRATION: '/auth/registration',
+  AUTH_LOGIN: '/auth/login',
+  RENT_A_CAR_ADMIN_PASSWORD_CHANGE: '/auth/password/update'
 };
 
 class AuthService extends HttpBaseClient {
@@ -14,22 +14,23 @@ class AuthService extends HttpBaseClient {
       credentials
     );
 
-    await localStorage.setItem("token", data.token);
-    await localStorage.setItem("role", data.role);
-    await localStorage.setItem("email", data.email);
-    await localStorage.setItem("userID", data.id);
+    await localStorage.setItem('token', data.token);
+    await localStorage.setItem('role', data.role);
+    await localStorage.setItem('email', data.email);
+    await localStorage.setItem('userID', data.id);
+    await localStorage.setItem('hotelId', !!data.hotelId ? data.hotelId : null);
 
     this.attachHeaders({
       Authorization: `Bearer ${data.token}`
     });
 
-    if (data.role === "RENT_A_CAR_ADMIN") {
-      localStorage.setItem("firstLogin", data.rentACarAdminFirstLogin);
+    if (data.role === 'RENT_A_CAR_ADMIN') {
+      localStorage.setItem('firstLogin', data.rentACarAdminFirstLogin);
       if (data.rentACarAdminFirstLogin == false)
-        history.push("/rent-a-car-admin/update-password");
-      else history.push("/");
+        history.push('/rent-a-car-admin/update-password');
+      else history.push('/');
     } else {
-      history.push("/");
+      history.push('/');
     }
 
     return { data };

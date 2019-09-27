@@ -31,18 +31,26 @@ export default function AirlineInformation({ airlineId }) {
   const user = useSelector(userDataSelector);
   const airlineAdmin = useSelector(selectAirlineAdmin);
 
+  var mineAirlineId = "";
+
   const [modalContent, setModalContent] = useState({
     isVisible: false,
     value: ""
   });
 
   var isReadOnly = true;
+  var role = "";
+
+  if(user != null){
+    role = user.role;
+  }
 
   if (airlineAdmin != "") {
     isReadOnly =
-      airlineId === airlineAdmin.airline.id && user.role === "AIRLINE_ADMIN"
+      airlineId === airlineAdmin.airline.id && role === "AIRLINE_ADMIN"
         ? false
         : true;
+    mineAirlineId = airlineAdmin.airline.id;
   }
 
   useEffect(() => {
@@ -202,8 +210,8 @@ export default function AirlineInformation({ airlineId }) {
             }}
           />
         </Container>
-        {user.role === "AIRLINE_ADMIN" &&
-        airlineId === airlineAdmin.airline.id ? (
+        {role === "AIRLINE_ADMIN" &&
+          airlineId === mineAirlineId ? (
           <Button
             variant="contained"
             color="primary"

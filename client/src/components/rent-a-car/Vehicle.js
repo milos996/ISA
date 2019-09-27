@@ -1,29 +1,29 @@
-import React, { useState, useEffect } from "react";
-import { makeStyles } from "@material-ui/core/styles";
-import { useDispatch, useSelector } from "react-redux";
-import Card from "@material-ui/core/Card";
-import CardActions from "@material-ui/core/CardActions";
-import CardContent from "@material-ui/core/CardContent";
-import Button from "@material-ui/core/Button";
-import Typography from "@material-ui/core/Typography";
-import DeleteIcon from "@material-ui/icons/Delete";
-import UpdateIcon from "@material-ui/icons/Update";
-import IconButton from "@material-ui/core/IconButton";
-import Modal from "@material-ui/core/Modal";
-import Rating from "react-rating";
-import StarBorderIcon from "@material-ui/icons/StarBorder";
-import StarIcon from "@material-ui/icons/Star";
-import AccessibilityIcon from "@material-ui/icons/Accessibility";
-import IsaDialog from "../UI/IsaDialog";
-import EditVehicle from "./EditVehicle";
-import DiscountVehicle from "./DiscountVehicle";
-import { deleteVehicle } from "../../store/rent-a-car/actions";
-import { selectVehicleSearchInformation } from "../../store/rent-a-car/selectors";
-import { createVehicleReservation } from "./../../store/rent-a-car/actions";
-import CardBackground from "../../assets/card_bckg.jpg";
+import React, { useState, useEffect } from 'react';
+import { makeStyles } from '@material-ui/core/styles';
+import { useDispatch, useSelector } from 'react-redux';
+import Card from '@material-ui/core/Card';
+import CardActions from '@material-ui/core/CardActions';
+import CardContent from '@material-ui/core/CardContent';
+import Button from '@material-ui/core/Button';
+import Typography from '@material-ui/core/Typography';
+import DeleteIcon from '@material-ui/icons/Delete';
+import UpdateIcon from '@material-ui/icons/Update';
+import IconButton from '@material-ui/core/IconButton';
+import Modal from '@material-ui/core/Modal';
+import Rating from 'react-rating';
+import StarBorderIcon from '@material-ui/icons/StarBorder';
+import StarIcon from '@material-ui/icons/Star';
+import AccessibilityIcon from '@material-ui/icons/Accessibility';
+import IsaDialog from '../UI/IsaDialog';
+import EditVehicle from './EditVehicle';
+import DiscountVehicle from './DiscountVehicle';
+import { deleteVehicle } from '../../store/rent-a-car/actions';
+import { selectVehicleSearchInformation } from '../../store/rent-a-car/selectors';
+import { createVehicleReservation } from './../../store/rent-a-car/actions';
+import CardBackground from '../../assets/card_bckg.jpg';
 
-export default function RentACarVehicle({ vehicle, location }) {
-  const role = window.localStorage.getItem("role");
+export default function RentACarVehicle({ vehicle, airplaneTicket = null }) {
+  const role = window.localStorage.getItem('role');
   const classes = useStyles();
   const dispatch = useDispatch();
   const [modalStyle] = React.useState(getModalStyle);
@@ -34,18 +34,18 @@ export default function RentACarVehicle({ vehicle, location }) {
   const info = useSelector(selectVehicleSearchInformation);
 
   useEffect(() => {
-    if (location != undefined) {
-      info.pickUpDate = location.state.pickUpDate;
-      info.dropOffDate = location.state.dropOffDate;
-    }
+    // if (airplaneTicket != undefined) {
+    //   info.pickUpDate = location.state.pickUpDate;
+    //   info.dropOffDate = location.state.dropOffDate;
+    // }
   });
 
   function handleReserve() {
     if (
-      info.pickUpDate === "" ||
-      info.dropOffDate === "" ||
-      info.pickUpLocation === "" ||
-      info.dropOffLocation === ""
+      info.pickUpDate === '' ||
+      info.dropOffDate === '' ||
+      info.pickUpLocation === '' ||
+      info.dropOffLocation === ''
     ) {
       alert(
         "You need to search for the vehicle first!\nSelect 'pickup-dropoff location' and 'pickup-dropoff date'"
@@ -54,12 +54,10 @@ export default function RentACarVehicle({ vehicle, location }) {
     }
 
     const vehicleId = vehicle.id;
-    var ticketId;
-    if (location != undefined) ticketId = location.state.airplaneTicketId;
 
     dispatch(
       createVehicleReservation({
-        airplaneTicketId: ticketId,
+        airplaneTicketId: airplaneTicket,
         vehicleId,
         info
       })
@@ -106,12 +104,12 @@ export default function RentACarVehicle({ vehicle, location }) {
         <Typography color="textSecondary">{vehicle.model}</Typography>
         <Typography variant="body2" component="p">
           <strong>
-            {" "}
-            {vehicle.type} {vehicle.brand} {vehicle.model}, from{" "}
+            {' '}
+            {vehicle.type} {vehicle.brand} {vehicle.model}, from{' '}
             {vehicle.yearOfProduction}.
           </strong>
           <div>
-            <br /> Price for this vehicle:{" "}
+            <br /> Price for this vehicle:{' '}
             <strong>{vehicle.pricePerDay}$</strong>.
           </div>
           <br />
@@ -134,20 +132,20 @@ export default function RentACarVehicle({ vehicle, location }) {
           ></Rating>
         </Typography>
         <br />
-        {role === "RENT_A_CAR_ADMIN" ? (
+        {role === 'RENT_A_CAR_ADMIN' ? (
           <Typography variant="body2" component="p">
             If you want to change this vehicle click on <strong>UPDATE</strong>
           </Typography>
         ) : null}
-        {role === "USER" ? (
+        {role === 'USER' ? (
           <Typography variant="body2" component="p">
-            If you want to reserve this vehicle click on{" "}
+            If you want to reserve this vehicle click on{' '}
             <strong>RESERVE</strong>
           </Typography>
         ) : null}
       </CardContent>
       <CardActions>
-        {role === "RENT_A_CAR_ADMIN" ? (
+        {role === 'RENT_A_CAR_ADMIN' ? (
           <div>
             <IconButton
               aria-label="update"
@@ -171,7 +169,7 @@ export default function RentACarVehicle({ vehicle, location }) {
             </IconButton>
           </div>
         ) : null}
-        {role === "USER" ? (
+        {role === 'USER' ? (
           <Button size="small" onClick={handleReserve}>
             Reserve
           </Button>
@@ -202,10 +200,10 @@ function getModalStyle() {
 
 const useStyles = makeStyles(theme => ({
   paper: {
-    position: "absolute",
+    position: 'absolute',
     width: 450,
     backgroundColor: theme.palette.background.paper,
-    border: "2px solid #000",
+    border: '2px solid #000',
     boxShadow: theme.shadows[5],
     padding: theme.spacing(2, 4, 3)
   },
@@ -219,12 +217,12 @@ const useStyles = makeStyles(theme => ({
     padding: 15,
     paddingBottom: 15,
     backgroundImage: `url(${CardBackground})`,
-    textAlign: "center"
+    textAlign: 'center'
   },
   bullet: {
-    display: "inline-block",
-    margin: "0 2px",
-    transform: "scale(0.8)"
+    display: 'inline-block',
+    margin: '0 2px',
+    transform: 'scale(0.8)'
   },
   title: {
     fontSize: 14

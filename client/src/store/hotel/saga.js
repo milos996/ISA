@@ -1,4 +1,4 @@
-import { take, put, call } from "redux-saga/effects";
+import { take, put, call } from 'redux-saga/effects';
 import {
   SAVE_SERVICES,
   FETCH_HOTEL_SERVICES,
@@ -17,7 +17,7 @@ import {
   RATE_HOTEL,
   RATE_ROOM,
   SORT_HOTELS
-} from "./constants";
+} from './constants';
 import {
   putHotelServices,
   putHotelDetails,
@@ -27,9 +27,9 @@ import {
   putHotelRooms,
   putRoomDetailsChange,
   putNewRoom
-} from "./actions";
-import hotelServices from "../../services/api/Hotel";
-import locationService from "../../services/LocationService";
+} from './actions';
+import hotelServices from '../../services/api/Hotel';
+import locationService from '../../services/LocationService';
 
 export function* fetchServices() {
   const { payload } = yield take(FETCH_HOTEL_SERVICES);
@@ -254,28 +254,28 @@ const MOCK_ROOMS = [
 ];
 
 const MOCK_HOTEL_SERVICES = [
-  { id: 122, name: "air-conditioning", price: 0.56, selected: false },
+  { id: 122, name: 'air-conditioning', price: 0.56, selected: false },
   {
     id: 124,
-    name: "air-conditioning",
+    name: 'air-conditioning',
     price: 23,
     selected: true
   },
   {
     id: 125,
-    name: "air-conditioning",
+    name: 'air-conditioning',
     price: 12,
     selected: true
   },
   {
     id: 128,
-    name: "air-conditioning",
+    name: 'air-conditioning',
     price: 4,
     selected: true
   },
   {
     id: 123,
-    name: "wi-fi",
+    name: 'wi-fi',
     price: 0.9,
     selected: true
   }
@@ -284,13 +284,13 @@ const MOCK_HOTEL_SERVICES = [
 const MOCK_HOTELS = [
   {
     id: 12,
-    name: "hotel1",
+    name: 'hotel1',
     description:
-      "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla molestie nisi erat, hendrerit molestie felis fermentum non.",
+      'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla molestie nisi erat, hendrerit molestie felis fermentum non.',
     address: {
-      street: "Ulica",
-      city: "Wien",
-      state: "Austria",
+      street: 'Ulica',
+      city: 'Wien',
+      state: 'Austria',
       longitude: 119.0,
       latitude: 40
     },
@@ -298,13 +298,13 @@ const MOCK_HOTELS = [
   },
   {
     id: 13,
-    name: "hotel nbla",
+    name: 'hotel nbla',
     description:
-      " Pellentesque venenatis nec tellus rhoncus tempor. Donec imperdiet tortor dapibus vestibulum condimentum. Cras tristique magna eros, quis sollicitudin risus rutrum at. Sed laoreet semper ex. Nullam ligula felis, mattis in ante at, euismod luctus risus. Curabitur tristique rhoncus orci, sed faucibus velit auctor at. Nullam risus ex, venenatis id massa sit amet, finibus vehicula orci. Sed consectetur, purus eu posuere pulvinar,",
+      ' Pellentesque venenatis nec tellus rhoncus tempor. Donec imperdiet tortor dapibus vestibulum condimentum. Cras tristique magna eros, quis sollicitudin risus rutrum at. Sed laoreet semper ex. Nullam ligula felis, mattis in ante at, euismod luctus risus. Curabitur tristique rhoncus orci, sed faucibus velit auctor at. Nullam risus ex, venenatis id massa sit amet, finibus vehicula orci. Sed consectetur, purus eu posuere pulvinar,',
     address: {
-      street: "Ulica",
-      city: "Nis",
-      state: "Srbija",
+      street: 'Ulica',
+      city: 'Nis',
+      state: 'Srbija',
       longitude: 119.0,
       latitude: 40
     },
@@ -312,12 +312,12 @@ const MOCK_HOTELS = [
   },
   {
     id: 121525,
-    name: "hotel blaa",
-    description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. ",
+    name: 'hotel blaa',
+    description: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. ',
     address: {
-      street: "Ulica",
-      city: "Novi Sad",
-      state: "Srbija",
+      street: 'Ulica',
+      city: 'Novi Sad',
+      state: 'Srbija',
       longitude: 19.8335,
       latitude: 45.2671
     },
@@ -325,13 +325,13 @@ const MOCK_HOTELS = [
   },
   {
     id: 121233,
-    name: "asdasd hotel",
+    name: 'asdasd hotel',
     description:
-      "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla molestie nisi erat, hendrerit molestie felis fermentum non. Sed nec euismod massa, non volutpat elit. Aliquam non accumsan quam. Pellentesque venenatis nec tellus rhoncus tempor. Donec imperdiet tortor dapibus vestibulum condimentum. Cras tristique magna eros, quis sollicitudin risus rutrum at. Sed laoreet semper ex. Nullam ligula felis, mattis in ante at, euismod luctus risus. Curabitur tristique rhoncus orci, sed faucibus velit auctor at. Nullam risus ex, venenatis id massa sit amet, finibus vehicula orci. Sed consectetur, purus eu posuere pulvinar, magna turpis imperdiet risus, eget sodales felis risus non orci. Sed sodales venenatis arcu, eu dictum nulla varius in. Morbi nec accumsan orci. Vivamus facilisis orci sed felis auctor porttitor. Mauris semper vulputate congue.",
+      'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla molestie nisi erat, hendrerit molestie felis fermentum non. Sed nec euismod massa, non volutpat elit. Aliquam non accumsan quam. Pellentesque venenatis nec tellus rhoncus tempor. Donec imperdiet tortor dapibus vestibulum condimentum. Cras tristique magna eros, quis sollicitudin risus rutrum at. Sed laoreet semper ex. Nullam ligula felis, mattis in ante at, euismod luctus risus. Curabitur tristique rhoncus orci, sed faucibus velit auctor at. Nullam risus ex, venenatis id massa sit amet, finibus vehicula orci. Sed consectetur, purus eu posuere pulvinar, magna turpis imperdiet risus, eget sodales felis risus non orci. Sed sodales venenatis arcu, eu dictum nulla varius in. Morbi nec accumsan orci. Vivamus facilisis orci sed felis auctor porttitor. Mauris semper vulputate congue.',
     address: {
-      street: "Ulica",
-      city: "Beograd",
-      state: "Srbija",
+      street: 'Ulica',
+      city: 'Beograd',
+      state: 'Srbija',
       longitude: 20.48,
       latitude: 44.7866
     },
@@ -339,13 +339,13 @@ const MOCK_HOTELS = [
   },
   {
     id: 1523,
-    name: "hotel nbla",
+    name: 'hotel nbla',
     description:
-      " Pellentesque venenatis nec tellus rhoncus tempor. Donec imperdiet tortor dapibus vestibulum condimentum. Cras tristique magna eros, quis sollicitudin risus rutrum at. Sed laoreet semper ex. Nullam ligula felis, mattis in ante at, euismod luctus risus. Curabitur tristique rhoncus orci, sed faucibus velit auctor at. Nullam risus ex, venenatis id massa sit amet, finibus vehicula orci. Sed consectetur, purus eu posuere pulvinar,",
+      ' Pellentesque venenatis nec tellus rhoncus tempor. Donec imperdiet tortor dapibus vestibulum condimentum. Cras tristique magna eros, quis sollicitudin risus rutrum at. Sed laoreet semper ex. Nullam ligula felis, mattis in ante at, euismod luctus risus. Curabitur tristique rhoncus orci, sed faucibus velit auctor at. Nullam risus ex, venenatis id massa sit amet, finibus vehicula orci. Sed consectetur, purus eu posuere pulvinar,',
     address: {
-      street: "Ulica",
-      city: "Nis",
-      state: "Srbija",
+      street: 'Ulica',
+      city: 'Nis',
+      state: 'Srbija',
       longitude: 21.8958,
       latitude: 43.3209
     },
@@ -353,12 +353,12 @@ const MOCK_HOTELS = [
   },
   {
     id: 1512,
-    name: "hotel blaa",
-    description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. ",
+    name: 'hotel blaa',
+    description: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. ',
     address: {
-      street: "Ulica",
-      city: "Novi Sad",
-      state: "Srbija",
+      street: 'Ulica',
+      city: 'Novi Sad',
+      state: 'Srbija',
       longitude: 19.8335,
       latitude: 45.2671
     },
@@ -366,13 +366,13 @@ const MOCK_HOTELS = [
   },
   {
     id: 512,
-    name: "asdasd hotel",
+    name: 'asdasd hotel',
     description:
-      "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla molestie nisi erat, hendrerit molestie felis fermentum non. Sed nec euismod massa, non volutpat elit. Aliquam non accumsan quam. Pellentesque venenatis nec tellus rhoncus tempor. Donec imperdiet tortor dapibus vestibulum condimentum. Cras tristique magna eros, quis sollicitudin risus rutrum at. Sed laoreet semper ex. Nullam ligula felis, mattis in ante at, euismod luctus risus. Curabitur tristique rhoncus orci, sed faucibus velit auctor at. Nullam risus ex, venenatis id massa sit amet, finibus vehicula orci. Sed consectetur, purus eu posuere pulvinar, magna turpis imperdiet risus, eget sodales felis risus non orci. Sed sodales venenatis arcu, eu dictum nulla varius in. Morbi nec accumsan orci. Vivamus facilisis orci sed felis auctor porttitor. Mauris semper vulputate congue.",
+      'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla molestie nisi erat, hendrerit molestie felis fermentum non. Sed nec euismod massa, non volutpat elit. Aliquam non accumsan quam. Pellentesque venenatis nec tellus rhoncus tempor. Donec imperdiet tortor dapibus vestibulum condimentum. Cras tristique magna eros, quis sollicitudin risus rutrum at. Sed laoreet semper ex. Nullam ligula felis, mattis in ante at, euismod luctus risus. Curabitur tristique rhoncus orci, sed faucibus velit auctor at. Nullam risus ex, venenatis id massa sit amet, finibus vehicula orci. Sed consectetur, purus eu posuere pulvinar, magna turpis imperdiet risus, eget sodales felis risus non orci. Sed sodales venenatis arcu, eu dictum nulla varius in. Morbi nec accumsan orci. Vivamus facilisis orci sed felis auctor porttitor. Mauris semper vulputate congue.',
     address: {
-      street: "Ulica",
-      city: "Beograd",
-      state: "Srbija",
+      street: 'Ulica',
+      city: 'Beograd',
+      state: 'Srbija',
       longitude: 19.8335,
       latitude: 45.2671
     },

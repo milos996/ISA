@@ -1,33 +1,33 @@
-import React, { useEffect, useState } from "react";
-import { useSelector, useDispatch } from "react-redux";
-import { makeStyles } from "@material-ui/core/styles";
-import { Container } from "@material-ui/core";
-import Box from "@material-ui/core/Box";
-import Icon from "@material-ui/core/Icon";
-import Modal from "@material-ui/core/Modal";
-import { Grid } from "@material-ui/core";
-import TextField from "@material-ui/core/TextField";
-import Button from "@material-ui/core/Button";
-import ButtonGroup from "@material-ui/core/ButtonGroup";
+import React, { useEffect, useState } from 'react';
+import { useSelector, useDispatch } from 'react-redux';
+import { makeStyles } from '@material-ui/core/styles';
+import { Container } from '@material-ui/core';
+import Box from '@material-ui/core/Box';
+import Icon from '@material-ui/core/Icon';
+import Modal from '@material-ui/core/Modal';
+import { Grid } from '@material-ui/core';
+import TextField from '@material-ui/core/TextField';
+import Button from '@material-ui/core/Button';
+import ButtonGroup from '@material-ui/core/ButtonGroup';
 import {
   KeyboardDatePicker,
   MuiPickersUtilsProvider
-} from "@material-ui/pickers";
-import DateFnsUtils from "@date-io/date-fns";
-import dateFormat from "dateformat";
-import { selectRentACarVehicles } from "../../store/rent-a-car/selectors";
-import { userDataSelector } from "../../store/user/selectors";
-import RentACarVehicle from "./Vehicle";
+} from '@material-ui/pickers';
+import DateFnsUtils from '@date-io/date-fns';
+import dateFormat from 'dateformat';
+import { selectRentACarVehicles } from '../../store/rent-a-car/selectors';
+import { userDataSelector } from '../../store/user/selectors';
+import RentACarVehicle from './Vehicle';
 import {
   fetchRentACarVehicles,
   fetchRentACarVehiclesOnDiscount,
   searchVehicles,
   sortVehicles
-} from "../../store/rent-a-car/actions";
-import CreateVehicle from "./CreateVehicle";
-import Background from "../../assets/background.jpg";
+} from '../../store/rent-a-car/actions';
+import CreateVehicle from './CreateVehicle';
+import Background from '../../assets/background.jpg';
 
-export default function RentACarVehicles({ rentACarId, location }) {
+export default function RentACarVehicles({ rentACarId, airplaneTicket }) {
   const user = useSelector(userDataSelector);
   const vehicles = useSelector(selectRentACarVehicles);
   const classes = useStyles();
@@ -37,9 +37,9 @@ export default function RentACarVehicles({ rentACarId, location }) {
 
   const [pickUpDate, setPickUpDate] = useState();
   const [dropOffDate, setDropOffDate] = useState();
-  const [pickUpLocation, setPickUpLocation] = useState("");
-  const [dropOffLocation, setDropOffLocation] = useState("");
-  const [type, setType] = useState("");
+  const [pickUpLocation, setPickUpLocation] = useState('');
+  const [dropOffLocation, setDropOffLocation] = useState('');
+  const [type, setType] = useState('');
   const [seats, setSeats] = useState(0);
   const [price, setPrice] = useState({
     min: 0,
@@ -51,10 +51,10 @@ export default function RentACarVehicles({ rentACarId, location }) {
   }
 
   useEffect(() => {
-    if (location != undefined) {
-      setPickUpDate(location.state.pickUpDate);
-      setDropOffDate(location.state.dropOffDate);
-    }
+    // if (location != undefined) {
+    //   setPickUpDate(location.state.pickUpDate);
+    //   setDropOffDate(location.state.dropOffDate);
+    // }
 
     dispatch(
       fetchRentACarVehicles({
@@ -66,8 +66,8 @@ export default function RentACarVehicles({ rentACarId, location }) {
     dispatch(
       fetchRentACarVehiclesOnDiscount({
         rentACarId: rentACarId,
-        pickUpDate: dateFormat(new Date(), "yyyy-mm-dd"),
-        dropOffDate: dateFormat(new Date(), "yyyy-mm-dd")
+        pickUpDate: dateFormat(new Date(), 'yyyy-mm-dd'),
+        dropOffDate: dateFormat(new Date(), 'yyyy-mm-dd')
       })
     );
   }, []);
@@ -90,19 +90,19 @@ export default function RentACarVehicles({ rentACarId, location }) {
   }
 
   function handleSortByBrand() {
-    dispatch(sortVehicles({ by: "brand", rentACarId: rentACarId }));
+    dispatch(sortVehicles({ by: 'brand', rentACarId: rentACarId }));
   }
 
   function handleSortByModel() {
-    dispatch(sortVehicles({ by: "model", rentACarId: rentACarId }));
+    dispatch(sortVehicles({ by: 'model', rentACarId: rentACarId }));
   }
 
   function handleSortByYop() {
-    dispatch(sortVehicles({ by: "yearOfProduction", rentACarId: rentACarId }));
+    dispatch(sortVehicles({ by: 'yearOfProduction', rentACarId: rentACarId }));
   }
 
   function handleSortByRating() {
-    dispatch(sortVehicles({ by: "rating", rentACarId: rentACarId }));
+    dispatch(sortVehicles({ by: 'rating', rentACarId: rentACarId }));
   }
 
   return (
@@ -121,7 +121,7 @@ export default function RentACarVehicles({ rentACarId, location }) {
         <Grid item xl={2}>
           <h2>Vehicles</h2>
         </Grid>
-        {user.role === "RENT_A_CAR_ADMIN" ? (
+        {user.role === 'RENT_A_CAR_ADMIN' ? (
           <Grid mx={4} className={classes.addPosition}>
             <Icon onClick={() => setCreateModalVisibility(true)}>
               add_circle
@@ -157,9 +157,9 @@ export default function RentACarVehicles({ rentACarId, location }) {
               margin="normal"
               label="Pick up date"
               value={pickUpDate}
-              onChange={date => setPickUpDate(dateFormat(date, "yyyy-mm-dd"))}
+              onChange={date => setPickUpDate(dateFormat(date, 'yyyy-mm-dd'))}
               KeyboardButtonProps={{
-                "aria-label": "change date"
+                'aria-label': 'change date'
               }}
             />
           </MuiPickersUtilsProvider>
@@ -203,9 +203,9 @@ export default function RentACarVehicles({ rentACarId, location }) {
               margin="normal"
               label="Drop off date"
               value={dropOffDate}
-              onChange={date => setDropOffDate(dateFormat(date, "yyyy-mm-dd"))}
+              onChange={date => setDropOffDate(dateFormat(date, 'yyyy-mm-dd'))}
               KeyboardButtonProps={{
-                "aria-label": "change date"
+                'aria-label': 'change date'
               }}
             />
           </MuiPickersUtilsProvider>
@@ -258,7 +258,11 @@ export default function RentACarVehicles({ rentACarId, location }) {
       </ButtonGroup>
       <Box display="flex" p={1} className={classes.bckg}>
         {Object.keys(vehicles).map(vehicleId => (
-          <RentACarVehicle key={vehicleId} vehicle={vehicles[vehicleId]} />
+          <RentACarVehicle
+            key={vehicleId}
+            vehicle={vehicles[vehicleId]}
+            airplaneTicket={airplaneTicket}
+          />
         ))}
       </Box>
     </Container>
@@ -278,24 +282,24 @@ function getModalStyle() {
 
 const useStyles = makeStyles(theme => ({
   paper: {
-    position: "absolute",
+    position: 'absolute',
     width: 400,
     backgroundColor: theme.palette.background.paper,
-    border: "2px solid #000",
+    border: '2px solid #000',
     boxShadow: theme.shadows[5],
     padding: theme.spacing(2, 4, 3)
   },
   bckg: {
     backgroundImage: `url(${Background})`,
-    textAlign: "center"
+    textAlign: 'center'
   },
   root: {
-    position: "absolute",
-    left: "20%",
-    top: "5%",
-    width: "60%",
-    display: "flex",
-    flexDirection: "column"
+    position: 'absolute',
+    left: '20%',
+    top: '5%',
+    width: '60%',
+    display: 'flex',
+    flexDirection: 'column'
   },
   textField: {
     marginLeft: theme.spacing(1),
@@ -307,17 +311,17 @@ const useStyles = makeStyles(theme => ({
   },
   button: {
     margin: theme.spacing(1),
-    width: "30%",
-    marginLeft: "auto",
-    background: "#008080",
-    color: "#FFFFFF"
+    width: '30%',
+    marginLeft: 'auto',
+    background: '#008080',
+    color: '#FFFFFF'
   },
   buttonGroup: {
-    background: "#008080",
-    color: "#FFFFFF"
+    background: '#008080',
+    color: '#FFFFFF'
   },
   buttonGroupPosition: {
-    background: "#008080",
+    background: '#008080',
     marginTop: 25,
     marginBottom: 25
   },
@@ -329,13 +333,13 @@ const useStyles = makeStyles(theme => ({
     marginTop: theme.spacing(2)
   },
   listScroll: {
-    maxHeight: "370px",
-    overflow: "scroll"
+    maxHeight: '370px',
+    overflow: 'scroll'
   },
   addPosition: {
     marginTop: 25
   },
   largeIcon: {
-    fontSize: "3em"
+    fontSize: '3em'
   }
 }));

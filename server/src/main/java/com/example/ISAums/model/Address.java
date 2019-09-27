@@ -11,16 +11,27 @@ import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
+import java.util.UUID;
+
 import static com.example.ISAums.util.ValidationConstraints.*;
 
 @Data
-@Builder
 @Entity
 @NoArgsConstructor
 @AllArgsConstructor
 @Table(name = "address")
 @Where(clause = "is_deleted='false'")
 public class Address extends BaseEntity {
+
+    @Builder
+    public Address(UUID id, @NotBlank @Size(max = CITY_SIZE) String city, @NotBlank @Size(max = STATE_SIZE) String state, @NotBlank @Size(max = STREET_SIZE) String street, @NotNull @Range(min = 0, max = 180) Double longitude, @NotNull @Range(min = 0, max = 90) Double latitude) {
+        super(id);
+        this.city = city;
+        this.state = state;
+        this.street = street;
+        this.longitude = longitude;
+        this.latitude = latitude;
+    }
 
     @Column(name = "city")
     @NotBlank

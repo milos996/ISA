@@ -19,6 +19,7 @@ import com.example.ISAums.repository.UserRepository;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.validation.Valid;
@@ -47,18 +48,18 @@ public class RoomService {
         this.userRepository = userRepository1;
     }
 
-    @Transactional(readOnly = true)
+    @Transactional(readOnly = true, isolation = Isolation.READ_COMMITTED)
     public List<Room> get(UUID hotelId, LocalDate startDate, Integer nights, Integer people, Double fromPrice, Double toPrice) {
         LocalDate endDate = startDate != null ? startDate.plusDays(nights) : null;
         return this.roomRepository.getRooms(hotelId, startDate, endDate, people, fromPrice, toPrice);
     }
 
-    @Transactional(readOnly = true)
+    @Transactional(readOnly = true, isolation = Isolation.READ_COMMITTED)
     public List<Room> getRooms() {
         return roomRepository.findAll();
     }
 
-    @Transactional(rollbackFor = Exception.class)
+    @Transactional(rollbackFor = Exception.class, isolation = Isolation.SERIALIZABLE)
     public Room createRoom(CreateRoomRequest request, UUID userId) {
         if (roomRepository.existsByFloorAndNumberAndHotelId(request.getFloor(), request.getNumber(), request.getHotelId())) {
             throw new CustomException("Room at this floor " + request.getFloor() + " and with this room number " + request.getNumber() + " already exist!");
@@ -83,7 +84,7 @@ public class RoomService {
         return room;
     }
 
-    @Transactional(rollbackFor = Exception.class)
+    @Transactional(rollbackFor = Exception.class, isolation = Isolation.SERIALIZABLE)
     public Room updateRoom(@Valid UUID roomId, UpdateRoomRequest request) {
         Optional<Room> optionalRoom = roomRepository.findById(roomId);
 
@@ -100,7 +101,7 @@ public class RoomService {
         return room;
     }
 
-    @Transactional(rollbackFor = Exception.class)
+    @Transactional(rollbackFor = Exception.class, isolation = Isolation.SERIALIZABLE)
     public Boolean deleteRoom(UUID roomId) {
         Optional<Room> room = roomRepository.findById(roomId);
         if (!room.isPresent()) {
@@ -113,7 +114,7 @@ public class RoomService {
         return true;
     }
 
-    @Transactional(rollbackFor = Exception.class)
+    @Transactional(rollbackFor = Exception.class, isolation = Isolation.READ_UNCOMMITTED)
     public void rate(CreateRatingRequest request) {
         HotelReservation hotelReservation = hotelReservationRepository.findById(request.getReservationId()).orElse(null);
 

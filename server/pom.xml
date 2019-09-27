@@ -185,7 +185,7 @@
 				<filtering>false</filtering>
 			</resource>
 			<resource>
-				<directory>src/main/config/${user.name}</directory>
+				<directory>src/main/config/milos</directory>
 
 				<filtering>false</filtering>
 			</resource>

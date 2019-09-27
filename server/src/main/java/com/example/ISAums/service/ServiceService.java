@@ -7,6 +7,7 @@ import com.example.ISAums.exception.EntityAlreadyExistsException;
 import com.example.ISAums.exception.EntityWithIdDoesNotExist;
 import com.example.ISAums.repository.ServiceRepository;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
@@ -21,7 +22,7 @@ public class ServiceService {
         this.serviceRepository = serviceRepository;
     }
 
-    @Transactional(rollbackFor = Exception.class)
+    @Transactional(rollbackFor = Exception.class, isolation = Isolation.READ_COMMITTED)
     public com.example.ISAums.model.Service createService(CreateServiceRequest request) {
         if (serviceRepository.existsByName(request.getName())) {
             throw new EntityAlreadyExistsException(request.getName());
@@ -35,7 +36,7 @@ public class ServiceService {
     }
 
 
-    @Transactional(rollbackFor = Exception.class)
+    @Transactional(rollbackFor = Exception.class, isolation = Isolation.REPEATABLE_READ)
     public com.example.ISAums.model.Service updateService(UpdateServiceRequest request) {
         Optional<com.example.ISAums.model.Service> service = serviceRepository.findById(request.getId());
 
@@ -52,7 +53,7 @@ public class ServiceService {
     }
 
 
-    @Transactional(rollbackFor = Exception.class)
+    @Transactional(rollbackFor = Exception.class, isolation = Isolation.SERIALIZABLE)
     public Boolean deleteService(UUID serviceId) {
         Optional<com.example.ISAums.model.Service> service = serviceRepository.findById(serviceId);
 
@@ -66,12 +67,12 @@ public class ServiceService {
     }
 
 
-    @Transactional(readOnly = true)
+    @Transactional(readOnly = true, isolation = Isolation.READ_COMMITTED)
     public List<com.example.ISAums.model.Service> getServices() {
         return serviceRepository.findAll();
     }
 
-    @Transactional(readOnly = true)
+    @Transactional(readOnly = true, isolation = Isolation.READ_COMMITTED)
     public List<com.example.ISAums.model.Service> getAllServicesThatHotelDontHave(UUID hotelId) {
         return this.serviceRepository.findAllWhereHotelServiceDontHave(hotelId);
     }

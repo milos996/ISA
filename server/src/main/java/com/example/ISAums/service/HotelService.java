@@ -14,6 +14,7 @@ import com.example.ISAums.util.UtilService;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.validation.Valid;
@@ -38,12 +39,12 @@ public class HotelService {
         this.ratingRepository = ratingRepository;
     }
 
-    @Transactional(readOnly = true)
+    @Transactional(readOnly = true, isolation = Isolation.READ_COMMITTED)
     public List<Hotel> get(LocalDate startDate, LocalDate endDate, String name, String city, String state) {
         return hotelRepository.findAllByFilters(startDate, endDate, name, city, state);
     }
 
-    @Transactional(rollbackFor = Exception.class)
+    @Transactional(rollbackFor = Exception.class , isolation = Isolation.REPEATABLE_READ)
     public Hotel createHotel(CreateHotelRequest request) {
         if (hotelRepository.existsByName(request.getName())) {
             throw new EntityAlreadyExistsException(request.getName());
@@ -64,7 +65,7 @@ public class HotelService {
     }
 
 
-    @Transactional(rollbackFor = Exception.class)
+    @Transactional(rollbackFor = Exception.class,  isolation = Isolation.REPEATABLE_READ)
     public Hotel updateHotel(@Valid UUID id, UpdateHotelRequest request) {
         if (!hotelRepository.existsById(id)) {
             throw new EntityWithIdDoesNotExist("Hotel", id);
@@ -96,14 +97,8 @@ public class HotelService {
         return hotel;
     }
 
-    @Transactional(readOnly = true)
-    public List<HotelReservation> getHotelReservationsBasedOnReportType(UUID hotelId, ReportType reportType) {
-        Map<String, Date> dateFilter = UtilService.getStartEndDateFromReportType(reportType);
-        return null;
-    }
-
     // TODO: When authentication is finished, use signed-in user to get to his hotel id
-    @Transactional(readOnly = true)
+    @Transactional(readOnly = true,  isolation = Isolation.REPEATABLE_READ)
     public Double getHotelIncomeForDate(Date startDate, Date endDate) {
 
         // TODO: Delete this line when u get user from token
@@ -117,7 +112,7 @@ public class HotelService {
                 .reduce(0, (subtotal, price) -> subtotal + price);
     }
 
-    @Transactional(rollbackFor = Exception.class)
+    @Transactional(rollbackFor = Exception.class,  isolation = Isolation.SERIALIZABLE)
     public void deleteHotel(UUID hotelId) {
         Optional<Hotel> hotel = hotelRepository.findById(hotelId);
 
@@ -128,6 +123,7 @@ public class HotelService {
         hotelRepository.delete(hotel.get());
     }
 
+    @Transactional(rollbackFor = Exception.class,  isolation = Isolation.SERIALIZABLE)
     public Hotel getHotel(UUID hotelId) {
         Optional<Hotel> hotel = hotelRepository.findById(hotelId);
 
@@ -138,7 +134,7 @@ public class HotelService {
         return hotel.get();
     }
 
-    @Transactional(rollbackFor = Exception.class)
+    @Transactional(readOnly = true, isolation = Isolation.READ_COMMITTED)
     public void rate(CreateRatingRequest request) {
         HotelReservation hotelReservation = hotelReservationRepository.findById(request.getReservationId()).orElse(null);
 

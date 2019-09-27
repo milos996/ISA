@@ -27,7 +27,7 @@ import {
   RATE_HOTEL,
   RATE_ROOM,
   SORT_HOTELS
-} from "./constants";
+} from './constants';
 
 export const putHotelDetails = payload => ({
   type: PUT_HOTEL_DETAILS,

@@ -1,32 +1,29 @@
-import React, { useState, useEffect } from "react";
-import { Link } from "react-router-dom";
-import { useSelector, useDispatch } from "react-redux";
-import Modal from "@material-ui/core/Modal";
-import { makeStyles, withStyles } from "@material-ui/core/styles";
-import AppBar from "@material-ui/core/AppBar";
-import Toolbar from "@material-ui/core/Toolbar";
-import Typography from "@material-ui/core/Typography";
-import Button from "@material-ui/core/Button";
-import teal from "@material-ui/core/colors/teal";
-import {
-  userTokenSelector,
-  userDataSelector,
-  userLoggedSelector
-} from "../store/user/selectors";
-import { logoutUser } from "../store/user/actions";
-import { history } from "../index";
-import GroupIcon from "@material-ui/icons/Group";
-import ContactMailIcon from "@material-ui/icons/ContactMail";
-import AccountBoxIcon from "@material-ui/icons/AccountBox";
-import AirlineIcon from "@material-ui/icons/AirplanemodeActive";
-import PersonAddSharpIcon from "@material-ui/icons/PersonAddSharp";
-import ExitToAppIcon from "@material-ui/icons/ExitToApp";
-import InputRoundedIcon from "@material-ui/icons/InputRounded";
-import RegistrationPage from "../pages/Registration";
-import LoginPage from "../pages/Login";
-import Tooltip from "@material-ui/core/Tooltip";
-import { selectAirlineAdmin } from "../store/airline/selectors";
-import { fetchAirlineAdmin } from "../store/airline/actions";
+import React, { useState, useEffect } from 'react';
+import { Link } from 'react-router-dom';
+import { useSelector, useDispatch } from 'react-redux';
+import Modal from '@material-ui/core/Modal';
+import { makeStyles, withStyles } from '@material-ui/core/styles';
+import AppBar from '@material-ui/core/AppBar';
+import Toolbar from '@material-ui/core/Toolbar';
+import Typography from '@material-ui/core/Typography';
+import Button from '@material-ui/core/Button';
+import teal from '@material-ui/core/colors/teal';
+import { userTokenSelector, userDataSelector } from '../store/user/selectors';
+import { logoutUser } from '../store/user/actions';
+import { history } from '../index';
+import GroupIcon from '@material-ui/icons/Group';
+import ContactMailIcon from '@material-ui/icons/ContactMail';
+import HomeIcon from '@material-ui/icons/Home';
+import AccountBoxIcon from '@material-ui/icons/AccountBox';
+import AirlineIcon from '@material-ui/icons/AirplanemodeActive';
+import PersonAddSharpIcon from '@material-ui/icons/PersonAddSharp';
+import ExitToAppIcon from '@material-ui/icons/ExitToApp';
+import InputRoundedIcon from '@material-ui/icons/InputRounded';
+import RegistrationPage from '../pages/Registration';
+import LoginPage from '../pages/Login';
+import Tooltip from '@material-ui/core/Tooltip';
+import { selectAirlineAdmin } from '../store/airline/selectors';
+import { fetchAirlineAdmin } from '../store/airline/actions';
 
 const primary = teal[400];
 
@@ -36,20 +33,27 @@ export default function Navbar() {
   const userToken = useSelector(userTokenSelector);
   const dispatch = useDispatch();
   const user = useSelector(userDataSelector);
-
+  const airlineAdmin = useSelector(selectAirlineAdmin);
   const [
     registrationModalVisibility,
     setRegistrationModalVisibility
   ] = useState(false);
 
+  var role = 'USER';
+  if (user != null) {
+    role = user.role;
+  }
   const [loginModalVisibility, setLoginModalVisibility] = useState(false);
 
-  const airlineAdmin = useSelector(selectAirlineAdmin);
+  useEffect(() => {
+    dispatch(fetchAirlineAdmin());
+  }, []);
+
   const handleLogout = () => {
     dispatch(
       logoutUser({
         callback: () => {
-          history.push("/");
+          history.push('/');
         }
       })
     );
@@ -88,7 +92,7 @@ export default function Navbar() {
         <Toolbar>
           <Typography variant="h6" className={classes.title}>
             <Link className="button" to="">
-              <img src={require("../assets/umslogo.png")} height="48"></img>
+              <img src={require('../assets/umslogo.png')} height="48"></img>
             </Link>
           </Typography>
           {userToken != null ? (
@@ -116,6 +120,16 @@ export default function Navbar() {
                 </Link>
               </LightTooltip>
 
+              {user.role === 'HOTEL_ADMIN' && (
+                <LightTooltip title="My Hotel">
+                  <Link className="button" to={`/user/hotel/${user.hotelId}`}>
+                    <Button color="inherit">
+                      <HomeIcon></HomeIcon>
+                    </Button>
+                  </Link>
+                </LightTooltip>
+              )}
+
               <LightTooltip title="Logout">
                 <Button color="inherit" onClick={handleLogout}>
                   <ExitToAppIcon></ExitToAppIcon>
@@ -138,7 +152,9 @@ export default function Navbar() {
               </Button>
             </div>
           )}
-          {userToken != null && user.role === "AIRLINE_ADMIN" && (
+          {userToken != null &&
+          role === 'AIRLINE_ADMIN' &&
+          airlineAdmin != '' ? (
             <LightTooltip title="Airline profile">
               <Link
                 className="button"
@@ -149,7 +165,7 @@ export default function Navbar() {
                 </Button>
               </Link>
             </LightTooltip>
-          )}
+          ) : null}
         </Toolbar>
       </AppBar>
     </div>
@@ -170,27 +186,27 @@ const useStyles = makeStyles(theme => ({
     background: primary
   },
   paper: {
-    position: "absolute",
-    width: "40%",
-    height: "90%",
+    position: 'absolute',
+    width: '40%',
+    height: '90%',
     backgroundColor: theme.palette.background.paper,
-    border: "2px solid #5bc0de",
+    border: '2px solid #5bc0de',
     boxShadow: theme.shadows[5],
     padding: theme.spacing(2, 4, 3)
   },
   loginPaper: {
-    position: "absolute",
-    width: "40%",
-    height: "70%",
+    position: 'absolute',
+    width: '40%',
+    height: '70%',
     backgroundColor: theme.palette.background.paper,
-    border: "2px solid #5bc0de",
+    border: '2px solid #5bc0de',
     boxShadow: theme.shadows[5],
     padding: theme.spacing(2, 4, 3)
   },
   modal: {
-    display: "flex",
-    alignItems: "center",
-    justifyContent: "center"
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center'
   }
 }));
 
@@ -207,7 +223,7 @@ function getModalStyle() {
 const LightTooltip = withStyles(theme => ({
   tooltip: {
     backgroundColor: theme.palette.common.white,
-    color: "rgba(0, 0, 0, 0.87)",
+    color: 'rgba(0, 0, 0, 0.87)',
     boxShadow: theme.shadows[1],
     fontSize: 11
   }

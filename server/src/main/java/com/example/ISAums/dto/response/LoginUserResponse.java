@@ -30,4 +30,6 @@ public class LoginUserResponse {
     private String state;
 
     private String city;
+
+    private String hotelId;
 }

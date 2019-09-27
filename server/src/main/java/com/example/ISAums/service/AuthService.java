@@ -108,6 +108,7 @@ public class AuthService {
                 if (authentication.isAuthenticated()) {
                     SecurityContextHolder.getContext().setAuthentication(authentication);
                     String token = jwtTokenUtil.generateAuthToken(user);
+                    String hotelId = String.valueOf(user.getHotelAdmin().getHotel().getId());
 
                     if (user.getAuthorities().toArray()[0].toString().equals("RENT_A_CAR_ADMIN")){
                         RentACarAdmin rentACarAdmin = rentACarAdminRepository.findByUser_Id(user.getId());
@@ -136,6 +137,7 @@ public class AuthService {
                             .state(user.getState())
                             .phoneNumber(user.getPhoneNumber())
                             .role(user.getAuthorities().toArray()[0].toString())
+                            .hotelId(hotelId)
                             .build();
                     }
                 }

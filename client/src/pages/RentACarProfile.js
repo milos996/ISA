@@ -1,14 +1,14 @@
-import React from "react";
-import RentACarVehicles from "../components/rent-a-car/Vehicles";
-import RentACarInformation from "../components/rent-a-car/Information";
-import RentACarDiscountedVehicles from "../components/rent-a-car/DiscountedVehicles";
-import Container from "@material-ui/core/Container";
-import RentACarOffices from "../components/rent-a-car/Offices";
-import { makeStyles } from "@material-ui/core/styles";
-import Background from "../assets/background.jpg";
-import Divider from "@material-ui/core/Divider";
+import React from 'react';
+import RentACarVehicles from '../components/rent-a-car/Vehicles';
+import RentACarInformation from '../components/rent-a-car/Information';
+import RentACarDiscountedVehicles from '../components/rent-a-car/DiscountedVehicles';
+import Container from '@material-ui/core/Container';
+import RentACarOffices from '../components/rent-a-car/Offices';
+import { makeStyles } from '@material-ui/core/styles';
+import Background from '../assets/background.jpg';
+import Divider from '@material-ui/core/Divider';
 
-export default function RentACarProfilePage({ match }) {
+export default function RentACarProfilePage({ match, location }) {
   const classes = useStyles();
 
   return (
@@ -21,7 +21,10 @@ export default function RentACarProfilePage({ match }) {
 
         <RentACarInformation rentACarId={match.params.id} />
         <RentACarOffices rentACarId={match.params.id} />
-        <RentACarVehicles rentACarId={match.params.id} />
+        <RentACarVehicles
+          rentACarId={match.params.id}
+          airplaneTicket={location.state.airplaneTicketId}
+        />
       </Container>
     </div>
   );
