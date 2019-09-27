@@ -6,6 +6,7 @@ import {
   PUT_RENT_A_CAR_OFFICES,
   PUT_RENT_A_CAR_LOCATION_INFORMATION,
   PUT_VEHICLES,
+  PUT_OFFICES,
   PUT_VEHICLE_SEARCH_INFORMATION,
   PUT_VEHICLE_DETAILS,
   PUT_RENT_A_CAR_INCOME,
@@ -53,6 +54,7 @@ const initialState = {
       brand: "Mercedes"
     }
   ],
+  offices: [],
   rentACarVehicles: [],
   rentACarVehiclesOnDiscount: [],
   rentACarOffices: [],
@@ -97,6 +99,7 @@ const actionHandler = {
   [PUT_AVAILABLE_RENT_A_CAR_VEHICLES]:
     computationFunctions.putAvailableRentACarVehicles,
   [PUT_VEHICLES]: computationFunctions.putVehicles,
+  [PUT_OFFICES]: computationFunctions.putOffices,
   [PUT_VEHICLE_DETAILS]: computationFunctions.putVehicleDetails,
   [PUT_VEHICLE_SEARCH_INFORMATION]:
     computationFunctions.putVehicleSearchInformation

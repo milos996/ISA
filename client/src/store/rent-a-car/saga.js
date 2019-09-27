@@ -9,6 +9,7 @@ import {
   FETCH_RENT_A_CAR_OFFICES,
   CREATE_OFFICE,
   DELETE_OFFICE,
+  FETCH_OFFICES,
   SEARCH_RENT_A_CARS,
   SORT_RENT_A_CARS,
   FETCH_VEHICLES,
@@ -36,6 +37,7 @@ import {
   putRentACarOffices,
   putRentACarLocationInformation,
   putVehicles,
+  putOffices,
   putSearchInformation,
   putRentACarIncome,
   putRentACarBusyness,
@@ -173,6 +175,12 @@ export function* fetchRentACarOffices() {
     payload.rentACarId
   );
   yield put(putRentACarOffices(data));
+}
+
+export function* fetchOffices() {
+  const { payload } = yield take(FETCH_OFFICES);
+  const { data } = yield call(rentACarService.fetchOffices);
+  yield put(putOffices(data));
 }
 
 export function* createRentACarOffice() {

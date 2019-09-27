@@ -33,7 +33,7 @@ public interface VehicleReservationRepository extends JpaRepository<VehicleReser
                   "GROUP BY v.id ", nativeQuery = true)
     List<GetRentACarVehicleBusynessResponse> getBusyness(String rentACarId, String startDate, String endDate);
 
-    @Query(value= "SELECT * FROM vehice_reservation as vr " +
+    @Query(value= "SELECT * FROM vehicle_reservation as vr " +
                   "WHERE vr.vehicle_id = :vid " +
                   "AND vr.end_date >= :endDate" ,nativeQuery = true)
     List<Vehicle> isReserved(String vid, String endDate);

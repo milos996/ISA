@@ -36,11 +36,14 @@ import {
   fetchRentACarDetails,
   fetchRentACarOffices,
   fetchVehicles,
-  fetchRentACarLocationInformation
+  fetchRentACarLocationInformation,
+  fetchOffices
 } from "../store/rent-a-car/actions";
 import {
   selectRentACars,
-  selectRentACarDetails
+  selectRentACarDetails,
+  selectRentACarOffices,
+  selectOffices
 } from "../store/rent-a-car/selectors";
 import { userDataSelector } from "../store/user/selectors";
 
@@ -48,7 +51,10 @@ export default function RentACarPage({ history, location }) {
   const user = useSelector(userDataSelector);
   const dispatch = useDispatch();
   const classes = useStyles();
+  const selected = useSelector(selectRentACarDetails);
   const rentACars = useSelector(selectRentACars);
+  const offices = useSelector(selectOffices);
+
   const [modalStyle] = React.useState(getModalStyle);
   const [createModalVisibility, setCreateModalVisibility] = useState(false);
   const [updateModalVisibility, setUpdateModalVisibility] = useState(false);
@@ -63,7 +69,6 @@ export default function RentACarPage({ history, location }) {
     showAvailabilityModalVisibility,
     setShowAvailabilityModalVisibility
   ] = useState(false);
-  const selected = useSelector(selectRentACarDetails);
 
   const [name, setName] = useState(null);
   const [city, setCity] = useState(null);
@@ -142,7 +147,7 @@ export default function RentACarPage({ history, location }) {
   }, []);
 
   useEffect(() => {
-    dispatch(fetchVehicles());
+    dispatch(fetchOffices());
   }, []);
 
   return (
@@ -326,6 +331,14 @@ export default function RentACarPage({ history, location }) {
                   fullSymbol={<StarIcon></StarIcon>}
                 ></Rating>
               </Typography>
+              {offices.map((office, index) => (
+                <Container className={classes.offices}>
+                  {office.name === rac.name ? (
+                    <Typography>{office.location}</Typography>
+                  ) : null}
+                </Container>
+              ))}
+
               <br />
             </CardContent>
             {user.role === "RENT_A_CAR_ADMIN" ? (
@@ -416,15 +429,14 @@ const useStyles = makeStyles(theme => ({
     backgroundSize: "contain"
   },
   content: {
-    marginTop: "7%"
+    marginTop: "7%",
+    textAlign: "center"
   },
   description: {
     marginLeft: 20,
     marginBottom: 10
   },
-  rating: {
-    marginLeft: 20
-  },
+  rating: {},
   vertical: {
     display: "flex",
     flexDirection: "column",
@@ -455,5 +467,10 @@ const useStyles = makeStyles(theme => ({
   buttonGroupBckg: {
     background: "#FFFFFF",
     color: "#FFFFFF"
+  },
+  offices: {
+    display: "flex",
+    flexDirection: "column",
+    textAlign: "center"
   }
 }));

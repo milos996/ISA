@@ -80,7 +80,7 @@ public class VehicleConverter {
     }
 
     public static List<SearchVehicleResponse> toSearchVehicleResponseFromVehicles(List<Vehicle> vehicles, String pickUpDate, String dropOffDate) throws ParseException {
-        int days = getNumberOfDays(pickUpDate, dropOffDate);
+        int days = getNumberOfDays(dropOffDate, pickUpDate);
 
         return vehicles.stream()
                 .map(vehicle -> toSearchVehicleResponseFromVehicle(vehicle, days))
@@ -131,8 +131,8 @@ public class VehicleConverter {
 
 
         private static int getNumberOfDays(String pickUpDate, String dropOffDate) throws ParseException {
-        Date pickUp =new SimpleDateFormat("yyyy-mm-dd").parse(pickUpDate);
-        Date dropOff =new SimpleDateFormat("yyyy-mm-dd").parse(dropOffDate);
+        Date pickUp =new SimpleDateFormat("yyyy-MM-dd").parse(pickUpDate);
+        Date dropOff =new SimpleDateFormat("yyyy-MM-dd").parse(dropOffDate);
         long diff = dropOff.getTime() - pickUp.getTime();
         float ndays = (diff / (1000*60*60*24));
         int days = (int) ndays + 1;

@@ -59,12 +59,13 @@ public class RentACarController {
 
     //TODO get from airplane ticket destination and retrieve rent a car vehicle that exist on that location (same for confirm vehicle reservation)
     @GetMapping("/{id}/vehicles/discount")
-    public ResponseEntity<List<GetQuickVehicleResponse>> quick(
+    public ResponseEntity<List<GetDiscountedVehicleResponse>> quick(
             @PathVariable(name = "id", required = true) String rentACarId,
             @RequestParam(name = "pickUpDate", required = true) String pickUpDate,
             @RequestParam(name = "dropOffDate", required = true) String dropOffDate
     ) throws ParseException {
-        return ResponseEntity.ok(toGetQuickVehicleResponseFromVehicles(vehicleService.getQuick(pickUpDate, dropOffDate, rentACarId), pickUpDate, dropOffDate));
+        return ResponseEntity.ok(vehicleService.test(rentACarId, pickUpDate,dropOffDate));
+        //return ResponseEntity.ok(toGetQuickVehicleResponseFromVehicles(vehicleService.getQuick(pickUpDate, dropOffDate, rentACarId), pickUpDate, dropOffDate));
     }
 
     @GetMapping("/{id}/vehicles/availability")

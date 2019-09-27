@@ -28,9 +28,9 @@ public interface RentACarRepository extends JpaRepository<RentACar, UUID> {
                    "(SELECT vr.vehicle_id FROM vehicle_reservation AS vr " +
                    "WHERE ((:pickUpDate is null AND :dropOffDate is null) OR vr.start_date <= :dropOffDate AND vr.end_date >= :pickUpDate) " +
                    "OR ((:pickUpDate is null AND :dropOffDate is null) OR vr.start_date >= :dropOffDate AND vr.end_date <= :pickUpDate )) " +
-                   "AND (:name is null OR rac.name LIKE %:name%) " +
-                   "AND (:city is null OR al.city LIKE %:city%) " +
-                   "AND (:state is null OR al.state LIKE %:state%) " +
+                   "AND (:name is null OR rac.name LIKE :name) " +
+                   "AND (:city is null OR al.city LIKE :city) " +
+                   "AND (:state is null OR al.state LIKE :state) " +
                    "GROUP BY rac.id", nativeQuery = true)
     List<RentACar> search(String city, String state, String name, String pickUpDate, String dropOffDate);
 

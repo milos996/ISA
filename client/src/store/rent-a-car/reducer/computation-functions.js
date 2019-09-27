@@ -87,3 +87,10 @@ export function putVehicles(state, vehicles) {
     vehicles
   };
 }
+
+export function putOffices(state, offices) {
+  return {
+    ...state,
+    offices
+  };
+}

@@ -47,6 +47,4 @@ public class Discount  extends  BaseEntity {
     @Range(min = 0)
     private Double rate;
 
-
-
 }

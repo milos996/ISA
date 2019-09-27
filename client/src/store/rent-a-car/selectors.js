@@ -45,3 +45,8 @@ export const selectRentACarOffices = state => {
 export const selectVehicles = state => {
   return state[reducer].vehicles;
 };
+
+export const selectOffices = state => {
+  console.log(state);
+  return state[reducer].offices;
+};

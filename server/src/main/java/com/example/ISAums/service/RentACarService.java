@@ -19,6 +19,7 @@ import org.springframework.security.authentication.AnonymousAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.text.ParseException;
@@ -42,17 +43,17 @@ public class RentACarService {
     private final RatingRepository ratingRepository;
     private final VehicleReservationRepository vehicleReservationRepository;
 
-    @Transactional(readOnly = true)
+    @Transactional(readOnly = true, isolation = Isolation.REPEATABLE_READ)
     public List<RentACar> findAll() {
         return this.rentACarRepository.findAll();
     }
 
-    @Transactional(readOnly = true)
+    @Transactional(readOnly = true, isolation = Isolation.REPEATABLE_READ)
     public RentACar findById(UUID id) {
         return rentACarRepository.findById(id).orElse(null);
     }
 
-    @Transactional(rollbackFor = Exception.class)
+    @Transactional(rollbackFor = Exception.class, isolation = Isolation.SERIALIZABLE)
     public List<RentACar> create(CreateRentACarRequest request) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         RentACarAdmin rentACarAdmin = rentACarAdminRepository.findByUser_Id(UUID.fromString(authentication.getName()));
@@ -75,7 +76,7 @@ public class RentACarService {
         return rentACarRepository.findAll();
     }
 
-    @Transactional(rollbackFor = Exception.class)
+    @Transactional(rollbackFor = Exception.class, isolation = Isolation.SERIALIZABLE)
     public List<RentACar> update(UpdateRentACarRequest request) {
         Optional<RentACar> rentACar = rentACarRepository.findById(request.getId());
 
@@ -100,7 +101,7 @@ public class RentACarService {
         return rentACarRepository.findAll();
     }
 
-    @Transactional(rollbackFor = Exception.class)
+    @Transactional(rollbackFor = Exception.class, isolation = Isolation.SERIALIZABLE)
     public List<RentACar> delete(UUID rentACarId) {
         Optional<RentACar> rentACar = rentACarRepository.findById(rentACarId);
 
@@ -112,7 +113,7 @@ public class RentACarService {
         return rentACarRepository.findAll();
     }
 
-    @Transactional(readOnly = true)
+    @Transactional(readOnly = true, isolation = Isolation.SERIALIZABLE)
     public List<RentACar> search(String city, String state, String name, String pickUpDate, String dropOffDate) {
         if (pickUpDate.compareTo(dropOffDate) > 0)
             throw new CustomException("Pick up date must be before drop off date!");
@@ -128,20 +129,22 @@ public class RentACarService {
         if (dropOffDate.equals("null") || dropOffDate.isEmpty())
             dropOffDate = null;
 
+        logger.info("NAME : " + name);
         return rentACarRepository.search(city, state, name, pickUpDate, dropOffDate);
     }
 
-    @Transactional(readOnly = true)
+    @Transactional(readOnly = true, isolation = Isolation.REPEATABLE_READ)
     public List<GetRentACarVehicleIncomeResponse> getIncome(String id, String startDate, String endDate) throws ParseException {
-        calculateNumberOfDays(startDate, endDate);
+        if (startDate.compareTo(endDate) > 0)
+            throw new CustomException("Start date must be before end date!");
 
         return vehicleReservationRepository.getIncome(id, startDate, endDate);
     }
 
-
     @Transactional(readOnly = true)
     public List<GetRentACarVehicleBusynessResponse> getBusyness(String id, String startDate, String endDate) throws ParseException {
-        calculateNumberOfDays(startDate, endDate);
+        if (startDate.compareTo(endDate) > 0)
+            throw new CustomException("Start date must be before end date!");
 
         return vehicleReservationRepository.getBusyness(id, startDate, endDate);
     }
@@ -178,8 +181,10 @@ public class RentACarService {
         return vehicleRepository.findRentACarVehicles(rentACar.getId().toString(), currentDate);
     }
 
-    @Transactional(readOnly = true)
+    @Transactional(readOnly = true, isolation = Isolation.REPEATABLE_READ)
     public List<Vehicle> getAvailability(String rentACarId, String startDate, String endDate, boolean available) {
+        if (startDate.compareTo(endDate) > 0)
+            throw new CustomException("Start date must be before end date!");
 
         if (available == true)
             return vehicleRepository.findAllAvailable(rentACarId, startDate, endDate);

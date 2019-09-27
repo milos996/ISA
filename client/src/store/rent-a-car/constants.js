@@ -33,6 +33,8 @@ export const FETCH_RENT_A_CAR_OFFICES = "fetch_rent_a_car_offices";
 export const PUT_RENT_A_CAR_OFFICES = "put_rent_a_car_offices";
 export const CREATE_OFFICE = "create_office";
 export const DELETE_OFFICE = "delete_office";
+export const FETCH_OFFICES = "fetch_offices";
+export const PUT_OFFICES = "put_offices";
 
 export const FETCH_VEHICLES = "fetch_vehicles";
 export const PUT_VEHICLES = "put_vehicles";

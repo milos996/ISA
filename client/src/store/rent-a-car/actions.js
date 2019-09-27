@@ -29,6 +29,8 @@ import {
   PUT_RENT_A_CAR_OFFICES,
   CREATE_OFFICE,
   DELETE_OFFICE,
+  FETCH_OFFICES,
+  PUT_OFFICES,
   FETCH_VEHICLES,
   PUT_VEHICLES,
   SEARCH_VEHICLES,
@@ -162,6 +164,16 @@ export const createRentACarOffice = payload => ({
 
 export const deleteRentACarOffice = payload => ({
   type: DELETE_OFFICE,
+  payload
+});
+
+export const fetchOffices = payload => ({
+  type: FETCH_OFFICES,
+  payload
+});
+
+export const putOffices = payload => ({
+  type: PUT_OFFICES,
   payload
 });
 

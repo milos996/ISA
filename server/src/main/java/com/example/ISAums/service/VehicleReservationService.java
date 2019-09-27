@@ -36,7 +36,7 @@ public class VehicleReservationService {
     private final AirplaneTicketRepository airplaneTicketRepository;
     private final UserRepository userRepository;
 
-    @Transactional(rollbackFor = Exception.class)
+    @Transactional(rollbackFor = Exception.class, isolation = Isolation.SERIALIZABLE)
     public Vehicle reserve(CreateVehicleReservationRequest request) {
         Vehicle vehicle = vehicleRepository.findById(request.getVehicleId()).orElse(null);
 
@@ -50,11 +50,11 @@ public class VehicleReservationService {
             throw new CustomException("Vehicle is not available in that period of time!");
         }
 
-        if (rentACarLocationRepository.checkLocationCity(vehicle.getRentACar().getId(), request.getInfo().getPickUpLocation()) == null) {
+        if (rentACarLocationRepository.checkLocationCity(vehicle.getRentACar().getId().toString(), request.getInfo().getPickUpLocation()).size() == 0) {
             throw new CustomException("Rent a car service does not have office at that pick up location!");
         }
 
-        if (rentACarLocationRepository.checkLocationCity(vehicle.getRentACar().getId(), request.getInfo().getDropOffLocation()) == null) {
+        if (rentACarLocationRepository.checkLocationCity(vehicle.getRentACar().getId().toString(), request.getInfo().getDropOffLocation()).size() == 0) {
             throw new CustomException("Rent a car service does not have office at that drop off location!");
         }
 
@@ -84,7 +84,7 @@ public class VehicleReservationService {
         return vehicle;
     }
 
-    @Transactional(readOnly = true)
+    @Transactional(readOnly = true, isolation = Isolation.REPEATABLE_READ)
     public List<VehicleReservation> get() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 
@@ -93,7 +93,7 @@ public class VehicleReservationService {
         return vehicleReservationRepository.findByUserId(user.getId().toString());
     }
 
-    @Transactional(rollbackFor = Exception.class, isolation = Isolation.READ_COMMITTED)
+    @Transactional(rollbackFor = Exception.class, isolation = Isolation.SERIALIZABLE)
     public List<VehicleReservation> cancel(String vehicleReservationId) {
         VehicleReservation vehicleReservation = vehicleReservationRepository.findById(UUID.fromString(vehicleReservationId)).orElse(null);
 

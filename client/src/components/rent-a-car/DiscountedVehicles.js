@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { makeStyles } from "@material-ui/core/styles";
+import Badge from "@material-ui/core/Badge";
 import Card from "@material-ui/core/Card";
 import CardActions from "@material-ui/core/CardActions";
 import CardContent from "@material-ui/core/CardContent";
@@ -14,14 +15,17 @@ import {
   selectRentACarVehiclesOnDiscount,
   selectRentACarDetails
 } from "../../store/rent-a-car/selectors";
+import { userDataSelector } from "../../store/user/selectors";
 import Rating from "react-rating";
 import Background from "../../assets/background.jpg";
 import CardBackground from "../../assets/card_discount_bckg.jpg";
+import Brightness5Icon from "@material-ui/icons/Brightness5";
 
 export default function DiscountedVehicles({ rentACarId, location }) {
   const discountedVehicles = useSelector(selectRentACarVehiclesOnDiscount);
   const rentACar = useSelector(selectRentACarDetails);
   const classes = useStyles();
+  const user = useSelector(userDataSelector);
 
   return (
     <Container className={classes.vertical} maxWidth="xl">
@@ -38,6 +42,12 @@ export default function DiscountedVehicles({ rentACarId, location }) {
               <Typography color="textSecondary">
                 {discountedVehicles[vehicleId].model}
               </Typography>
+              <Badge
+                badgeContent={discountedVehicles[vehicleId].discountRate}
+                className={classes.badge}
+              >
+                <Brightness5Icon fontSize="large"></Brightness5Icon>
+              </Badge>
               <Typography
                 variant="body2"
                 component="p"
@@ -58,7 +68,16 @@ export default function DiscountedVehicles({ rentACarId, location }) {
                   </strong>
                 </div>
                 <div>
-                  <strong>{discountedVehicles[vehicleId].price}$</strong>.
+                  <strong>
+                    ORIGINAL PRICE:
+                    {discountedVehicles[vehicleId].originalPrice}$
+                  </strong>
+                  <br />
+                  <strong>
+                    DISCOUNTED PRICE: {discountedVehicles[vehicleId].discounted}
+                    $
+                  </strong>
+                  .
                 </div>
                 <br />
                 <Rating
@@ -81,11 +100,13 @@ export default function DiscountedVehicles({ rentACarId, location }) {
               </Typography>
               <br />
             </CardContent>
-            <CardActions className={classes.actions}>
-              <Button className={classes.button} size="small">
-                <strong>RESERVE</strong>
-              </Button>
-            </CardActions>
+            {user.role === "USER" ? (
+              <CardActions className={classes.actions}>
+                <Button className={classes.button} size="small">
+                  <strong>RESERVE</strong>
+                </Button>
+              </CardActions>
+            ) : null}
           </Card>
         </Container>
       ))}
@@ -93,7 +114,7 @@ export default function DiscountedVehicles({ rentACarId, location }) {
   );
 }
 
-const useStyles = makeStyles({
+const useStyles = makeStyles(theme => ({
   horizontal: {
     textAlign: "center",
     backgroundImage: `url(${Background})`
@@ -133,5 +154,8 @@ const useStyles = makeStyles({
   button: {
     marginLeft: "36.33%",
     marginRight: "36.33%"
+  },
+  badge: {
+    marginTop: 15
   }
-});
+}));

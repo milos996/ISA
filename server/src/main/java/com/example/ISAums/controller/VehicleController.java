@@ -32,8 +32,6 @@ import static com.example.ISAums.converter.VehicleConverter.*;
 @RestController
 @RequestMapping("/vehicles")
 public class VehicleController {
-    private static final Logger logger = LoggerFactory.getLogger(VehicleService.class);
-
     private final VehicleService vehicleService;
 
     public VehicleController(VehicleService vehicleService) {
@@ -62,7 +60,7 @@ public class VehicleController {
     @RequestMapping("/{id}")
     @PreAuthorize("hasAnyAuthority('RENT_A_CAR_ADMIN')")
     public ResponseEntity<List<GetVehicleResponse>> delete(@PathVariable(name = "id") UUID vehicleId) {
-        return ResponseEntity.ok(toGetVehicleResponseFromVehicles(vehicleService.delete(vehicleId)));
+         return ResponseEntity.ok(toGetVehicleResponseFromVehicles(vehicleService.delete(vehicleId)));
     }
 
     @PostMapping

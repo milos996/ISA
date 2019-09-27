@@ -116,6 +116,10 @@ class RentACarService extends HttpBaseClient {
     return this.getApiClient().post(ENDPOINTS.OFFICES, office);
   };
 
+  fetchOffices = () => {
+    return this.getApiClient().get(ENDPOINTS.OFFICES);
+  };
+
   deleteOffice = officeId => {
     return this.getApiClient().delete(
       format(ENDPOINTS.DELETE_OFFICE, officeId)
