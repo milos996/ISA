@@ -21,6 +21,7 @@ import InputRoundedIcon from "@material-ui/icons/InputRounded";
 import RegistrationPage from "../pages/Registration";
 import LoginPage from "../pages/Login";
 import Tooltip from "@material-ui/core/Tooltip";
+import { selectAirlineAdmin } from "../store/airline/selectors";
 import { fetchAirlineAdmin } from "../store/airline/actions";
 
 const primary = teal[400];
@@ -31,12 +32,16 @@ export default function Navbar() {
   const userToken = useSelector(userTokenSelector);
   const dispatch = useDispatch();
   const user = useSelector(userDataSelector);
-
+  const airlineAdmin = useSelector(selectAirlineAdmin);
   const [
     registrationModalVisibility,
     setRegistrationModalVisibility
   ] = useState(false);
 
+  var role = "USER";
+  if (user != null) {
+    role = user.role;
+  }
   const [loginModalVisibility, setLoginModalVisibility] = useState(false);
 
   useEffect(() => {
@@ -136,6 +141,20 @@ export default function Navbar() {
               </Button>
             </div>
           )}
+          {userToken != null &&
+          role === "AIRLINE_ADMIN" &&
+          airlineAdmin != "" ? (
+            <LightTooltip title="Airline profile">
+              <Link
+                className="button"
+                to={`/airline/${airlineAdmin.airline.id}`}
+              >
+                <Button color="inherit">
+                  <AirlineIcon></AirlineIcon>
+                </Button>
+              </Link>
+            </LightTooltip>
+          ) : null}
         </Toolbar>
       </AppBar>
     </div>

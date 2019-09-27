@@ -31,8 +31,8 @@ export default function BuisinessReport({ airlineId }) {
   const airlineRating = useSelector(selectAirlineRating);
   const user = useSelector(userDataSelector);
   const [modalStyle] = React.useState(getModalStyle);
-  //  const airlineAdmin = useSelector(selectAirlineAdmin);
-
+  const airlineAdmin = useSelector(selectAirlineAdmin);
+  var mineAirlineId = "";
   const [showIncomeModalVisibility, setShowIncomeModalVisibility] = useState(
     false
   );
@@ -60,6 +60,15 @@ export default function BuisinessReport({ airlineId }) {
     dispatch(fetchAirlineFlights({ airlineId }));
   }, [airlineId]);
 
+  var role = "";
+
+  if (user != null) {
+    role = user.role;
+  }
+
+  if (airlineAdmin != "") {
+    mineAirlineId = airlineAdmin.airline.id;
+  }
   function closeModal() {
     setShowIncomeModalVisibility(false);
     setShowSoldTicketsModalVisibility(false);
@@ -98,7 +107,7 @@ export default function BuisinessReport({ airlineId }) {
         value={airlineRating.avgRating}
       />
 
-      {user.role === "AIRLINE_ADMIN" && (
+      {role === "AIRLINE_ADMIN" && airlineId === mineAirlineId ? (
         <div>
           <Button
             variant="contained"
@@ -117,7 +126,7 @@ export default function BuisinessReport({ airlineId }) {
             Sold tickets
           </Button>
         </div>
-      )}
+      ) : null}
 
       <h2>Flights</h2>
       <Table className={classes.table}>

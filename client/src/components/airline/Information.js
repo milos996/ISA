@@ -31,25 +31,31 @@ export default function AirlineInformation({ airlineId }) {
   const user = useSelector(userDataSelector);
   const airlineAdmin = useSelector(selectAirlineAdmin);
 
+  var mineAirlineId = "";
+
   const [modalContent, setModalContent] = useState({
     isVisible: false,
     value: ""
   });
 
-  useEffect(() => {
-    dispatch(fetchAirlineAdmin());
-  }, [airlineId]);
-
   var isReadOnly = true;
   var role = "";
 
-  if (user != null) {
+  if(user != null){
     role = user.role;
   }
 
-  if (role === "AIRLINE_ADMIN") {
-    isReadOnly = false;
+  if (airlineAdmin != "") {
+    isReadOnly =
+      airlineId === airlineAdmin.airline.id && role === "AIRLINE_ADMIN"
+        ? false
+        : true;
+    mineAirlineId = airlineAdmin.airline.id;
   }
+
+  useEffect(() => {
+    dispatch(fetchAirlineAdmin());
+  }, [airlineId]);
 
   function setStreet(street) {
     dispatch(putAirlineLocationInformation({ street }));
@@ -204,7 +210,8 @@ export default function AirlineInformation({ airlineId }) {
             }}
           />
         </Container>
-        {user.role === "AIRLINE_ADMIN" && (
+        {role === "AIRLINE_ADMIN" &&
+          airlineId === mineAirlineId ? (
           <Button
             variant="contained"
             color="primary"
@@ -213,7 +220,7 @@ export default function AirlineInformation({ airlineId }) {
           >
             Save
           </Button>
-        )}
+        ) : null}
 
         <ISAMap
           address={airlineDetails.address}
