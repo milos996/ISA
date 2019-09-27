@@ -81,7 +81,7 @@ public class VehicleControllerTest {
     public void tryToGetVehicles() throws Exception {
         mockMvc.perform(org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get(URL_VEHICLES)).andExpect(status().isOk())
                 .andExpect(content().contentType(contentType))
-                .andExpect(jsonPath("$.[*].id").value(hasItem("0a0699ba-d635-4e6d-96b3-cdb1d7d59b47")));
+                .andExpect(jsonPath("$.[*].id").value(hasItem("0177cce1-4ff6-4ccf-a9cb-9a1a0b1fed91")));
     }
 
     @Test
@@ -89,7 +89,7 @@ public class VehicleControllerTest {
     public void tryToCreateNewVehicle() throws Exception {
         CreateRentACarVehicleRequest vehicle = CreateRentACarVehicleRequest
                 .builder()
-                .rentACarId(UUID.fromString("80474cee-a45d-453e-8562-adfd441ba1a9"))
+                .rentACarId(UUID.fromString("059cd705-f75a-40d4-9dba-8a5b17e514e7"))
                 .vehicle(CreateVehicleRequest
                         .builder()
                         .brand("Mercedes")
@@ -103,7 +103,7 @@ public class VehicleControllerTest {
 
         String request = MapperTest.json(vehicle);
 
-        String token = tokenGenerator.generateAuthToken(userService.findByEmail("nikola@gmail.com"));
+        String token = tokenGenerator.generateAuthToken(userService.findByEmail("marko@gmail.com"));
 
         mockMvc.perform(org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post(URL_VEHICLES).header("Authorization", "Bearer " + token)
                 .contentType(contentType).content(request))
@@ -131,7 +131,7 @@ public class VehicleControllerTest {
 
         String request = MapperTest.json(vehicle);
 
-        String token = tokenGenerator.generateAuthToken(userService.findByEmail("nikola@gmail.com"));
+        String token = tokenGenerator.generateAuthToken(userService.findByEmail("marko@gmail.com"));
 
         mockMvc.perform(org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post(URL_VEHICLES).header("Authorization", "Bearer " + token)
                 .contentType(contentType).content(request))
@@ -143,7 +143,7 @@ public class VehicleControllerTest {
     public void tryToCreateNewVehicleWithoutPermission() throws Exception {
         CreateRentACarVehicleRequest create = CreateRentACarVehicleRequest
                 .builder()
-                .rentACarId(UUID.fromString("80474cee-a45d-453e-8562-adfd441ba1a9"))
+                .rentACarId(UUID.fromString("06cbbecd-7763-4e21-bc87-f8f5295f9649"))
                 .vehicle(CreateVehicleRequest
                         .builder()
                         .brand("Mercedes")
@@ -171,13 +171,13 @@ public class VehicleControllerTest {
     public void tryToUpdateVehicle() throws Exception {
         UpdateVehicleRequest update = UpdateVehicleRequest
                 .builder()
-                .id(UUID.fromString("dce034af-e082-4717-8569-b60457854a41"))
+                .id(UUID.fromString("1393cc9e-a6cc-47c1-9216-ba73ca6f6125"))
                 .model("Punto")
                 .build();
 
         String request = MapperTest.json(update);
 
-        String token = tokenGenerator.generateAuthToken(userService.findByEmail("nikola@gmail.com"));
+        String token = tokenGenerator.generateAuthToken(userService.findByEmail("lazar@gmail.com"));
 
         mockMvc.perform(org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put(URL_VEHICLES).header("Authorization", "Bearer " + token).contentType(contentType).content(request))
                 .andExpect(status().isOk())
@@ -191,14 +191,14 @@ public class VehicleControllerTest {
     public void tryToUpdateNonExistentVehicle() throws Exception {
         UpdateVehicleRequest update = UpdateVehicleRequest
                 .builder()
-                .id(UUID.fromString("06cbbecd-7763-4e21-bc87-f8f5295f9649"))
+                .id(UUID.fromString("1393cc9e-a6cc-47c1-9216-ba73ca6f6121"))
                 .brand("Brabus")
                 .model("Punto")
                 .build();
 
         String request = MapperTest.json(update);
 
-        String token = tokenGenerator.generateAuthToken(userService.findByEmail("nikola@gmail.com"));
+        String token = tokenGenerator.generateAuthToken(userService.findByEmail("lazar@gmail.com"));
 
         mockMvc.perform(org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put(URL_VEHICLES).header("Authorization", "Bearer " + token).contentType(contentType).content(request))
                 .andExpect(status().isInternalServerError())
@@ -211,9 +211,9 @@ public class VehicleControllerTest {
     @Test
     @Transactional
     public void tryToDeleteVehicle() throws Exception {
-        String token = tokenGenerator.generateAuthToken(userService.findByEmail("nikola@gmail.com"));
+        String token = tokenGenerator.generateAuthToken(userService.findByEmail("lazar@gmail.com"));
 
-        UUID id = UUID.fromString("dce034af-e082-4717-8569-b60457854a41");
+        UUID id = UUID.fromString("0177cce1-4ff6-4ccf-a9cb-9a1a0b1fed91");
 
         mockMvc.perform(org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete(URL_VEHICLES + id).header("Authorization", "Bearer " + token))
                 .andExpect(status().isOk());
@@ -222,9 +222,9 @@ public class VehicleControllerTest {
     @Test(expected = NestedServletException.class)
     @Transactional
     public void tryToDeleteReservedVehicle() throws Exception {
-        String token = tokenGenerator.generateAuthToken(userService.findByEmail("nikola@gmail.com"));
+        String token = tokenGenerator.generateAuthToken(userService.findByEmail("lazar@gmail.com"));
 
-        UUID id = UUID.fromString("41c163f7-eaee-45cc-b48d-6422d67c5ee5");
+        UUID id = UUID.fromString("1393cc9e-a6cc-47c1-9216-ba73ca6f6125");
 
         mockMvc.perform(org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete(URL_VEHICLES + id).header("Authorization", "Bearer " + token))
                 .andExpect(status().isInternalServerError());
@@ -249,7 +249,7 @@ public class VehicleControllerTest {
         CreateRatingRequest rating = CreateRatingRequest
                 .builder()
                 .mark(7)
-                .reservationId(UUID.fromString("6bda2447-933b-4daa-bb44-5e23f2d768bd"))
+                .reservationId(UUID.fromString("1393cc9e-a6cc-47c1-9216-ba73ca6f6125"))
                 .build();
         String request = MapperTest.json(rating);
 
@@ -267,7 +267,7 @@ public class VehicleControllerTest {
         CreateRatingRequest rating = CreateRatingRequest
                 .builder()
                 .mark(7)
-                .reservationId(UUID.fromString("c8a4ae15-68fe-4e64-b344-7e4cf9e020e8"))
+                .reservationId(UUID.fromString("9b812e4f-e8b2-4add-9823-4171c9c4e06a"))
                 .build();
         String request = MapperTest.json(rating);
 

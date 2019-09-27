@@ -82,17 +82,17 @@ public class RentACarControllerTest {
         mockMvc.perform(org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get(URL_RENT_A_CARS))
                 .andExpect(status().isOk())
                 .andExpect(content().contentType(contentType))
-                .andExpect(jsonPath("$.[*].id").value(hasItem("80474cee-a45d-453e-8562-adfd441ba1a9")));
+                .andExpect(jsonPath("$.[*].id").value(hasItem("059cd705-f75a-40d4-9dba-8a5b17e514e7")));
     }
 
     @Test
     public void tryToFindExistentRentACar() throws Exception {
-        String id = "96612c15-da98-4a71-95be-d897b0c318d8";
+        String id = "059cd705-f75a-40d4-9dba-8a5b17e514e7";
 
         mockMvc.perform(org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get(URL_RENT_A_CARS + id))
                 .andExpect(status().isOk())
                 .andExpect(content().contentType(contentType))
-                .andExpect(jsonPath("$.id").value("96612c15-da98-4a71-95be-d897b0c318d8"));
+                .andExpect(jsonPath("$.id").value("059cd705-f75a-40d4-9dba-8a5b17e514e7"));
     }
 
     @Test(expected = NestedServletException.class)
@@ -105,7 +105,7 @@ public class RentACarControllerTest {
 
     @Test
     public void tryToFindRentACarVehicles() throws Exception {
-        String id =  "3f58d3a4-cdd7-4712-8336-69ff555bdf6b";
+        String id =  "059cd705-f75a-40d4-9dba-8a5b17e514e7";
 
         mockMvc.perform(org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get(URL_RENT_A_CARS + UUID.fromString(id) + "/vehicles"))
                 .andExpect(status().isOk())
@@ -115,10 +115,10 @@ public class RentACarControllerTest {
 
     @Test
     public void tryToGetRentACarIncome() throws Exception {
-        String id =  "3f58d3a4-cdd7-4712-8336-69ff555bdf6b";
+        String id =  "059cd705-f75a-40d4-9dba-8a5b17e514e7";
         String income = "/income?startDate=2019-09-01&endDate=2019-09-30";
 
-        String token = tokenGenerator.generateAuthToken(userService.findById(UUID.fromString("8624242b-7826-4178-a3e6-25ec0578ad08")));
+        String token = tokenGenerator.generateAuthToken(userService.findById(UUID.fromString("0843bca9-7dbf-4da0-8b5b-49afe9c002a4")));
 
         mockMvc.perform(org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get(URL_RENT_A_CARS + id + income).header("Authorization", "Bearer " + token))
                 .andExpect(status().isOk())
@@ -129,10 +129,10 @@ public class RentACarControllerTest {
     @Test(expected = NestedServletException.class)
     @Transactional
     public void tryToGetRentACarIncomeWhenEndDateIsBeforeStartDate() throws Exception {
-        String id =  "3f58d3a4-cdd7-4712-8336-69ff555bdf6b";
+        String id =  "059cd705-f75a-40d4-9dba-8a5b17e514e7";
         String income = "/income?startDate=2019-09-11&endDate=2019-09-01";
 
-        String token = tokenGenerator.generateAuthToken(userService.findById(UUID.fromString("8624242b-7826-4178-a3e6-25ec0578ad08")));
+        String token = tokenGenerator.generateAuthToken(userService.findById(UUID.fromString("0843bca9-7dbf-4da0-8b5b-49afe9c002a4")));
 
         mockMvc.perform(org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get(URL_RENT_A_CARS + id + income).header("Authorization", "Bearer " + token))
                 .andExpect(status().isInternalServerError());
@@ -141,7 +141,7 @@ public class RentACarControllerTest {
     @Test(expected = NestedServletException.class)
     @Transactional
     public void tryToGetRentACarBusynessWhenEndDateIsBeforeStartDate() throws Exception {
-        String id =  "3f58d3a4-cdd7-4712-8336-69ff555bdf6b";
+        String id =  "059cd705-f75a-40d4-9dba-8a5b17e514e7";
         String busyness = "/busyness?startDate=2019-09-11&endDate=2019-09-01";
 
         String token = tokenGenerator.generateAuthToken(userService.findById(UUID.fromString("8624242b-7826-4178-a3e6-25ec0578ad08")));
