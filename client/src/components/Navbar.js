@@ -33,22 +33,21 @@ export default function Navbar() {
   const userToken = useSelector(userTokenSelector);
   const dispatch = useDispatch();
   const user = useSelector(userDataSelector);
-  var airlineId = '';
   const airlineAdmin = useSelector(selectAirlineAdmin);
   const [
     registrationModalVisibility,
     setRegistrationModalVisibility
   ] = useState(false);
 
+  var role = 'USER';
+  if (user != null) {
+    role = user.role;
+  }
   const [loginModalVisibility, setLoginModalVisibility] = useState(false);
 
   useEffect(() => {
     dispatch(fetchAirlineAdmin());
   }, []);
-
-  if (airlineAdmin != '') {
-    airlineId = airlineAdmin.airline.id;
-  }
 
   const handleLogout = () => {
     dispatch(
@@ -153,7 +152,9 @@ export default function Navbar() {
               </Button>
             </div>
           )}
-          {userToken != null && user.role === 'AIRLINE_ADMIN' && (
+          {userToken != null &&
+          role === 'AIRLINE_ADMIN' &&
+          airlineAdmin != '' ? (
             <LightTooltip title="Airline profile">
               <Link
                 className="button"
@@ -164,7 +165,7 @@ export default function Navbar() {
                 </Button>
               </Link>
             </LightTooltip>
-          )}
+          ) : null}
         </Toolbar>
       </AppBar>
     </div>
