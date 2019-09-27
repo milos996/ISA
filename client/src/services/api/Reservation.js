@@ -5,9 +5,9 @@ const ENDPOINTS = {
   USER_VEHICLES_RESERVATION: "/vehicle-reservations/user/",
   USER_HOTELS_RESERVATION: "/hotel-reservations/user/",
   USER_FLIGHTS_RESERVATION: "/tickets/user/",
-  CANCEL_FLIGHT_RESERVATION: "/tickets/cancel/%s",
-  CANCEL_HOTEL_RESERVATION: "/hotel-reservations/cancel/%s",
-  CANCEL_VEHICLE_RESERVATION: "/vehicle-reservations/cancel/%s"
+  CANCEL_FLIGHT_RESERVATION: "/tickets/%s",
+  CANCEL_HOTEL_RESERVATION: "/hotel-reservations/%s",
+  CANCEL_VEHICLE_RESERVATION: "/vehicle-reservations/%s"
 };
 
 class ReservationService extends HttpBaseClient {

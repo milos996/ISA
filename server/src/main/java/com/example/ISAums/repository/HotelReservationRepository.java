@@ -26,4 +26,6 @@ public interface HotelReservationRepository extends  JpaRepository<HotelReservat
 //            "where r.id = :roomId " +
 //            "and not exist ( select * from HotelReservation hr2 where hr2.endDate > CURDATE())")
 //    Room existsByRoomWhereEndDateIsAfterToday(String roomId);
+
+    List<HotelReservation> findByAirplaneTicket_User_Id(UUID userId);
 }

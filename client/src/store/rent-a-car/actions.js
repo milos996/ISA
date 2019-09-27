@@ -10,6 +10,8 @@ import {
   PUT_RENT_A_CAR_INCOME,
   SHOW_RENT_A_CAR_BUSYNESS,
   PUT_RENT_A_CAR_BUSYNESS,
+  SHOW_AVAILABLE_RENT_A_CAR_VEHICLES,
+  PUT_AVAILABLE_RENT_A_CAR_VEHICLES,
   SAVE_RENT_A_CAR_DETAILS,
   FETCH_RENT_A_CAR_LOCATION_INFORMATION,
   PUT_RENT_A_CAR_LOCATION_INFORMATION,
@@ -17,23 +19,25 @@ import {
   PUT_RENT_A_CAR_DETAILS,
   FETCH_RENT_A_CAR_VEHICLES,
   PUT_RENT_A_CAR_VEHICLES,
+  FETCH_RENT_A_CAR_VEHICLES_ON_DISCOUNT,
+  PUT_RENT_A_CAR_VEHICLES_ON_DISCOUNT,
   CREATE_VEHICLE,
-  PUT_CREATED_RENT_A_CAR_VEHICLE,
   PUT_VEHICLE_DETAILS,
   SAVE_VEHICLE_DETAILS,
   DELETE_VEHICLE,
-  PUT_DELETE_VEHICLE_WITH_ID,
   FETCH_RENT_A_CAR_OFFICES,
   PUT_RENT_A_CAR_OFFICES,
   CREATE_OFFICE,
   DELETE_OFFICE,
-  PUT_DELETE_OFFICE_WITH_ID,
+  FETCH_OFFICES,
+  PUT_OFFICES,
   FETCH_VEHICLES,
   PUT_VEHICLES,
   SEARCH_VEHICLES,
   SORT_VEHICLES,
   PUT_VEHICLE_SEARCH_INFORMATION,
   RATE_VEHICLE,
+  DISCOUNT_VEHICLE,
   CREATE_VEHICLE_RESERVATION,
   CANCEL_VEHICLE_RESERVATION
 } from "./constants";
@@ -93,6 +97,16 @@ export const putRentACarBusyness = payload => ({
   payload
 });
 
+export const showAvailableRentACarVehicles = payload => ({
+  type: SHOW_AVAILABLE_RENT_A_CAR_VEHICLES,
+  payload
+});
+
+export const putAvailableRentACarVehicles = payload => ({
+  type: PUT_AVAILABLE_RENT_A_CAR_VEHICLES,
+  payload
+});
+
 export const fetchRentACarDetails = payload => ({
   type: FETCH_RENT_A_CAR_DETAILS,
   payload
@@ -128,6 +142,16 @@ export const putRentACarOffices = payload => ({
   payload
 });
 
+export const fetchRentACarVehiclesOnDiscount = payload => ({
+  type: FETCH_RENT_A_CAR_VEHICLES_ON_DISCOUNT,
+  payload
+});
+
+export const putRentACarVehiclesOnDiscount = payload => ({
+  type: PUT_RENT_A_CAR_VEHICLES_ON_DISCOUNT,
+  payload
+});
+
 export const fetchRentACarOffices = payload => ({
   type: FETCH_RENT_A_CAR_OFFICES,
   payload
@@ -138,18 +162,18 @@ export const createRentACarOffice = payload => ({
   payload
 });
 
-export const putCreatedRentACarVehicle = payload => ({
-  type: PUT_CREATED_RENT_A_CAR_VEHICLE,
-  payload
-});
-
 export const deleteRentACarOffice = payload => ({
   type: DELETE_OFFICE,
   payload
 });
 
-export const putDeleteOfficeWithId = payload => ({
-  type: PUT_DELETE_OFFICE_WITH_ID,
+export const fetchOffices = payload => ({
+  type: FETCH_OFFICES,
+  payload
+});
+
+export const putOffices = payload => ({
+  type: PUT_OFFICES,
   payload
 });
 
@@ -183,6 +207,11 @@ export const rateVehicle = payload => ({
   payload
 });
 
+export const discountVehicle = payload => ({
+  type: DISCOUNT_VEHICLE,
+  payload
+});
+
 export const createRentACarVehicle = payload => ({
   type: CREATE_VEHICLE,
   payload
@@ -200,11 +229,6 @@ export const putVehicleDetails = payload => ({
 
 export const saveVehicleDetails = payload => ({
   type: SAVE_VEHICLE_DETAILS,
-  payload
-});
-
-export const putDeleteVehicleWithId = payload => ({
-  type: PUT_DELETE_VEHICLE_WITH_ID,
   payload
 });
 

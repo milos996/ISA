@@ -32,8 +32,6 @@ import static com.example.ISAums.converter.VehicleConverter.*;
 @RestController
 @RequestMapping("/vehicles")
 public class VehicleController {
-    private static final Logger logger = LoggerFactory.getLogger(VehicleService.class);
-
     private final VehicleService vehicleService;
 
     public VehicleController(VehicleService vehicleService) {
@@ -62,7 +60,7 @@ public class VehicleController {
     @RequestMapping("/{id}")
     @PreAuthorize("hasAnyAuthority('RENT_A_CAR_ADMIN')")
     public ResponseEntity<List<GetVehicleResponse>> delete(@PathVariable(name = "id") UUID vehicleId) {
-        return ResponseEntity.ok(toGetVehicleResponseFromVehicles(vehicleService.delete(vehicleId)));
+         return ResponseEntity.ok(toGetVehicleResponseFromVehicles(vehicleService.delete(vehicleId)));
     }
 
     @PostMapping
@@ -92,8 +90,4 @@ public class VehicleController {
         return ResponseEntity.ok(toGetVehicleResponseFromVehicles(vehicleService.sort(by, rentACarId)));
     }
 
-    @GetMapping("/quick")
-    public ResponseEntity<List<GetQuickVehicleResponse>> quick(@RequestParam(name = "pickUpDate", required = true) String pickUpDate, @RequestParam(name = "dropOffDate", required = true) String dropOffDate) throws ParseException {
-        return ResponseEntity.ok(toGetQuickVehicleResponseFromVehicles(vehicleService.getQuick(pickUpDate, dropOffDate), pickUpDate, dropOffDate));
-    }
 }

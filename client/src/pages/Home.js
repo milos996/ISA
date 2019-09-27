@@ -8,15 +8,17 @@ import building from "../assets/skyline.png";
 import car from "../assets/car.png";
 import HomeAuth from "../pages/HomeAuthUser";
 import { userTokenSelector } from "../store/user/selectors";
+import Background from "../assets/background.jpg";
 
 export default function HomePage({ history }) {
   const classes = useStyles();
   const userToken = useSelector(userTokenSelector);
 
   return (
-    <Container>
-      <Container classes={{ root: classes.root }}>
+    <Container classes={{ root: classes.vertical }} maxWidth="xl">
+      <Container classes={{ root: classes.root }} maxWidth="xl">
         <NavigationCards
+          className={classes.card}
           image={plane}
           title="Airlines"
           description="Check airlines information and their destination flights."
@@ -25,6 +27,7 @@ export default function HomePage({ history }) {
           }}
         />
         <NavigationCards
+          className={classes.card}
           image={building}
           title="Hotels"
           description="Check hotels information and their rooms and prices."
@@ -33,6 +36,7 @@ export default function HomePage({ history }) {
           }}
         />
         <NavigationCards
+          className={classes.card}
           image={car}
           title="Rent A Cars"
           description="Check rent a car companies and their services."
@@ -48,12 +52,19 @@ export default function HomePage({ history }) {
 
 const useStyles = makeStyles(theme => ({
   root: {
+    textAlign: "center",
     display: "flex",
-    flexDirection: "row"
+    flexDirection: "row",
+    background: `url(${Background})`
   },
-  rootColumn: {
+  vertical: {
+    textAlign: "center",
     display: "flex",
-    flexDirection: "column"
+    flexDirection: "column",
+    background: `url(${Background})`
+  },
+  card: {
+    textAlign: "center"
   },
   inputs: {
     display: "flex",

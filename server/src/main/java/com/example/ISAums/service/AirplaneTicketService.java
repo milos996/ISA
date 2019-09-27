@@ -8,10 +8,13 @@ import com.example.ISAums.dto.response.GetSoldAirlineTicketsResponse;
 import com.example.ISAums.email_service.EmailServiceImpl;
 import com.example.ISAums.exception.FlightIsFullException;
 import com.example.ISAums.exception.SeatIsAlreadyReservedException;
+import com.example.ISAums.exception.CustomException;
 import com.example.ISAums.model.*;
 import com.example.ISAums.model.enumeration.GroupTripStatus;
 import com.example.ISAums.repository.*;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import java.util.*;
@@ -205,7 +208,27 @@ public class AirplaneTicketService {
 
     @Transactional(readOnly = true)
     public List<AirplaneTicket> getTickets() {
-        return airplaneTicketRepository.findAll();
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+
+        User user = userRepository.findByEmail(authentication.getName());
+
+        return airplaneTicketRepository.findByUser_Id(user.getId());
+    }
+
+    @Transactional(rollbackFor = Exception.class)
+    public List<AirplaneTicket> cancel(String ticketId) {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+
+        User user = userRepository.findByEmail(authentication.getName());
+
+        AirplaneTicket airplaneTicket = airplaneTicketRepository.findById(UUID.fromString(ticketId)).orElse(null);
+
+        if (airplaneTicket.getUser().getId() != user.getId())
+            throw new CustomException("This ticket does not belong to you!");
+
+        airplaneTicketRepository.delete(airplaneTicket);
+
+        return airplaneTicketRepository.findByUser_Id(user.getId());
     }
 
     @Transactional(readOnly = true)

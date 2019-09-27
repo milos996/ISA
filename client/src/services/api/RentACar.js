@@ -5,10 +5,14 @@ const ENDPOINTS = {
   RENT_A_CARS: "/rent-a-cars",
   RENT_A_CAR_DETAILS: "/rent-a-cars/%s",
   RENT_A_CAR_VEHICLES: "/rent-a-cars/%s/vehicles",
+  RENT_A_CAR_VEHICLES_ON_DISCOUNT:
+    "/rent-a-cars/%s/vehicles/discount?pickUpDate=%s&dropOffDate=%s",
   RENT_A_CAR_OFFICES: "/rent-a-car-locations/%s",
   RENT_A_CAR_RATING: "/rent-a-cars/rating/",
   RENT_A_CAR_INCOME: "/rent-a-cars/%s/income?startDate=%s&endDate=%s",
   RENT_A_CAR_BUSYNESS: "/rent-a-cars/%s/busyness?startDate=%s&endDate=%s",
+  RENT_A_CAR_VEHICLES_AVAILABILITY:
+    "/rent-a-cars/%s/vehicles/availability?startDate=%s&endDate=%s&available=%s",
   DELETE_RENT_A_CAR: "/rent-a-cars/delete/%s",
   OFFICES: "/rent-a-car-locations",
   DELETE_OFFICE: "/rent-a-car-locations/%s",
@@ -22,7 +26,8 @@ const ENDPOINTS = {
   VEHICLE_RESERVATIONS: "/vehicle-reservations",
   VEHICLE_RATING: "/vehicles/rating/",
   CANCEL_VEHICLE_RESERVATIONS: "/vehicle-reservations/%s",
-  SORT_VEHICLES: "/vehicles/sort?by=%s&rentACarId=%s"
+  SORT_VEHICLES: "/vehicles/sort?by=%s&rentACarId=%s",
+  CREATE_VEHICLE_DISCOUNT: "/discounts/vehicle"
 };
 
 class RentACarService extends HttpBaseClient {
@@ -66,15 +71,38 @@ class RentACarService extends HttpBaseClient {
     );
   };
 
-  fetchRentACarDetails = payload => {
+  showAvailableRentACarVehicles = availabilityPeriod => {
     return this.getApiClient().get(
-      format(ENDPOINTS.RENT_A_CAR_DETAILS, payload.id)
+      format(
+        ENDPOINTS.RENT_A_CAR_VEHICLES_AVAILABILITY,
+        availabilityPeriod.id,
+        availabilityPeriod.startDate,
+        availabilityPeriod.endDate,
+        availabilityPeriod.available
+      )
+    );
+  };
+
+  fetchRentACarDetails = rentACarId => {
+    return this.getApiClient().get(
+      format(ENDPOINTS.RENT_A_CAR_DETAILS, rentACarId)
     );
   };
 
   fetchRentACarVehicles = rentACarId => {
     return this.getApiClient().get(
       format(ENDPOINTS.RENT_A_CAR_VEHICLES, rentACarId)
+    );
+  };
+
+  fetchRentACarVehiclesOnDiscount = payload => {
+    return this.getApiClient().get(
+      format(
+        ENDPOINTS.RENT_A_CAR_VEHICLES_ON_DISCOUNT,
+        payload.rentACarId,
+        payload.pickUpDate,
+        payload.dropOffDate
+      )
     );
   };
 
@@ -86,6 +114,10 @@ class RentACarService extends HttpBaseClient {
 
   createRentACarOffice = office => {
     return this.getApiClient().post(ENDPOINTS.OFFICES, office);
+  };
+
+  fetchOffices = () => {
+    return this.getApiClient().get(ENDPOINTS.OFFICES);
   };
 
   deleteOffice = officeId => {
@@ -137,6 +169,13 @@ class RentACarService extends HttpBaseClient {
   sortVehicles = payload => {
     return this.getApiClient().get(
       format(ENDPOINTS.SORT_VEHICLES, payload.by, payload.rentACarId)
+    );
+  };
+
+  createVehicleDiscount = vehicleDiscount => {
+    return this.getApiClient().post(
+      ENDPOINTS.CREATE_VEHICLE_DISCOUNT,
+      vehicleDiscount
     );
   };
 

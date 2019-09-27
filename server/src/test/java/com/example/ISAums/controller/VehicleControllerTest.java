@@ -1,61 +1,61 @@
 package com.example.ISAums.controller;
 
-import com.example.ISAums.config.CustomProperties;
-import com.example.ISAums.converter.VehicleConverter;
+import com.example.ISAums.dto.request.CreateRatingRequest;
 import com.example.ISAums.dto.request.CreateRentACarVehicleRequest;
 import com.example.ISAums.dto.request.CreateVehicleRequest;
-import com.example.ISAums.dto.response.GetVehicleResponse;
-import com.example.ISAums.model.Vehicle;
+import com.example.ISAums.dto.request.UpdateVehicleRequest;
+import com.example.ISAums.security.JwtTokenUtil;
+import com.example.ISAums.service.UserService;
 import com.example.ISAums.service.VehicleService;
+import org.junit.runner.RunWith;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.context.junit4.SpringRunner;
+
 import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Before;
 import org.junit.BeforeClass;
-import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
-import org.junit.runner.RunWith;
-import org.mockito.Mock;
+import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.context.annotation.Bean;
 import org.springframework.http.MediaType;
-import org.springframework.http.ResponseEntity;
-import org.springframework.test.annotation.Rollback;
-import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 
-import javax.transaction.Transactional;
+import static org.hamcrest.CoreMatchers.hasItem;
+import static org.springframework.security.test.web.servlet.setup.SecurityMockMvcConfigurers.springSecurity;
+import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+
 import java.nio.charset.Charset;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.UUID;
 
-import static java.util.Collections.singletonList;
-import static org.hamcrest.CoreMatchers.hasItem;
-import static org.hamcrest.collection.IsCollectionWithSize.hasSize;
-import static org.hamcrest.core.Is.is;
-import static org.mockito.BDDMockito.given;
-import static org.springframework.http.MediaType.APPLICATION_JSON;
-import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.user;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
+import com.example.ISAums.util.MapperTest;
+import org.springframework.web.util.NestedServletException;
 
+import javax.transaction.Transactional;
 
 @RunWith(SpringRunner.class)
-@WebMvcTest(VehicleController.class)
-class VehicleControllerTest {
+@SpringBootTest
+public class VehicleControllerTest {
+    private static final Logger logger = LoggerFactory.getLogger(VehicleService.class);
 
-    private static final String URL_PREFIX = "/vehicles";
+    private static final String URL_VEHICLES = "/vehicles/";
 
     private MediaType contentType = new MediaType(MediaType.APPLICATION_JSON.getType(),
             MediaType.APPLICATION_JSON.getSubtype(), Charset.forName("utf8"));
 
     private MockMvc mockMvc;
+
+    @Autowired
+    private JwtTokenUtil tokenGenerator;
+
+    @Autowired
+    private UserService userService;
 
     @Autowired
     private WebApplicationContext webApplicationContext;
@@ -70,29 +70,26 @@ class VehicleControllerTest {
 
     @Before
     public void setUp() throws Exception {
-        this.mockMvc = MockMvcBuilders.webAppContextSetup(webApplicationContext).build();
+        this.mockMvc = MockMvcBuilders.webAppContextSetup(webApplicationContext).apply(springSecurity()).build();
     }
 
     @After
     public void tearDown() throws Exception {
     }
-       // given(vehicleController.getVehicles().getBody()).willReturn(allVehicles);
 
     @Test
-    public void getVehicles() throws Exception {
-        mockMvc.perform(org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get(URL_PREFIX)).andExpect(status().isOk())
+    public void tryToGetVehicles() throws Exception {
+        mockMvc.perform(org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get(URL_VEHICLES)).andExpect(status().isOk())
                 .andExpect(content().contentType(contentType))
-                .andExpect(jsonPath("$.[*].id").value(hasItem("59e5334d-4ebd-4874-b17e-81498477cb80")))
-                .andExpect(jsonPath("$.[*].id").value(hasItem("c776dd4a-946e-433e-aa18-6beb04b214ad")));
+                .andExpect(jsonPath("$.[*].id").value(hasItem("0a0699ba-d635-4e6d-96b3-cdb1d7d59b47")));
     }
 
-    @Transactional
-    @Rollback(true)
     @Test
-    public void create() throws Exception {
+    @Transactional
+    public void tryToCreateNewVehicle() throws Exception {
         CreateRentACarVehicleRequest vehicle = CreateRentACarVehicleRequest
                 .builder()
-                .rentACarId(UUID.fromString("f15b983a-ca3e-45cc-852c-4e7805110366"))
+                .rentACarId(UUID.fromString("80474cee-a45d-453e-8562-adfd441ba1a9"))
                 .vehicle(CreateVehicleRequest
                         .builder()
                         .brand("Mercedes")
@@ -104,23 +101,194 @@ class VehicleControllerTest {
                         .build())
                 .build();
 
-        mockMvc.perform(post("", vehicle)
-                .contentType(APPLICATION_JSON))
+        String request = MapperTest.json(vehicle);
+
+        String token = tokenGenerator.generateAuthToken(userService.findByEmail("nikola@gmail.com"));
+
+        mockMvc.perform(org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post(URL_VEHICLES).header("Authorization", "Bearer " + token)
+                .contentType(contentType).content(request))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$", hasSize(1)))
-                .andExpect(jsonPath("$[0].numberOfSeats", is(vehicle.getVehicle().getNumberOfSeats())));
+                .andExpect(content().contentType(contentType))
+                .andExpect(jsonPath("$.[*].brand").value(hasItem("Mercedes")));
+    }
 
+    @Test(expected = NestedServletException.class)
+    @Transactional
+    public void tryToCreateNewVehicleWithNonExistentRentACar() throws Exception {
+        CreateRentACarVehicleRequest vehicle = CreateRentACarVehicleRequest
+                .builder()
+                .rentACarId(UUID.fromString("06cbbecd-7763-4e21-bc87-f8f5295f9649"))
+                .vehicle(CreateVehicleRequest
+                        .builder()
+                        .brand("Mercedes")
+                        .model("G 300")
+                        .numberOfSeats(4)
+                        .pricePerDay(500.0)
+                        .type("Automobile")
+                        .yearOfProduction(2019)
+                        .build())
+                .build();
+
+        String request = MapperTest.json(vehicle);
+
+        String token = tokenGenerator.generateAuthToken(userService.findByEmail("nikola@gmail.com"));
+
+        mockMvc.perform(org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post(URL_VEHICLES).header("Authorization", "Bearer " + token)
+                .contentType(contentType).content(request))
+                .andExpect(status().isInternalServerError());
     }
 
     @Test
-    void update() {
+    @Transactional
+    public void tryToCreateNewVehicleWithoutPermission() throws Exception {
+        CreateRentACarVehicleRequest create = CreateRentACarVehicleRequest
+                .builder()
+                .rentACarId(UUID.fromString("80474cee-a45d-453e-8562-adfd441ba1a9"))
+                .vehicle(CreateVehicleRequest
+                        .builder()
+                        .brand("Mercedes")
+                        .model("G 300")
+                        .numberOfSeats(4)
+                        .pricePerDay(500.0)
+                        .type("Automobile")
+                        .yearOfProduction(2019)
+                        .build())
+                .build();
+
+        String request = MapperTest.json(create);
+
+        String token = tokenGenerator.generateAuthToken(userService.findByEmail("lazar@gmail.com"));
+
+        mockMvc.perform(org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post(URL_VEHICLES).header("Authorization", "Bearer " + token)
+                .contentType(contentType).content(request))
+                .andExpect(status().isForbidden())
+                .andDo(print())
+                .andExpect(content().string(""));
     }
 
     @Test
-    void delete() {
+    @Transactional
+    public void tryToUpdateVehicle() throws Exception {
+        UpdateVehicleRequest update = UpdateVehicleRequest
+                .builder()
+                .id(UUID.fromString("dce034af-e082-4717-8569-b60457854a41"))
+                .model("Punto")
+                .build();
+
+        String request = MapperTest.json(update);
+
+        String token = tokenGenerator.generateAuthToken(userService.findByEmail("nikola@gmail.com"));
+
+        mockMvc.perform(org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put(URL_VEHICLES).header("Authorization", "Bearer " + token).contentType(contentType).content(request))
+                .andExpect(status().isOk())
+                .andExpect(content().contentType(contentType))
+                .andDo(print())
+                .andExpect(jsonPath("$.model").value("Punto"));
+    }
+
+    @Test(expected = NestedServletException.class)
+    @Transactional
+    public void tryToUpdateNonExistentVehicle() throws Exception {
+        UpdateVehicleRequest update = UpdateVehicleRequest
+                .builder()
+                .id(UUID.fromString("06cbbecd-7763-4e21-bc87-f8f5295f9649"))
+                .brand("Brabus")
+                .model("Punto")
+                .build();
+
+        String request = MapperTest.json(update);
+
+        String token = tokenGenerator.generateAuthToken(userService.findByEmail("nikola@gmail.com"));
+
+        mockMvc.perform(org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put(URL_VEHICLES).header("Authorization", "Bearer " + token).contentType(contentType).content(request))
+                .andExpect(status().isInternalServerError())
+                .andExpect(content().contentType(contentType))
+                .andDo(print())
+                .andExpect(jsonPath("$.model").value("Punto"));
+    }
+
+
+    @Test
+    @Transactional
+    public void tryToDeleteVehicle() throws Exception {
+        String token = tokenGenerator.generateAuthToken(userService.findByEmail("nikola@gmail.com"));
+
+        UUID id = UUID.fromString("dce034af-e082-4717-8569-b60457854a41");
+
+        mockMvc.perform(org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete(URL_VEHICLES + id).header("Authorization", "Bearer " + token))
+                .andExpect(status().isOk());
+    }
+
+    @Test(expected = NestedServletException.class)
+    @Transactional
+    public void tryToDeleteReservedVehicle() throws Exception {
+        String token = tokenGenerator.generateAuthToken(userService.findByEmail("nikola@gmail.com"));
+
+        UUID id = UUID.fromString("41c163f7-eaee-45cc-b48d-6422d67c5ee5");
+
+        mockMvc.perform(org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete(URL_VEHICLES + id).header("Authorization", "Bearer " + token))
+                .andExpect(status().isInternalServerError());
+    }
+
+    @Test(expected = NestedServletException.class)
+    @Transactional
+    public void tryToDeleteNonExistentVehicle() throws Exception {
+        String token = tokenGenerator.generateAuthToken(userService.findByEmail("nikola@gmail.com"));
+
+        UUID id = UUID.fromString("de7a66b5-af2e-4492-b9d9-4baa9b38eedd");
+
+        mockMvc.perform(org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete(URL_VEHICLES + id).header("Authorization", "Bearer " + token))
+                .andExpect(status().isInternalServerError())
+                .andDo(print())
+                .andExpect(jsonPath("$.message").value(" Entity Vehicle with this id de7a66b5-af2e-4492-b9d9-4baa9b38eedd does not exist!"));
     }
 
     @Test
-    void search() {
+    @Transactional
+    public void tryToRateVehicle() throws Exception {
+        CreateRatingRequest rating = CreateRatingRequest
+                .builder()
+                .mark(7)
+                .reservationId(UUID.fromString("6bda2447-933b-4daa-bb44-5e23f2d768bd"))
+                .build();
+        String request = MapperTest.json(rating);
+
+        String token = tokenGenerator.generateAuthToken(userService.findById(UUID.fromString("bdfb53b3-1585-4997-9b39-1420caebf53e")));
+
+        mockMvc.perform(org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post(URL_VEHICLES + "rating").header("Authorization", "Bearer " + token)
+                .contentType(contentType).content(request))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.[*].id").value(hasItem("41c163f7-eaee-45cc-b48d-6422d67c5ee5")));
     }
+
+    @Test(expected = NestedServletException.class)
+    @Transactional
+    public void tryToRateVehicleBeforeDropOffDate() throws Exception {
+        CreateRatingRequest rating = CreateRatingRequest
+                .builder()
+                .mark(7)
+                .reservationId(UUID.fromString("c8a4ae15-68fe-4e64-b344-7e4cf9e020e8"))
+                .build();
+        String request = MapperTest.json(rating);
+
+        String token = tokenGenerator.generateAuthToken(userService.findById(UUID.fromString("42a4cc34-61bc-43be-82d3-75ca5af1739e")));
+
+        mockMvc.perform(org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post(URL_VEHICLES + "rating").header("Authorization", "Bearer " + token)
+                .contentType(contentType).content(request))
+                .andExpect(status().isInternalServerError());
+    }
+
+
+    @Test
+    @Transactional
+    public void tryToSearchForVehicles() throws Exception {
+        String criteria = "search?pickUpDate=2019-09-28&dropOffDate=2019-10-15&pickUpLocation=Sremska Mitrovica&dropOffLocation=Sremska Mitrovica&type=Automobile&seats=4&startRange=100&endRange=500&rentACarId=3f58d3a4-cdd7-4712-8336-69ff555bdf6b";
+
+        mockMvc.perform(org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get(URL_VEHICLES + criteria))
+                .andExpect(status().isOk())
+                .andDo(print())
+                .andExpect(jsonPath("$.[*].id").value(hasItem("58b28253-341c-4dae-ac24-2f7f0ac3e817")));
+    }
+
+
 }

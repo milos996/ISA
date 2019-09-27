@@ -117,7 +117,7 @@ public class AuthService {
                                 .email(user.getEmail())
                                 .token(token)
                                 .role(user.getAuthorities().toArray()[0].toString())
-                                .isRentACarAdminFirstLogin(rentACarAdmin.isFirstLogin())
+                                .isNotFirstLogin(rentACarAdmin.isNotFirstLogin())
                                 .build();
                     } else {
                     return LoginUserResponse
@@ -155,7 +155,7 @@ public class AuthService {
                 user.setPassword(bCryptPasswordEncoder.encode(request.getNewPassword()));
 
                 RentACarAdmin rentACarAdmin = rentACarAdminRepository.findByUser_Id(UUID.fromString(auth.getName()));
-                rentACarAdmin.setFirstLogin(true);
+                rentACarAdmin.setNotFirstLogin(false);
                 rentACarAdminRepository.save(rentACarAdmin);
 
                 AirlineAdmin airlineAdmin = airlineAdminRepository.findByUser_Id(UUID.fromString(auth.getName()));
@@ -171,11 +171,11 @@ public class AuthService {
     }
 
     @Transactional(readOnly = true)
-    public boolean isFirstLogin() {
+    public boolean isNotFirstLogin() {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
 
         RentACarAdmin rentACarAdmin = rentACarAdminRepository.findByUser_Id(UUID.fromString(auth.getName()));
 
-        return rentACarAdmin.isFirstLogin();
+        return rentACarAdmin.isNotFirstLogin();
     }
 }

@@ -13,6 +13,7 @@ import org.springframework.security.authentication.AnonymousAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.UUID;
@@ -26,7 +27,7 @@ public class RentACarAdminService {
     private final RentACarAdminRepository rentACarAdminRepository;
     private final AddressRepository addressRepository;
 
-    @Transactional(rollbackFor = Exception.class)
+    @Transactional(rollbackFor = Exception.class, isolation = Isolation.SERIALIZABLE)
     public RentACarAdmin update(UpdateRentACarAdminRequest request) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 

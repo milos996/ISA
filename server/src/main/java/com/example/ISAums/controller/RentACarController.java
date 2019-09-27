@@ -8,6 +8,7 @@ import com.example.ISAums.dto.response.*;
 import com.example.ISAums.repository.VehicleRepository;
 import com.example.ISAums.service.AuthService;
 import com.example.ISAums.service.RentACarService;
+import com.example.ISAums.service.VehicleService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
@@ -17,18 +18,20 @@ import java.util.List;
 import java.util.UUID;
 
 import static com.example.ISAums.converter.RentACarConverter.*;
+import static com.example.ISAums.converter.VehicleConverter.toGetQuickVehicleResponseFromVehicles;
+import static com.example.ISAums.converter.VehicleConverter.toGetRentACarAvailableResponseFromVehicles;
 
 @RestController
 @RequestMapping("/rent-a-cars")
 public class RentACarController {
     private final RentACarService rentACarService;
-    private final VehicleRepository vehicleRepository;
+    private final VehicleService vehicleService;
 
     private final AuthService authService;
 
-    public RentACarController(RentACarService rentACarService, VehicleRepository vehicleRepository, AuthService authService) {
+    public RentACarController(RentACarService rentACarService, VehicleService vehicleService, AuthService authService) {
         this.rentACarService = rentACarService;
-        this.vehicleRepository = vehicleRepository;
+        this.vehicleService = vehicleService;
         this.authService = authService;
     }
 
@@ -51,9 +54,25 @@ public class RentACarController {
     @GetMapping
     @RequestMapping("/{id}/vehicles")
     public ResponseEntity<List<GetVehicleResponse>> getRentACarVehicles(@PathVariable(name = "id") UUID rentACarId) {
-        return ResponseEntity.ok(VehicleConverter.toGetVehicleResponseFromVehicles(vehicleRepository.findByRentACar_Id(rentACarId)));
+        return ResponseEntity.ok(VehicleConverter.toGetVehicleResponseFromVehicles(vehicleService.findByRentACar_Id(rentACarId)));
     }
 
+    //TODO get from airplane ticket destination and retrieve rent a car vehicle that exist on that location (same for confirm vehicle reservation)
+    @GetMapping("/{id}/vehicles/discount")
+    public ResponseEntity<List<GetDiscountedVehicleResponse>> quick(
+            @PathVariable(name = "id", required = true) String rentACarId,
+            @RequestParam(name = "pickUpDate", required = true) String pickUpDate,
+            @RequestParam(name = "dropOffDate", required = true) String dropOffDate
+    ) throws ParseException {
+        return ResponseEntity.ok(vehicleService.test(rentACarId, pickUpDate,dropOffDate));
+        //return ResponseEntity.ok(toGetQuickVehicleResponseFromVehicles(vehicleService.getQuick(pickUpDate, dropOffDate, rentACarId), pickUpDate, dropOffDate));
+    }
+
+    @GetMapping("/{id}/vehicles/availability")
+    @PreAuthorize("hasAnyAuthority('RENT_A_CAR_ADMIN')")
+    public ResponseEntity<List<GetRentACarAvailableResponse>> availability(@PathVariable("id") String rentACarId, @RequestParam("startDate") String startDate, @RequestParam("endDate") String endDate, @RequestParam("available") boolean available) throws ParseException {
+        return ResponseEntity.ok(toGetRentACarAvailableResponseFromVehicles(rentACarService.getAvailability(rentACarId, startDate, endDate, available)));
+    }
 
     @GetMapping("/{id}/income")
     @PreAuthorize("hasAnyAuthority('RENT_A_CAR_ADMIN')")
@@ -66,7 +85,6 @@ public class RentACarController {
     public ResponseEntity<List<GetRentACarVehicleBusynessResponse>> busyness(@PathVariable("id") String id, @RequestParam("startDate") String startDate, @RequestParam("endDate") String endDate) throws ParseException {
         return ResponseEntity.ok(rentACarService.getBusyness(id, startDate, endDate));
     }
-
 
     @PreAuthorize("@authService.isFirstLogin()")
     @PutMapping ResponseEntity<List<GetRentACarResponse>> update(@RequestBody UpdateRentACarRequest request) {
@@ -102,7 +120,5 @@ public class RentACarController {
     public ResponseEntity<List<GetRentACarResponse>> sort(@RequestParam(name = "by", required = true) String by)  {
         return ResponseEntity.ok(toGetRentACarsResponseFromRentACar(rentACarService.sort(by)));
     }
-
-
 
 }

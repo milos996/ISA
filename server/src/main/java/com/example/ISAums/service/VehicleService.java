@@ -3,18 +3,17 @@ package com.example.ISAums.service;
 import com.example.ISAums.dto.request.CreateRatingRequest;
 import com.example.ISAums.dto.request.CreateRentACarVehicleRequest;
 import com.example.ISAums.dto.request.UpdateVehicleRequest;
+import com.example.ISAums.dto.response.GetDiscountedVehicleResponse;
 import com.example.ISAums.exception.CustomException;
 import com.example.ISAums.exception.EntityWithIdDoesNotExist;
-import com.example.ISAums.model.Rating;
-import com.example.ISAums.model.RentACar;
-import com.example.ISAums.model.Vehicle;
-import com.example.ISAums.model.VehicleReservation;
+import com.example.ISAums.model.*;
 import com.example.ISAums.model.enumeration.RatingType;
 import com.example.ISAums.repository.*;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.text.SimpleDateFormat;
@@ -34,7 +33,7 @@ public class VehicleService {
     private final VehicleReservationRepository vehicleReservationRepository;
     private final DiscountRepository discountRepository;
 
-    @Transactional(rollbackFor = Exception.class)
+    @Transactional(rollbackFor = Exception.class, isolation = Isolation.SERIALIZABLE)
     public List<Vehicle> create(CreateRentACarVehicleRequest request) {
         Vehicle vehicle = toVehicleFromCreateVehicleRequest(request.getVehicle());
 
@@ -46,15 +45,17 @@ public class VehicleService {
 
         vehicleRepository.save(vehicle);
 
-        return vehicleRepository.findByRentACar_Id(request.getRentACarId());
+        String currentDate = formatDate(new Date());
+
+        return vehicleRepository.findRentACarVehicles(request.getRentACarId().toString(), currentDate);
     }
 
-    @Transactional(readOnly = true)
+    @Transactional(readOnly = true, isolation = Isolation.REPEATABLE_READ)
     public List<Vehicle> findAll() {
         return vehicleRepository.findAll();
     }
 
-    @Transactional(rollbackFor = Exception.class)
+    @Transactional(rollbackFor = Exception.class, isolation = Isolation.SERIALIZABLE)
     public Vehicle update(UpdateVehicleRequest request) {
         Vehicle vehicle = vehicleRepository.findById(request.getId()).orElse(null);
 
@@ -79,24 +80,21 @@ public class VehicleService {
         if (request.getType() != null)
             vehicle.setType(request.getType());
 
-
-
         //copyNonNullProperties(request, vehicle.get());
 
         vehicleRepository.save(vehicle);
 
-        return vehicle;
+        return vehicleRepository.findById(request.getId()).orElse(null);
     }
 
-    @Transactional(rollbackFor = Exception.class)
+    @Transactional(rollbackFor = Exception.class, isolation = Isolation.SERIALIZABLE)
     public List<Vehicle> delete(UUID vehicleId) {
         Vehicle vehicle = vehicleRepository.findById(vehicleId).orElse(null);
 
         if(vehicle == null)
             throw new EntityWithIdDoesNotExist("Vehicle", vehicleId);
 
-        Date date = new Date();
-        String endDate = formatDate(date);
+        String endDate = formatDate(new Date());
 
         List<Vehicle> reserved = vehicleReservationRepository.isReserved(vehicleId.toString(), endDate);
 
@@ -105,12 +103,13 @@ public class VehicleService {
 
         UUID rentACarId = vehicle.getRentACar().getId();
 
+        logger.info("RAC ID:" + rentACarId.toString());
         vehicleRepository.delete(vehicle);
 
-        return vehicleRepository.findByRentACar_Id(rentACarId);
+        return vehicleRepository.findRentACarVehicles(rentACarId.toString(), endDate);
     }
 
-    @Transactional(readOnly = true)
+    @Transactional(readOnly = true, isolation = Isolation.SERIALIZABLE)
     public List<Vehicle> search(String pickUpDate, String dropOffDate, String pickUpLocation, String dropOffLocation, String type, int seats, double startRange, double endRange, String rentACarId) {
         int cityCount = 2;
 
@@ -151,7 +150,7 @@ public class VehicleService {
         return vehicleRepository.search(rentACarId, pickUpDate, dropOffDate, pickUpLocation, dropOffLocation, type, seats, startRange, endRange, cityCount);
     }
 
-    @Transactional(rollbackFor = Exception.class)
+    @Transactional(rollbackFor = Exception.class, isolation = Isolation.SERIALIZABLE)
     public List<Vehicle> rate(CreateRatingRequest request) {
         VehicleReservation vehicleReservation = vehicleReservationRepository.findById(request.getReservationId()).orElse(null);
 
@@ -176,10 +175,13 @@ public class VehicleService {
         vehicle.setRating(ratingRepository.getAverageMarkForEntity(vehicle.getId().toString(), RatingType.VEHICLE.name()));
         vehicleRepository.save(vehicle);
 
-        return vehicleRepository.findByRentACar_Id(vehicle.getRentACar().getId());
+        Date date = new Date();
+        String currentDate = formatDate(date);
+
+        return vehicleRepository.findRentACarVehicles(vehicle.getRentACar().getId().toString(), currentDate);
     }
 
-    @Transactional(readOnly = true)
+    @Transactional(readOnly = true, isolation = Isolation.REPEATABLE_READ)
     public List<Vehicle> sort(String by, String rentACarId) {
         if (by.equals("brand"))
             return vehicleRepository.sortByBrand(rentACarId);
@@ -194,13 +196,26 @@ public class VehicleService {
 
     }
 
-    @Transactional(readOnly = true)
-    public List<Vehicle> getQuick(String pickUpDate, String dropOffDate) {
-        return null;
+    @Transactional(readOnly = true, isolation = Isolation.REPEATABLE_READ)
+    public List<Vehicle> getQuick(String pickUpDate, String dropOffDate, String rentACarId) {
+        return vehicleRepository.findVehiclesOnDiscount(pickUpDate, dropOffDate, rentACarId);
+    }
+
+    @Transactional(readOnly = true, isolation = Isolation.REPEATABLE_READ)
+    public List<Vehicle> findByRentACar_Id(UUID rentACarId) {
+        String currentDate = formatDate(new Date());
+        return vehicleRepository.findRentACarVehicles(rentACarId.toString(), currentDate);
     }
 
     private String formatDate(Date date) {
         SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
         return formatter.format(date);
     }
+
+    @Transactional(readOnly = true)
+    public List<GetDiscountedVehicleResponse> test(String rentACarId, String startDate, String endDate) {
+        return discountRepository.findVehicles(rentACarId, startDate, endDate);
+    }
+
+
 }

@@ -26,7 +26,8 @@ public class RentACarLocationController {
         return ResponseEntity.ok(toGetRentACarLocationsResponseFromRentALocations(rentACarLocationService.findAll()));
     }
 
-    @GetMapping(value = "/{id}")
+    @GetMapping
+    @RequestMapping("/{id}")
     public ResponseEntity<List<GetRentACarLocationResponse>> getRentACarLocations(@PathVariable("id") UUID id) {
         return ResponseEntity.ok(toGetRentACarLocationsResponseFromRentALocations(rentACarLocationService.findByRentACarId(id)));
     }

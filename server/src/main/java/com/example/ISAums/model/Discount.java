@@ -7,6 +7,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.Type;
 import org.hibernate.annotations.Where;
+import org.hibernate.validator.constraints.Range;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
@@ -42,8 +43,8 @@ public class Discount  extends  BaseEntity {
     @Enumerated(EnumType.STRING)
     private DiscountType type;
 
-
-
-
+    @Column(name = "rate")
+    @Range(min = 0)
+    private Double rate;
 
 }

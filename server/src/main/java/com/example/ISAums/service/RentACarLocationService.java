@@ -16,6 +16,7 @@ import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.*;
@@ -33,17 +34,17 @@ public class RentACarLocationService {
     private final RentACarRepository rentACarRepository;
     private final AgencyLocationRepository agencyLocationRepository;
 
-    @Transactional(readOnly = true)
+    @Transactional(readOnly = true, isolation = Isolation.READ_COMMITTED)
     public List<RentACarLocation> findAll() {
         return rentACarLocationRepository.findAll();
     }
 
-    @Transactional(readOnly = true)
+    @Transactional(readOnly = true, isolation = Isolation.READ_COMMITTED)
     public List<RentACarLocation> findByRentACarId(UUID id) {
         return rentACarLocationRepository.findByRentACar_Id(id);
     }
 
-    @Transactional(rollbackFor = Exception.class)
+    @Transactional(rollbackFor = Exception.class, isolation = Isolation.SERIALIZABLE)
     public List<RentACarLocation> create(CreateRentACarLocationRequest request) {
         RentACar rentACar = rentACarRepository.findById(request.getRentACarId()).orElse(null);
         //TODO are you owner?
@@ -69,7 +70,7 @@ public class RentACarLocationService {
         return rentACarLocationRepository.findByRentACar_Id(request.getRentACarId());
     }
 
-    @Transactional(rollbackFor = Exception.class)
+    @Transactional(rollbackFor = Exception.class, isolation = Isolation.SERIALIZABLE)
     public RentACarLocation update(UpdateRentACarLocationRequest request) {
         RentACar rentACar = rentACarRepository.findById(request.getRentACarId()).orElse(null);
 
@@ -88,7 +89,7 @@ public class RentACarLocationService {
         return rentACarLocation;
     }
 
-    @Transactional(rollbackFor = Exception.class)
+    @Transactional(rollbackFor = Exception.class, isolation = Isolation.SERIALIZABLE)
     public List<RentACarLocation>  delete(UUID rentACarLocationId) {
         Optional<RentACarLocation> rentACarLocation = rentACarLocationRepository.findById(rentACarLocationId);
 
@@ -101,7 +102,7 @@ public class RentACarLocationService {
         return rentACarLocationRepository.findByRentACar_Id(rentACarId);
     }
 
-    @Transactional(readOnly = true)
+    @Transactional(readOnly = true, isolation = Isolation.SERIALIZABLE)
     public List<RentACarLocation> search(String city, String state, String name, String pickUpDate, String dropOffDate) {
         if (city.equals("null"))
             city = null;
@@ -113,18 +114,6 @@ public class RentACarLocationService {
             pickUpDate = null;
         if (dropOffDate.equals("null"))
             dropOffDate = null;
-
-//        Map<RentACar, List<AgencyLocation>> offices = new HashMap<>();
-//        UUID current = rentACarLocations.get(0).getRentACar().getId();
-//        List<AgencyLocation> agencyLocations = new ArrayList<>();
-//        for (RentACarLocation racl : rentACarLocations) {
-//            if (racl.getRentACar().getId().equals(current)) {
-//                agencyLocations.add(racl.getAgencyLocation());
-//                offices.put(racl.getRentACar(), agencyLocations);
-//            } else {
-//                agencyLocations = new ArrayList<>();
-//            }
-//        }
 
         return rentACarLocationRepository.search(city, state, name, pickUpDate, dropOffDate);
     }

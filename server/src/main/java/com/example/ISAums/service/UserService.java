@@ -3,11 +3,14 @@ package com.example.ISAums.service;
 import com.example.ISAums.dto.request.UpdateFriendshipRequestRequest;
 import com.example.ISAums.dto.request.SendFriendshipRequestRequest;
 import com.example.ISAums.dto.request.UpdateUserProfileRequest;
+import com.example.ISAums.exception.CustomException;
 import com.example.ISAums.exception.EntityWithIdDoesNotExist;
 import com.example.ISAums.model.Friendship;
 import com.example.ISAums.model.enumeration.InvitationStatus;
 import com.example.ISAums.repository.FriendshipRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import com.example.ISAums.model.User;
 import com.example.ISAums.repository.UserRepository;
@@ -132,4 +135,23 @@ public class UserService {
 		copyNonNullProperties(request, friendship.get());
 		friendshipRepository.save(friendship.get());
 	}
+
+	@Transactional(readOnly = true)
+	public List<User> sort(String by) {
+		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+
+		String email =  authentication.getName();
+
+		User user = userRepository.findByEmail(email);
+
+		if (by.equals("firstName"))
+			return friendshipRepository.sortByFirstName(user.getId().toString());
+		else if(by.equals("lastName"))
+			return friendshipRepository.sortByLastName(user.getId().toString());
+		else
+			throw  new CustomException("Unknown attribute!");
+
+	}
+
+
 }
