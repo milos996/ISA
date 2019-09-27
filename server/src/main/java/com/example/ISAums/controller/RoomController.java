@@ -69,6 +69,7 @@ public class RoomController {
 
     @PostMapping
     @RequestMapping("/rating")
+    @PreAuthorize("hasAnyAuthority('USER')")
     public ResponseEntity<List<GetRoomResponse>> rating(@RequestBody CreateRatingRequest request) {
         roomService.rate(request);
         return null;

@@ -97,6 +97,8 @@ public class VehicleReservationService {
     public List<VehicleReservation> cancel(String vehicleReservationId) {
         VehicleReservation vehicleReservation = vehicleReservationRepository.findById(UUID.fromString(vehicleReservationId)).orElse(null);
 
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+
         Date currentDate = new Date();
 
         long diff = vehicleReservation.getEndDate().getTime() - currentDate.getTime();
@@ -108,7 +110,7 @@ public class VehicleReservationService {
 
         vehicleReservationRepository.deleteById(UUID.fromString(vehicleReservationId));
 
-        return vehicleReservationRepository.findAll();
+        return vehicleReservationRepository.findByUserId(authentication.getName());
     }
 
     private String format(Date date) {

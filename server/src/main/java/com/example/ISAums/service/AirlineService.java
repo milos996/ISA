@@ -11,6 +11,8 @@ import com.example.ISAums.model.*;
 import com.example.ISAums.model.enumeration.RatingType;
 import com.example.ISAums.repository.*;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Transactional;
@@ -94,12 +96,14 @@ public class AirlineService {
         if (airplaneTicket == null)
             throw new EntityWithIdDoesNotExist("airplane ticket",request.getReservationId());
 
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+
         Airline airline = airplaneTicket.getFlight().getAirplane().getAirline();
-        if (ratingRepository.checkIfUserAlreadyRateEntity("1a8591af-7141-4ecf-aee4-a4963b56db31", airline.getId().toString(), RatingType.AIRLINE.name()) != null)
+        if (ratingRepository.checkIfUserAlreadyRateEntity(authentication.getName(), airline.getId().toString(), RatingType.AIRLINE.name()) != null)
             throw new CustomException("You already rate this airline!");
 
         Rating rating = toRatingFromCreateRequest(airline.getId(), request, RatingType.AIRLINE);
-        rating.setUserID(UUID.fromString("1a8591af-7141-4ecf-aee4-a4963b56db31"));
+        rating.setUserID(UUID.fromString(authentication.getName()));
         ratingRepository.save(rating);
 
         airline.setRating(ratingRepository.getAverageMarkForEntity(airline.getId().toString(), RatingType.AIRLINE.name()));

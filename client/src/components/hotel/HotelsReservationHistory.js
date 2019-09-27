@@ -96,7 +96,7 @@ export default function HotelsReservation() {
       <MaterialTable
         title="History"
         columns={columns}
-        data={test}
+        data={hotels}
         actions={actions}
       />
     </div>
