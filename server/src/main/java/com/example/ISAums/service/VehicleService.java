@@ -12,6 +12,8 @@ import com.example.ISAums.repository.*;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Transactional;
@@ -32,6 +34,7 @@ public class VehicleService {
     private final RatingRepository ratingRepository;
     private final VehicleReservationRepository vehicleReservationRepository;
     private final DiscountRepository discountRepository;
+    private final UserRepository userRepository;
 
     @Transactional(rollbackFor = Exception.class, isolation = Isolation.SERIALIZABLE)
     public List<Vehicle> create(CreateRentACarVehicleRequest request) {
@@ -150,7 +153,7 @@ public class VehicleService {
         return vehicleRepository.search(rentACarId, pickUpDate, dropOffDate, pickUpLocation, dropOffLocation, type, seats, startRange, endRange, cityCount);
     }
 
-    @Transactional(rollbackFor = Exception.class, isolation = Isolation.SERIALIZABLE)
+    @Transactional(rollbackFor = Exception.class)
     public List<Vehicle> rate(CreateRatingRequest request) {
         VehicleReservation vehicleReservation = vehicleReservationRepository.findById(request.getReservationId()).orElse(null);
 
@@ -165,11 +168,15 @@ public class VehicleService {
         if (vehicle == null)
             throw new EntityWithIdDoesNotExist("vehicle", vehicleReservation.getVehicle().getId());
 
-        if (ratingRepository.checkIfUserAlreadyRateEntity("1a8591af-7141-4ecf-aee4-a4963b56db31", vehicle.getId().toString(), RatingType.VEHICLE.name()) != null)
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        User user = userRepository.findById(UUID.fromString(authentication.getName())).orElse(null);
+
+
+        if (ratingRepository.checkIfUserAlreadyRateEntity(user.getId().toString(), vehicle.getId().toString(), RatingType.VEHICLE.name()) != null)
             throw new CustomException("You already rate this vehicle!");
 
         Rating rating = toRatingFromCreateRequest(vehicle.getId(), request, RatingType.VEHICLE);
-        rating.setUserID(UUID.fromString("1a8591af-7141-4ecf-aee4-a4963b56db31"));
+        rating.setUserID(UUID.fromString(authentication.getName()));
         ratingRepository.save(rating);
 
         vehicle.setRating(ratingRepository.getAverageMarkForEntity(vehicle.getId().toString(), RatingType.VEHICLE.name()));

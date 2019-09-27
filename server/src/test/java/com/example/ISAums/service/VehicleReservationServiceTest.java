@@ -162,6 +162,76 @@ public class VehicleReservationServiceTest {
         verify(rentACarLocationRepositoryMocked, times(2)).checkLocationCity("3f58d3a4-cdd7-4712-8336-69ff555bdf6b", "Sremska Mitrovica");
         verify(userRepositoryMocked, times(1)).findById(UUID.fromString("c28113e1-9b85-422e-bfbd-ee1ed579b9d7"));
 
+        verifyNoMoreInteractions(vehicleRepositoryMocked);
+        verifyNoMoreInteractions(rentACarLocationRepositoryMocked);
+        verifyNoMoreInteractions(userRepositoryMocked);
+    }
+
+    @Test
+    @Transactional
+    @WithMockUser(username = "c28113e1-9b85-422e-bfbd-ee1ed579b9d7")
+    public void tryToGetUserReservations() throws Exception {
+        String pickUp = "2019-07-10";
+        String dropOff = "2019-07-14";
+        Date startDate = new SimpleDateFormat("yyyy-MM-dd").parse(pickUp);
+        Date endDate = new SimpleDateFormat("yyyy-MM-dd").parse(dropOff);
+
+        User user = User
+                .builder()
+                .state("Serbia")
+                .city("Sremska Mitrovica")
+                .email("user@user.com")
+                .firstName("User")
+                .lastName("User")
+                .password("123")
+                .phoneNumber("06891231")
+                .role(Role.USER)
+                .isEnabled(true)
+                .build();
+        user.setId(UUID.fromString("c28113e1-9b85-422e-bfbd-ee1ed579b9d7"));
+
+        RentACar rac = RentACar
+                .builder()
+                .name("USM")
+                .address(Address
+                        .builder()
+                        .city("Novi Sad")
+                        .state("Serbia")
+                        .street("Pap Pavla 42")
+                        .latitude(45.2771)
+                        .longitude(19.8435)
+                        .build())
+                .description("Fina vozila")
+                .rating(0.0)
+                .build();
+        rac.setId(UUID.fromString("3f58d3a4-cdd7-4712-8336-69ff555bdf6b"));
+
+        Vehicle vehicle = Vehicle
+                .builder()
+                .brand("BMW")
+                .model("M7")
+                .rentACar(rac)
+                .rating(0.0)
+                .numberOfPeople(4)
+                .pricePerDay(250.0)
+                .type("Automobile")
+                .yearOfProduction(2017)
+                .build();
+        vehicle.setId(UUID.fromString("2e9b3a9a-cc3c-42d3-80fc-7837e5504e70"));
+
+        VehicleReservation vehicleReservation = VehicleReservation
+                .builder()
+                .vehicle(vehicle)
+                .user(user)
+                .price(1000.00)
+                .startDate(startDate)
+                .endDate(endDate)
+                .build();
+        vehicleReservation.setId(UUID.fromString("96612c15-da98-4a71-95be-d897b0c318d8"));
+
+        when(userRepositoryMocked.findById(UUID.fromString("c28113e1-9b85-422e-bfbd-ee1ed579b9d7"))).thenReturn(Optional.of(user));
+        when(vehicleReservationRepositoryMocked.findByUserId("c28113e1-9b85-422e-bfbd-ee1ed579b9d7")).thenReturn(Arrays.asList(vehicleReservation));
+
     }
 
 }

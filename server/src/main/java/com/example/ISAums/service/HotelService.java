@@ -9,11 +9,10 @@ import com.example.ISAums.exception.EntityWithIdDoesNotExist;
 import com.example.ISAums.model.*;
 import com.example.ISAums.model.enumeration.RatingType;
 import com.example.ISAums.model.enumeration.ReportType;
-import com.example.ISAums.repository.AddressRepository;
-import com.example.ISAums.repository.HotelRepository;
-import com.example.ISAums.repository.HotelReservationRepository;
-import com.example.ISAums.repository.RatingRepository;
+import com.example.ISAums.repository.*;
 import com.example.ISAums.util.UtilService;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Transactional;
@@ -142,16 +141,18 @@ public class HotelService {
         if (hotelReservation == null)
             throw new EntityWithIdDoesNotExist("hotel reservation",request.getReservationId());
 
-//      if (hotelReservation.getEndDate().compareTo(new LocalDate()) >= 0)
-//            throw new CustomException("You did not left hotel yet!");
+      if (hotelReservation.getEndDate().compareTo(LocalDate.now()) >= 0)
+            throw new CustomException("You did not left hotel yet!");
 
         Hotel hotel = hotelReservation.getRoom().getHotel();
 
-//        if (ratingRepository.checkIfUserAlreadyRateEntity(userId, request.getEntityId(), RatingType.RENT_A_CAR.name()) != null)
-//            throw new CustomException("You already rate this hotel!");
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+
+        if (ratingRepository.checkIfUserAlreadyRateEntity(authentication.getName(), hotel.getId().toString(), RatingType.HOTEL.name()) != null)
+            throw new CustomException("You already rate this hotel!");
 
         Rating rating = toRatingFromCreateRequest(hotel.getId(), request, RatingType.HOTEL);
-//        rating.setUserID(userId);
+        rating.setUserID(UUID.fromString(authentication.getName()));
         ratingRepository.save(rating);
 
         hotel.setRating(ratingRepository.getAverageMarkForEntity(hotel.getId().toString(), RatingType.HOTEL.name()));

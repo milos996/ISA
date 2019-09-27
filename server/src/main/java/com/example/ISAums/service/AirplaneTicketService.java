@@ -210,7 +210,7 @@ public class AirplaneTicketService {
     public List<AirplaneTicket> getTickets() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 
-        User user = userRepository.findByEmail(authentication.getName());
+        User user = userRepository.findById(UUID.fromString(authentication.getName())).orElse(null);
 
         return airplaneTicketRepository.findByUser_Id(user.getId());
     }

@@ -25,7 +25,6 @@ const LoginPage = ({ closeModal }) => {
         email,
         password,
         callback: () => {
-          window.location.reload();
           closeModal();
         }
       })

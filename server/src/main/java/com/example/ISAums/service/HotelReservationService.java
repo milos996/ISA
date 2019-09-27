@@ -68,7 +68,7 @@ public class HotelReservationService {
     @Transactional(readOnly = true, isolation = Isolation.READ_COMMITTED)
     public List<HotelReservation> get() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        User user = userRepository.findByEmail(authentication.getName());
+        User user = userRepository.findById(UUID.fromString(authentication.getName())).orElse(null);
 
         return hotelReservationRepository.findByAirplaneTicket_User_Id(user.getId());
     }

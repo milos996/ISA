@@ -16,6 +16,8 @@ import com.example.ISAums.repository.HotelReservationRepository;
 import com.example.ISAums.repository.RatingRepository;
 import com.example.ISAums.repository.RoomRepository;
 import com.example.ISAums.repository.UserRepository;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Transactional;
@@ -35,15 +37,15 @@ public class RoomService {
     private final RoomRepository roomRepository;
     private final HotelReservationRepository hotelReservationRepository;
     private final HotelRepository hotelRepository;
-    private final UserRepository userRepository;
     private final RatingRepository ratingRepository;
+    private final UserRepository userRepository;
 
-    public RoomService(RoomRepository roomRepository, HotelReservationRepository hotelReservationRepository, HotelRepository hotelRepository, UserRepository userRepository, RatingRepository ratingRepository) {
+    public RoomService(RoomRepository roomRepository, HotelReservationRepository hotelReservationRepository, HotelRepository hotelRepository, UserRepository userRepository, RatingRepository ratingRepository, UserRepository userRepository1) {
         this.roomRepository = roomRepository;
         this.hotelReservationRepository = hotelReservationRepository;
         this.hotelRepository = hotelRepository;
-        this.userRepository = userRepository;
         this.ratingRepository = ratingRepository;
+        this.userRepository = userRepository1;
     }
 
     @Transactional(readOnly = true, isolation = Isolation.READ_COMMITTED)
@@ -119,21 +121,22 @@ public class RoomService {
         if (hotelReservation == null)
             throw new EntityWithIdDoesNotExist("hotel reservation",request.getReservationId());
 
-//        if (hotelReservation.getEndDate().compareTo(new LocalDate()) >= 0)
-//            throw new CustomException("You did not left hotel yet!");
-
+        if (hotelReservation.getEndDate().compareTo(LocalDate.now()) >= 0)
+            throw new CustomException("You did not left hotel yet!");
 
         Room room = hotelReservation.getRoom();
 
-//        if (ratingRepository.checkIfUserAlreadyRateEntity(userId, request.getEntityId(), RatingType.RENT_A_CAR.name()) != null)
-//            throw new CustomException("You already rate this room!");
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+
+        if (ratingRepository.checkIfUserAlreadyRateEntity(authentication.getName(), room.getId().toString(), RatingType.ROOM.name()) != null)
+            throw new CustomException("You already rate this room!");
 
         Rating rating = toRatingFromCreateRequest(room.getId(), request, RatingType.ROOM);
-//        rating.setUserID(userId);
         ratingRepository.save(rating);
 
         room.setRating(ratingRepository.getAverageMarkForEntity(room.getId().toString(), RatingType.ROOM.name()));
         roomRepository.save(room);
+
 
     }
 }

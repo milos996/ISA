@@ -92,6 +92,7 @@ public class HotelController {
 
     @PostMapping
     @RequestMapping("/rating")
+    @PreAuthorize("hasAnyAuthority('USER')")
     public ResponseEntity<List<GetHotelResponse>> rating(@RequestBody CreateRatingRequest request) {
         hotelService.rate(request);
         return null;

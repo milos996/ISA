@@ -41,6 +41,7 @@ public class RentACarService {
     private final VehicleRepository vehicleRepository;
     private final RatingRepository ratingRepository;
     private final VehicleReservationRepository vehicleReservationRepository;
+    private final UserRepository userRepository;
 
 
     @Transactional(rollbackFor = Exception.class, isolation = Isolation.SERIALIZABLE)
@@ -58,7 +59,7 @@ public class RentACarService {
         return rentACarRepository.findById(id).orElse(null);
     }
 
-    @Transactional(rollbackFor = Exception.class, isolation = Isolation.SERIALIZABLE)
+    @Transactional(rollbackFor = Exception.class)
     public List<RentACar> create(CreateRentACarRequest request) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         RentACarAdmin rentACarAdmin = rentACarAdminRepository.findByUser_Id(UUID.fromString(authentication.getName()));
@@ -159,8 +160,7 @@ public class RentACarService {
         VehicleReservation vehicleReservation = vehicleReservationRepository.findById(request.getReservationId()).orElse(null);
 
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-
-        logger.info("INFO: " + authentication.getName());
+        User user = userRepository.findById(UUID.fromString(authentication.getName())).orElse(null);
 
         if (vehicleReservation == null)
             throw new EntityWithIdDoesNotExist("vehicle reservation", request.getReservationId());
@@ -170,11 +170,11 @@ public class RentACarService {
         if (vehicleReservation.getEndDate().compareTo(new Date()) >= 0)
             throw new CustomException("You did not return vehicle yet!");
 
-        if (ratingRepository.checkIfUserAlreadyRateEntity("1a8591af-7141-4ecf-aee4-a4963b56db31", rentACar.getId().toString(), RatingType.RENT_A_CAR.name()) != null)
+        if (ratingRepository.checkIfUserAlreadyRateEntity(user.getId().toString(), rentACar.getId().toString(), RatingType.RENT_A_CAR.name()) != null)
             throw new CustomException("You already rate this rent a car service!");
 
         Rating rating = toRatingFromCreateRequest(rentACar.getId(), request, RatingType.RENT_A_CAR);
-        rating.setUserID(UUID.fromString("1a8591af-7141-4ecf-aee4-a4963b56db31"));
+        rating.setUserID(UUID.fromString(authentication.getName()));
         ratingRepository.save(rating);
 
         rentACar.setRating(ratingRepository.getAverageMarkForEntity(rentACar.getId().toString(), RatingType.RENT_A_CAR.name()));
