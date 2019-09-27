@@ -9,6 +9,7 @@ import com.example.ISAums.repository.*;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
@@ -33,6 +34,7 @@ public class HotelReservationService {
         this.userRepository = userRepository;
     }
 
+    @Transactional(rollbackFor = Exception.class, isolation = Isolation.SERIALIZABLE)
     public void create(CreateHotelReservationsRequest request) {
         Optional<AirplaneTicket> optionalAirplaneTicket = airplaneTicketRepository.findById(request.getAirplaneTicketId());
         if (!optionalAirplaneTicket.isPresent()) {
@@ -63,7 +65,7 @@ public class HotelReservationService {
 
     }
 
-    @Transactional(readOnly = true)
+    @Transactional(readOnly = true, isolation = Isolation.READ_COMMITTED)
     public List<HotelReservation> get() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         User user = userRepository.findByEmail(authentication.getName());
@@ -71,7 +73,7 @@ public class HotelReservationService {
         return hotelReservationRepository.findByAirplaneTicket_User_Id(user.getId());
     }
 
-    @Transactional(rollbackFor = Exception.class)
+    @Transactional(rollbackFor = Exception.class, isolation = Isolation.READ_COMMITTED)
     public List<HotelReservation> cancel(String hotelReservationId) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         User user = userRepository.findByEmail(authentication.getName());
