@@ -9,16 +9,27 @@ import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
+import java.util.UUID;
+
 import static com.example.ISAums.util.ValidationConstraints.*;
 
 @Data
-@Builder
 @Entity
 @NoArgsConstructor
 @AllArgsConstructor
 @Table(name = "hotel")
 @Where(clause = "is_deleted='false'")
 public class Hotel extends BaseEntity {
+
+    @Builder
+    public Hotel(UUID id, @NotBlank @Size(max = NAME_SIZE) String name, @NotBlank @Size(max = DESCRIPTION_SIZE) String description, @Range(min = 0, max = MAX_RATING) Double rating, @NotNull Address address, Integer version) {
+        super(id);
+        this.name = name;
+        this.description = description;
+        this.rating = rating;
+        this.address = address;
+        this.version = version;
+    }
 
     @Column(name = "name")
     @NotBlank
@@ -40,7 +51,6 @@ public class Hotel extends BaseEntity {
     private Address address;
 
     @Version
-    private Integer version;
-
+    private Integer version = 1;
 }
 

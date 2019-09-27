@@ -9,6 +9,7 @@ import com.example.ISAums.repository.HotelRepository;
 import com.example.ISAums.repository.HotelServiceRepository;
 import com.example.ISAums.repository.ServiceRepository;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
@@ -29,12 +30,12 @@ public class HotelServiceService {
         this.serviceRepository = serviceRepository;
     }
 
-    @Transactional(readOnly = true)
+    @Transactional(readOnly = true, isolation = Isolation.READ_COMMITTED)
     public List<HotelService> getServices(UUID hotelId) {
         return hotelServiceRepository.findAllByHotelId(hotelId);
     }
 
-    @Transactional(rollbackFor = Exception.class)
+    @Transactional(rollbackFor = Exception.class, isolation = Isolation.READ_COMMITTED)
     public List<HotelService> createHotelServices(UUID hotelId, CreateHotelServiceRequest request) {
         Optional<Hotel> hotel = hotelRepository.findById(hotelId);
 

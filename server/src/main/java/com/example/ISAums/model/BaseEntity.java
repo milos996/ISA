@@ -18,6 +18,15 @@ import java.util.UUID;
 @EqualsAndHashCode(of = {"id"})
 public abstract class BaseEntity implements Persistable<UUID> {
 
+    public BaseEntity(){}
+
+    public BaseEntity(UUID id) {
+        this.id = id;
+        this.timeCreated = LocalDateTime.now();
+        this.timeUpdated = LocalDateTime.now();
+        this.isDeleted = false;
+    }
+
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(name = "id")
