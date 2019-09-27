@@ -8,7 +8,11 @@ import Toolbar from "@material-ui/core/Toolbar";
 import Typography from "@material-ui/core/Typography";
 import Button from "@material-ui/core/Button";
 import teal from "@material-ui/core/colors/teal";
-import { userTokenSelector, userDataSelector } from "../store/user/selectors";
+import {
+  userTokenSelector,
+  userDataSelector,
+  userLoggedSelector
+} from "../store/user/selectors";
 import { logoutUser } from "../store/user/actions";
 import { history } from "../index";
 import GroupIcon from "@material-ui/icons/Group";
@@ -30,7 +34,6 @@ export default function Navbar() {
   const classes = useStyles();
   const [modalStyle] = useState(getModalStyle);
   const userToken = useSelector(userTokenSelector);
-  const userData = useSelector(userDataSelector);
   const dispatch = useDispatch();
   const user = useSelector(userDataSelector);
 
@@ -59,7 +62,8 @@ export default function Navbar() {
 
   useEffect(() => {
     dispatch(fetchAirlineAdmin());
-  }, [user.id]);
+  }, []);
+
   return (
     <div className={classes.root}>
       <Modal open={registrationModalVisibility} className={classes.modal}>
@@ -87,7 +91,7 @@ export default function Navbar() {
               <img src={require("../assets/umslogo.png")} height="48"></img>
             </Link>
           </Typography>
-          {userToken ? (
+          {userToken != null ? (
             <div>
               <LightTooltip title="Friends">
                 <Link className="button" to={`/user/${user.id}/friends`}>
@@ -134,7 +138,7 @@ export default function Navbar() {
               </Button>
             </div>
           )}
-          {userToken && user.role === "AIRLINE_ADMIN" && (
+          {userToken != null && user.role === "AIRLINE_ADMIN" && (
             <LightTooltip title="Airline profile">
               <Link
                 className="button"

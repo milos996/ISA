@@ -35,13 +35,18 @@ import static com.example.ISAums.converter.RentACarConverter.*;
 public class RentACarService {
     private static final Logger logger = LoggerFactory.getLogger(RentACarService.class);
 
-    private final UserRepository userRepository;
     private final RentACarAdminRepository rentACarAdminRepository;
     private final RentACarRepository rentACarRepository;
     private final AddressRepository addressRepository;
     private final VehicleRepository vehicleRepository;
     private final RatingRepository ratingRepository;
     private final VehicleReservationRepository vehicleReservationRepository;
+
+
+    @Transactional(rollbackFor = Exception.class, isolation = Isolation.SERIALIZABLE)
+    public void save(RentACar rentACar) {
+        rentACarRepository.save(rentACar);
+    }
 
     @Transactional(readOnly = true, isolation = Isolation.REPEATABLE_READ)
     public List<RentACar> findAll() {

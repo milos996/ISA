@@ -30,7 +30,8 @@ import {
   putUserHotelsReservation,
   putUserVehiclesReservation,
   putUserInvites,
-  putFriendshipRequests
+  putFriendshipRequests,
+  putLogged
 } from "./actions";
 import userService from "../../services/api/User";
 import authService from "../../services/api/Auth";
@@ -46,15 +47,17 @@ export function* registration() {
 export function* login() {
   const { payload } = yield take(LOGIN);
   const { data } = yield call(authService.login, payload);
-  yield put(putUserToken(data.token));
   yield put(putUserData(data));
+  yield put(putUserToken(data.token));
 }
 
 export function* logout() {
   const { payload } = yield take(LOGOUT);
   window.localStorage.clear();
   yield put(putUserToken(null));
+  yield put(putLogged(null));
   yield put(putUserData(null));
+  payload.callback();
 }
 
 export function* saveUserData() {
