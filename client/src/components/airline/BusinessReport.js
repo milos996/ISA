@@ -31,7 +31,7 @@ export default function BuisinessReport({ airlineId }) {
   const airlineRating = useSelector(selectAirlineRating);
   const user = useSelector(userDataSelector);
   const [modalStyle] = React.useState(getModalStyle);
-  const airlineAdmin = useSelector(selectAirlineAdmin);
+  //  const airlineAdmin = useSelector(selectAirlineAdmin);
 
   const [showIncomeModalVisibility, setShowIncomeModalVisibility] = useState(
     false
@@ -98,8 +98,7 @@ export default function BuisinessReport({ airlineId }) {
         value={airlineRating.avgRating}
       />
 
-      {user.role === "AIRLINE_ADMIN" &&
-      airlineAdmin.airline.id === airlineId ? (
+      {user.role === "AIRLINE_ADMIN" && (
         <div>
           <Button
             variant="contained"
@@ -118,7 +117,7 @@ export default function BuisinessReport({ airlineId }) {
             Sold tickets
           </Button>
         </div>
-      ) : null}
+      )}
 
       <h2>Flights</h2>
       <Table className={classes.table}>

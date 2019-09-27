@@ -36,6 +36,10 @@ export default function AirlineInformation({ airlineId }) {
     value: ""
   });
 
+  useEffect(() => {
+    dispatch(fetchAirlineAdmin());
+  }, [airlineId]);
+
   var isReadOnly = true;
   var role = "";
 
@@ -43,16 +47,9 @@ export default function AirlineInformation({ airlineId }) {
     role = user.role;
   }
 
-  if (airlineAdmin != "") {
-    isReadOnly =
-      airlineId === airlineAdmin.airline.id && role === "AIRLINE_ADMIN"
-        ? false
-        : true;
+  if (role === "AIRLINE_ADMIN") {
+    isReadOnly = false;
   }
-
-  useEffect(() => {
-    dispatch(fetchAirlineAdmin());
-  }, [airlineId]);
 
   function setStreet(street) {
     dispatch(putAirlineLocationInformation({ street }));
@@ -207,8 +204,7 @@ export default function AirlineInformation({ airlineId }) {
             }}
           />
         </Container>
-        {user.role === "AIRLINE_ADMIN" &&
-        airlineId === airlineAdmin.airline.id ? (
+        {user.role === "AIRLINE_ADMIN" && (
           <Button
             variant="contained"
             color="primary"
@@ -217,7 +213,7 @@ export default function AirlineInformation({ airlineId }) {
           >
             Save
           </Button>
-        ) : null}
+        )}
 
         <ISAMap
           address={airlineDetails.address}
