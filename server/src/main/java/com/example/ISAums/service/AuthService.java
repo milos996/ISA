@@ -116,6 +116,11 @@ public class AuthService {
                                 .id(user.getId())
                                 .email(user.getEmail())
                                 .token(token)
+                                .firstName(user.getFirstName())
+                                .lastName(user.getLastName())
+                                .city(user.getCity())
+                                .state(user.getState())
+                                .phoneNumber(user.getPhoneNumber())
                                 .role(user.getAuthorities().toArray()[0].toString())
                                 .isNotFirstLogin(rentACarAdmin.isNotFirstLogin())
                                 .build();
@@ -125,6 +130,11 @@ public class AuthService {
                             .id(user.getId())
                             .email(user.getEmail())
                             .token(token)
+                            .firstName(user.getFirstName())
+                            .lastName(user.getLastName())
+                            .city(user.getCity())
+                            .state(user.getState())
+                            .phoneNumber(user.getPhoneNumber())
                             .role(user.getAuthorities().toArray()[0].toString())
                             .build();
                     }

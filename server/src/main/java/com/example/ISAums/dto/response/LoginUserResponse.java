@@ -20,4 +20,14 @@ public class LoginUserResponse {
     private boolean isNotFirstLogin;
 
     private String role;
+
+    private String firstName;
+
+    private String lastName;
+
+    private String phoneNumber;
+
+    private String state;
+
+    private String city;
 }

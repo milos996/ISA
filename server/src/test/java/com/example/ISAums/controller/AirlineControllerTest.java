@@ -16,12 +16,10 @@ import org.springframework.http.MediaType;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
-
 import java.nio.charset.Charset;
-
-import static com.example.ISAums.constants.AirlineConstants.DB_NAME;
+import static com.example.ISAums.constants.AirlineConstants.AIRLINE_DB_NAME;
 import static com.example.ISAums.constants.UserConstants.*;
-import static com.example.ISAums.constants.UserConstants.DB_ID;
+import static com.example.ISAums.constants.AirlineConstants.AIRLINE_DB_ID;
 import static org.hamcrest.Matchers.hasItem;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
@@ -80,6 +78,16 @@ public class AirlineControllerTest {
         mockMvc.perform(get(URL + "/all"))
                 .andExpect(content().contentType(contentType))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.[*].name").value(hasItem(DB_NAME)));
+                .andExpect(jsonPath("$.[*].name").value(hasItem(AIRLINE_DB_NAME)));
+    }
+
+    @Test
+    public void getAirline() throws Exception {
+
+        mockMvc.perform(get(URL + "/" + AIRLINE_DB_ID))
+                .andExpect(content().contentType(contentType))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.name").value(AIRLINE_DB_NAME));
+
     }
 }

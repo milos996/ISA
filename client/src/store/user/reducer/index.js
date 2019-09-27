@@ -8,7 +8,8 @@ import {
   PUT_USER_HOTELS_RESERVATION,
   PUT_USER_VEHICLES_RESERVATION,
   PUT_USER_INVITES,
-  PUT_FRIENDSHIP_REQUESTS
+  PUT_FRIENDSHIP_REQUESTS,
+  PUT_LOGGED
 } from "../constants";
 import * as computationFunctions from "./computation-functions";
 
@@ -184,7 +185,13 @@ const initialState = {
   userHotelsReservation: [],
   userInvites: [],
   foundUsers: [],
-  users: []
+  users: [],
+  logged: {
+    role: window.localStorage.getItem("role"),
+    userID: window.localStorage.getItem("userID"),
+    email: window.localStorage.getItem("email"),
+    token: window.localStorage.getItem("token")
+  }
 };
 
 const userReducer = (state = initialState, { type, payload }) => {
@@ -207,7 +214,8 @@ const actionHandler = {
   [PUT_USER_VEHICLES_RESERVATION]:
     computationFunctions.putUserVehiclesReservation,
   [PUT_USER_INVITES]: computationFunctions.putUserInvites,
-  [PUT_FRIENDSHIP_REQUESTS]: computationFunctions.putFriendshipRequests
+  [PUT_FRIENDSHIP_REQUESTS]: computationFunctions.putFriendshipRequests,
+  [PUT_LOGGED]: computationFunctions.putLogged
 };
 
 export default userReducer;

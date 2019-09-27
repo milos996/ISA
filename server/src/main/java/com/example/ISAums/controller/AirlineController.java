@@ -5,7 +5,6 @@ import com.example.ISAums.dto.request.UpdateAirlineRequest;
 import com.example.ISAums.dto.response.*;
 import com.example.ISAums.model.Airline;
 import com.example.ISAums.model.AirlineAdmin;
-import com.example.ISAums.model.User;
 import com.example.ISAums.service.AirlineService;
 import com.example.ISAums.service.AirplaneTicketService;
 import org.springframework.http.ResponseEntity;

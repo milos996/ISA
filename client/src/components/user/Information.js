@@ -47,11 +47,11 @@ export default function UserInformation({ userId }) {
 
   useEffect(() => {
     dispatch(fetchUserData(userId));
-  }, [userId]);
+  }, []);
 
   useEffect(() => {
     dispatch(fetchFriendshipRequests(userId));
-  });
+  }, []);
 
   function handleSaveButton() {
     dispatch(saveUserData(userDetails));

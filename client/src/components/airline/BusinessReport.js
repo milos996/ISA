@@ -51,7 +51,7 @@ export default function BuisinessReport({ airlineId }) {
   ]);
   useEffect(() => {
     dispatch(fetchAirlineAdmin());
-  }, [airlineId]);
+  }, []);
   useEffect(() => {
     dispatch(fetchAirlineRating(airlineId));
   }, [airlineId]);

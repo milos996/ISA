@@ -7,12 +7,18 @@ import plane from "../assets/black-plane.png";
 import building from "../assets/skyline.png";
 import car from "../assets/car.png";
 import HomeAuth from "../pages/HomeAuthUser";
-import { userTokenSelector } from "../store/user/selectors";
+import { userDataSelector } from "../store/user/selectors";
 import Background from "../assets/background.jpg";
 
 export default function HomePage({ history }) {
   const classes = useStyles();
-  const userToken = useSelector(userTokenSelector);
+  const userData = useSelector(userDataSelector);
+
+  var role = "";
+
+  if (userData != null) {
+    role = userData.role;
+  }
 
   return (
     <Container classes={{ root: classes.vertical }} maxWidth="xl">
@@ -45,7 +51,7 @@ export default function HomePage({ history }) {
           }}
         />
       </Container>
-      {userToken != null ? <HomeAuth /> : null}
+      {role === "USER" ? <HomeAuth /> : null}
     </Container>
   );
 }
