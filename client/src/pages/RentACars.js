@@ -1,34 +1,34 @@
-import React, { useEffect, useState } from "react";
-import { useDispatch, useSelector } from "react-redux";
-import { makeStyles } from "@material-ui/core/styles";
-import TextField from "@material-ui/core/TextField";
-import Button from "@material-ui/core/Button";
-import ButtonGroup from "@material-ui/core/ButtonGroup";
-import { Container } from "@material-ui/core";
-import Card from "@material-ui/core/Card";
-import CardHeader from "@material-ui/core/CardHeader";
-import CardMedia from "@material-ui/core/CardMedia";
-import CardActions from "@material-ui/core/CardActions";
-import CardContent from "@material-ui/core/CardContent";
-import Typography from "@material-ui/core/Typography";
-import Rating from "react-rating";
-import StarBorderIcon from "@material-ui/icons/StarBorder";
-import StarIcon from "@material-ui/icons/Star";
-import DateFnsUtils from "@date-io/date-fns";
+import React, { useEffect, useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import { makeStyles } from '@material-ui/core/styles';
+import TextField from '@material-ui/core/TextField';
+import Button from '@material-ui/core/Button';
+import ButtonGroup from '@material-ui/core/ButtonGroup';
+import { Container } from '@material-ui/core';
+import Card from '@material-ui/core/Card';
+import CardHeader from '@material-ui/core/CardHeader';
+import CardMedia from '@material-ui/core/CardMedia';
+import CardActions from '@material-ui/core/CardActions';
+import CardContent from '@material-ui/core/CardContent';
+import Typography from '@material-ui/core/Typography';
+import Rating from 'react-rating';
+import StarBorderIcon from '@material-ui/icons/StarBorder';
+import StarIcon from '@material-ui/icons/Star';
+import DateFnsUtils from '@date-io/date-fns';
 import {
   KeyboardDatePicker,
   MuiPickersUtilsProvider
-} from "@material-ui/pickers";
-import dateFormat from "dateformat";
-import Modal from "@material-ui/core/Modal";
-import CreateRentACar from "../components/rent-a-car/CreateRentACar";
-import EditRentACar from "../components/rent-a-car/EditRentACar";
-import RentACarIncome from "../components/rent-a-car/Income";
-import RentACarBusyness from "../components/rent-a-car/Busyness";
-import RentACarAvailability from "../components/rent-a-car/Availability";
-import vehicle from "../assets/vehicle.png";
-import Background from "../assets/background.jpg";
-import ISAMap from "../components/hotel/ISAMap";
+} from '@material-ui/pickers';
+import dateFormat from 'dateformat';
+import Modal from '@material-ui/core/Modal';
+import CreateRentACar from '../components/rent-a-car/CreateRentACar';
+import EditRentACar from '../components/rent-a-car/EditRentACar';
+import RentACarIncome from '../components/rent-a-car/Income';
+import RentACarBusyness from '../components/rent-a-car/Busyness';
+import RentACarAvailability from '../components/rent-a-car/Availability';
+import vehicle from '../assets/vehicle.png';
+import Background from '../assets/background.jpg';
+import ISAMap from '../components/hotel/ISAMap';
 import {
   fetchRentACars,
   searchRentACars,
@@ -38,14 +38,14 @@ import {
   fetchVehicles,
   fetchRentACarLocationInformation,
   fetchOffices
-} from "../store/rent-a-car/actions";
+} from '../store/rent-a-car/actions';
 import {
   selectRentACars,
   selectRentACarDetails,
   selectRentACarOffices,
   selectOffices
-} from "../store/rent-a-car/selectors";
-import { userDataSelector } from "../store/user/selectors";
+} from '../store/rent-a-car/selectors';
+import { userDataSelector } from '../store/user/selectors';
 
 export default function RentACarPage({ history, location }) {
   const user = useSelector(userDataSelector);
@@ -94,7 +94,7 @@ export default function RentACarPage({ history, location }) {
   }
 
   function handleUpdate() {
-    if (selected.name === undefined) alert("Please select rent a car first");
+    if (selected.name === undefined) alert('Please select rent a car first');
     else setUpdateModalVisibility(true);
   }
 
@@ -116,30 +116,30 @@ export default function RentACarPage({ history, location }) {
   }
 
   function handleShowIncome(val, index) {
-    if (selected.name === undefined) alert("Please select rent a car first");
+    if (selected.name === undefined) alert('Please select rent a car first');
     else setShowIncomeModalVisibility(true);
   }
 
   function handleShowBusyness() {
-    if (selected.name === undefined) alert("Please select rent a car first");
+    if (selected.name === undefined) alert('Please select rent a car first');
     else setShowBusynessModalVisibility(true);
   }
 
   function handleShowAvailability() {
-    if (selected.name === undefined) alert("Please select rent a car first");
+    if (selected.name === undefined) alert('Please select rent a car first');
     else setShowAvailabilityModalVisibility(true);
   }
 
   function handleSortByName() {
-    dispatch(sortRentACars({ by: "name" }));
+    dispatch(sortRentACars({ by: 'name' }));
   }
 
   function handleSortByAddress() {
-    dispatch(sortRentACars({ by: "address" }));
+    dispatch(sortRentACars({ by: 'address' }));
   }
 
   function handleSortByRating() {
-    dispatch(sortRentACars({ by: "rating" }));
+    dispatch(sortRentACars({ by: 'rating' }));
   }
 
   useEffect(() => {
@@ -224,9 +224,9 @@ export default function RentACarPage({ history, location }) {
               margin="normal"
               label="Start date"
               value={pickUpDate}
-              onChange={date => setPickUpDate(dateFormat(date, "yyyy-mm-dd"))}
+              onChange={date => setPickUpDate(dateFormat(date, 'yyyy-mm-dd'))}
               KeyboardButtonProps={{
-                "aria-label": "change date"
+                'aria-label': 'change date'
               }}
             />
           </MuiPickersUtilsProvider>
@@ -239,9 +239,9 @@ export default function RentACarPage({ history, location }) {
               margin="normal"
               label="End date"
               value={dropOffDate}
-              onChange={date => setDropOffDate(dateFormat(date, "yyyy-mm-dd"))}
+              onChange={date => setDropOffDate(dateFormat(date, 'yyyy-mm-dd'))}
               KeyboardButtonProps={{
-                "aria-label": "change date"
+                'aria-label': 'change date'
               }}
             />
           </MuiPickersUtilsProvider>
@@ -275,7 +275,7 @@ export default function RentACarPage({ history, location }) {
               RATING
             </Button>
           </ButtonGroup>
-          {user.role === "RENT_A_CAR_ADMIN" ? (
+          {user.role === 'RENT_A_CAR_ADMIN' ? (
             <Button
               variant="contained"
               color="primary"
@@ -310,8 +310,8 @@ export default function RentACarPage({ history, location }) {
                   pathname: `/rent-a-cars/${rac.id}/vehicles`,
                   state: {
                     pickUpDate: pickUpDate,
-                    dropOffDate: dropOffDate
-                    //airplaneTicketId: location.state.airplaneTicketId
+                    dropOffDate: dropOffDate,
+                    airplaneTicketId: location.state.airplaneTicketId
                   }
                 });
               }}
@@ -341,7 +341,7 @@ export default function RentACarPage({ history, location }) {
 
               <br />
             </CardContent>
-            {user.role === "RENT_A_CAR_ADMIN" ? (
+            {user.role === 'RENT_A_CAR_ADMIN' ? (
               <CardActions>
                 <Container className={classes.buttonGroupBckg}>
                   <ButtonGroup
@@ -409,28 +409,28 @@ function getModalStyle() {
 
 const useStyles = makeStyles(theme => ({
   paper: {
-    position: "absolute",
-    width: "50%",
+    position: 'absolute',
+    width: '50%',
     backgroundColor: theme.palette.background.paper,
-    border: "2px solid #008080",
+    border: '2px solid #008080',
     boxShadow: theme.shadows[5],
     padding: theme.spacing(2, 4, 3)
   },
   card: {
-    marginTop: "9.5%",
+    marginTop: '9.5%',
     backgroundColor: theme.palette.background.paper,
-    border: "2px solid #008080",
+    border: '2px solid #008080',
     boxShadow: theme.shadows[5],
     padding: theme.spacing(1, 1, 1),
-    height: "70%"
+    height: '70%'
   },
   media: {
     height: 128,
-    backgroundSize: "contain"
+    backgroundSize: 'contain'
   },
   content: {
-    marginTop: "7%",
-    textAlign: "center"
+    marginTop: '7%',
+    textAlign: 'center'
   },
   description: {
     marginLeft: 20,
@@ -438,13 +438,13 @@ const useStyles = makeStyles(theme => ({
   },
   rating: {},
   vertical: {
-    display: "flex",
-    flexDirection: "column",
+    display: 'flex',
+    flexDirection: 'column',
     background: `url(${Background})`
   },
   horizontal: {
-    display: "flex",
-    flexDirection: "row",
+    display: 'flex',
+    flexDirection: 'row',
     paddingBottom: 20,
     background: `url(${Background})`
   },
@@ -454,23 +454,23 @@ const useStyles = makeStyles(theme => ({
     width: 200
   },
   button: {
-    background: "#008080",
+    background: '#008080',
     marginBottom: 25,
     marginLeft: 25,
     marginTop: 20,
     height: 35
   },
   buttonGroup: {
-    background: "#008080",
-    color: "#FFFFFF"
+    background: '#008080',
+    color: '#FFFFFF'
   },
   buttonGroupBckg: {
-    background: "#FFFFFF",
-    color: "#FFFFFF"
+    background: '#FFFFFF',
+    color: '#FFFFFF'
   },
   offices: {
-    display: "flex",
-    flexDirection: "column",
-    textAlign: "center"
+    display: 'flex',
+    flexDirection: 'column',
+    textAlign: 'center'
   }
 }));

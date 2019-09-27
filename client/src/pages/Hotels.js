@@ -1,21 +1,21 @@
-import React, { useEffect, useState } from "react";
-import { useDispatch, useSelector } from "react-redux";
-import { makeStyles } from "@material-ui/core/styles";
-import { fetchHotels } from "../store/hotel/actions";
-import { selectHotels } from "../store/hotel/selectors";
-import building from "../assets/skyline.png";
-import NavigationCards from "../components/UI/NavigationCards";
-import ISAMap from "../components/hotel/ISAMap";
-import Button from "@material-ui/core/Button";
-import ButtonGroup from "@material-ui/core/ButtonGroup";
+import React, { useEffect, useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import { makeStyles } from '@material-ui/core/styles';
+import { fetchHotels } from '../store/hotel/actions';
+import { selectHotels } from '../store/hotel/selectors';
+import building from '../assets/skyline.png';
+import NavigationCards from '../components/UI/NavigationCards';
+import ISAMap from '../components/hotel/ISAMap';
+import Button from '@material-ui/core/Button';
+import ButtonGroup from '@material-ui/core/ButtonGroup';
 import {
   KeyboardDatePicker,
   MuiPickersUtilsProvider
-} from "@material-ui/pickers";
-import TextField from "@material-ui/core/TextField";
-import DateFnsUtils from "@date-io/date-fns";
-import { searchHotelsBasedOnFilters, sortHotels } from "../store/hotel/actions";
-import { userTokenSelector } from "../store/user/selectors";
+} from '@material-ui/pickers';
+import TextField from '@material-ui/core/TextField';
+import DateFnsUtils from '@date-io/date-fns';
+import { searchHotelsBasedOnFilters, sortHotels } from '../store/hotel/actions';
+import { userTokenSelector } from '../store/user/selectors';
 
 export default function HotelsPage({ history, location }) {
   const dispatch = useDispatch();
@@ -46,15 +46,15 @@ export default function HotelsPage({ history, location }) {
   }
 
   function handleSortByName() {
-    dispatch(sortHotels({ by: "name" }));
+    dispatch(sortHotels({ by: 'name' }));
   }
 
   function handleSortByAddress() {
-    dispatch(sortHotels({ by: "address" }));
+    dispatch(sortHotels({ by: 'address' }));
   }
 
   function handleSortByRating() {
-    dispatch(sortHotels({ by: "rating" }));
+    dispatch(sortHotels({ by: 'rating' }));
   }
 
   useEffect(() => {
@@ -64,16 +64,35 @@ export default function HotelsPage({ history, location }) {
   return (
     <div className="horizontal-items a-i-fs f-ww">
       <div className="vertical-items a-i-fs f-ww">
-        {userToken && (
-          <Button
-            variant="contained"
-            className={classes.button}
-            onClick={() => {
-              history.push("/");
-            }}
-          >
-            Cancel Reservation
-          </Button>
+        {userToken && !!location.state && (
+          <div>
+            <Button
+              variant="contained"
+              className={classes.button}
+              onClick={() => {
+                history.push('/');
+              }}
+            >
+              Cancel Reservation
+            </Button>
+
+            <Button
+              variant="contained"
+              className={classes.button}
+              onClick={() => {
+                history.push({
+                  pathname: `/rent-a-cars`,
+                  state: {
+                    airplaneTicketId: location.state
+                      ? location.state.airplaneTicketId
+                      : ''
+                  }
+                });
+              }}
+            >
+              Reserve vehicle
+            </Button>
+          </div>
         )}
         <div className="vertical-items a-i-fs f-ww">
           <TextField
@@ -114,7 +133,7 @@ export default function HotelsPage({ history, location }) {
               value={startDate}
               onChange={date => setStartDate(date)}
               KeyboardButtonProps={{
-                "aria-label": "change date"
+                'aria-label': 'change date'
               }}
             />
           </MuiPickersUtilsProvider>
@@ -129,7 +148,7 @@ export default function HotelsPage({ history, location }) {
               value={endDate}
               onChange={date => setEndDate(date)}
               KeyboardButtonProps={{
-                "aria-label": "change date"
+                'aria-label': 'change date'
               }}
             />
           </MuiPickersUtilsProvider>
@@ -169,7 +188,7 @@ export default function HotelsPage({ history, location }) {
                   endDate,
                   airplaneTicketId: location.state
                     ? location.state.airplaneTicketId
-                    : ""
+                    : ''
                 }
               });
             }}
@@ -184,8 +203,8 @@ export default function HotelsPage({ history, location }) {
 
 const useStyles = makeStyles(theme => ({
   container: {
-    display: "flex",
-    flexWrap: "wrap"
+    display: 'flex',
+    flexWrap: 'wrap'
   },
   textField: {
     marginLeft: theme.spacing(1),
