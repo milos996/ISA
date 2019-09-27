@@ -30,10 +30,10 @@ export default function Navbar() {
   const classes = useStyles();
   const [modalStyle] = useState(getModalStyle);
   const userToken = useSelector(userTokenSelector);
-  const userData = useSelector(userDataSelector);
   const dispatch = useDispatch();
   const user = useSelector(userDataSelector);
-
+  var airlineId = "";
+  const airlineAdmin = useSelector(selectAirlineAdmin);
   const [
     registrationModalVisibility,
     setRegistrationModalVisibility
@@ -41,7 +41,14 @@ export default function Navbar() {
 
   const [loginModalVisibility, setLoginModalVisibility] = useState(false);
 
-  const airlineAdmin = useSelector(selectAirlineAdmin);
+  useEffect(() => {
+    dispatch(fetchAirlineAdmin());
+  }, []);
+
+  if (airlineAdmin != "") {
+    airlineId = airlineAdmin.airline.id;
+  }
+
   const handleLogout = () => {
     dispatch(
       logoutUser({
@@ -57,9 +64,6 @@ export default function Navbar() {
     setLoginModalVisibility(false);
   }
 
-  useEffect(() => {
-    dispatch(fetchAirlineAdmin());
-  }, [user.id]);
   return (
     <div className={classes.root}>
       <Modal open={registrationModalVisibility} className={classes.modal}>

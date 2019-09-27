@@ -34,25 +34,14 @@ public class AirplaneTicketController {
     @PostMapping(value = "/quickBooking")
     @PreAuthorize("hasAnyAuthority('USER')")
     public ResponseEntity<CreateQuickTicketBookingResponse> createQuickTicketBooking(@AuthenticationPrincipal UUID userId, @RequestBody CreateQuickTicketBookingRequest request){
-        AirplaneTicket airplaneTicket = null;
-        try{
-            airplaneTicket = airplaneTicketService.createQuickTicketBooking(userId, request);
-        }catch(FlightIsFullException e){
-            return new ResponseEntity(HttpStatus.INTERNAL_SERVER_ERROR);
-        }
-
-         return ResponseEntity.ok(toCreateQuickTicketBookingResponseFromAirplaneTicket(airplaneTicket));
+        AirplaneTicket airplaneTicket = airplaneTicketService.createQuickTicketBooking(userId, request);
+        return ResponseEntity.ok(toCreateQuickTicketBookingResponseFromAirplaneTicket(airplaneTicket));
     }
 
     @PostMapping(value = "/reservation")
     public ResponseEntity<TicketReservationResponse> ticketReservation(@AuthenticationPrincipal UUID userId, @RequestBody CreateAirplaneTicketReservationRequest request){
-        AirplaneTicket ticket = null;
-        try {
-            ticket = airplaneTicketService.reservation(userId, request);
-        }catch(SeatIsAlreadyReservedException e){
-            return new ResponseEntity(HttpStatus.INTERNAL_SERVER_ERROR);
-        }
 
+        AirplaneTicket ticket = airplaneTicketService.reservation(userId, request);
         return ResponseEntity.ok(toTicketReservationResponseFromTicket(ticket));
     }
 

@@ -37,10 +37,15 @@ export default function AirlineInformation({ airlineId }) {
   });
 
   var isReadOnly = true;
+  var role = "";
+
+  if (user != null) {
+    role = user.role;
+  }
 
   if (airlineAdmin != "") {
     isReadOnly =
-      airlineId === airlineAdmin.airline.id && user.role === "AIRLINE_ADMIN"
+      airlineId === airlineAdmin.airline.id && role === "AIRLINE_ADMIN"
         ? false
         : true;
   }
