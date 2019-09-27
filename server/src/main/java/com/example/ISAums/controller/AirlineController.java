@@ -59,7 +59,10 @@ public class AirlineController {
     @GetMapping(value = "/airline-admin")
     public ResponseEntity<GetAirlineAdminResponse> getAirlineAdmin(@AuthenticationPrincipal UUID userId){
        AirlineAdmin admin = airlineService.getAirlineAdmin(userId);
-        return ResponseEntity.ok(toGetAirlineAdminResponseFromAdmin(admin));
+       if(admin != null)
+           return ResponseEntity.ok(toGetAirlineAdminResponseFromAdmin(admin));
+       else
+           return ResponseEntity.ok().build();
     }
 
     @GetMapping(value = "/{id}/sold-tickets")

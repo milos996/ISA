@@ -36,10 +36,14 @@ export default function AirlineInformation({ airlineId }) {
     value: ""
   });
 
-  const isReadOnly =
-    airlineId === airlineAdmin.airline.id && user.role === "AIRLINE_ADMIN"
-      ? false
-      : true;
+  var isReadOnly = true;
+
+  if (airlineAdmin != "") {
+    isReadOnly =
+      airlineId === airlineAdmin.airline.id && user.role === "AIRLINE_ADMIN"
+        ? false
+        : true;
+  }
 
   useEffect(() => {
     dispatch(fetchAirlineAdmin());

@@ -8,7 +8,8 @@ import { makeTicketReservation } from "../../store/airplane_ticket/actions";
 import { selectSeats } from "../../store/airplane_ticket/selectors";
 import {
   putSelectedSeats,
-  fetchFlight
+  fetchFlight,
+  clearSelectedSeats
 } from "../../store/airplane_ticket/actions";
 import { Link } from "react-router-dom";
 import { REQUEST_TYPE } from "../../constants/user";
@@ -61,6 +62,7 @@ export default function ChooseSeats({ match, history }) {
         }
       })
     );
+    dispatch(clearSelectedSeats([]));
   }
 
   return (
@@ -131,7 +133,6 @@ export default function ChooseSeats({ match, history }) {
           Reserve
         </Button>
       )}
-
       {selectedSeats.length > 1 && (
         <Link
           to={

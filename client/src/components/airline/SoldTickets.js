@@ -116,7 +116,7 @@ export default function SoldTickets({ closeModal }) {
         />
         <VictoryBar
           data={soldTickets}
-          x="price"
+          x="ticket"
           y="soldTickets"
           style={{ data: { fill: "#008080" } }}
         />

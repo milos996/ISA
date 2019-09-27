@@ -51,7 +51,7 @@ export default function UserInformation({ userId }) {
 
   useEffect(() => {
     dispatch(fetchFriendshipRequests(userId));
-  }, [userId]);
+  });
 
   function handleSaveButton() {
     dispatch(saveUserData(userDetails));

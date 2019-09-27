@@ -87,6 +87,20 @@ export default function Navbar() {
               <img src={require("../assets/umslogo.png")} height="48"></img>
             </Link>
           </Typography>
+
+          {userToken && user.role === "AIRLINE_ADMIN" && (
+            <LightTooltip title="Airline profile">
+              <Link
+                className="button"
+                to={`/airline/${airlineAdmin.airline.id}`}
+              >
+                <Button color="inherit">
+                  <AirlineIcon></AirlineIcon>
+                </Button>
+              </Link>
+            </LightTooltip>
+          )}
+
           {userToken ? (
             <div>
               <LightTooltip title="Friends">
@@ -133,18 +147,6 @@ export default function Navbar() {
                 <InputRoundedIcon></InputRoundedIcon>
               </Button>
             </div>
-          )}
-          {userToken && user.role === "AIRLINE_ADMIN" && (
-            <LightTooltip title="Airline profile">
-              <Link
-                className="button"
-                to={`/airline/${airlineAdmin.airline.id}`}
-              >
-                <Button color="inherit">
-                  <AirlineIcon></AirlineIcon>
-                </Button>
-              </Link>
-            </LightTooltip>
           )}
         </Toolbar>
       </AppBar>

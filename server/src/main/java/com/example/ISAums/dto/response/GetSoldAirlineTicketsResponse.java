@@ -7,8 +7,8 @@ import org.springframework.data.rest.core.config.Projection;
 @Projection(name = "soldAirlineTicketsResponse", types = {AirplaneTicket.class})
 public interface GetSoldAirlineTicketsResponse {
 
-    @Value("#{target.price}")
-    Double getPrice();
+    @Value("#{'(' + target.t_segment + ', ' + target.t_row + ', ' + target.t_column + ')'}")
+    String getTicket();
 
     @Value("#{target.sold_tickets}")
     Integer getSoldTickets();
