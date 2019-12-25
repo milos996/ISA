@@ -7,9 +7,6 @@ import lombok.NoArgsConstructor;
 import org.hibernate.validator.constraints.Range;
 import org.springframework.lang.Nullable;
 
-import javax.validation.constraints.NotNull;
-import java.util.UUID;
-
 
 @Builder
 @Data

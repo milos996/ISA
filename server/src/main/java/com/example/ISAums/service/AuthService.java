@@ -8,7 +8,6 @@ import com.example.ISAums.dto.response.LoginUserResponse;
 import com.example.ISAums.exception.CustomException;
 import com.example.ISAums.exception.EntityAlreadyExistsException;
 import com.example.ISAums.model.*;
-import com.example.ISAums.model.enumeration.Role;
 import com.example.ISAums.repository.*;
 import com.example.ISAums.security.JwtTokenUtil;
 import com.example.ISAums.security.UserDetailsServiceImpl;
@@ -19,20 +18,14 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
-import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-
+import org.springframework.stereotype.Service;
 import javax.mail.MessagingException;
 import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
-import java.security.Security;
-import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.List;
 import java.util.UUID;
 
 @Service
@@ -108,7 +101,7 @@ public class AuthService {
                 if (authentication.isAuthenticated()) {
                     SecurityContextHolder.getContext().setAuthentication(authentication);
                     String token = jwtTokenUtil.generateAuthToken(user);
-                    String hotelId = String.valueOf(user.getHotelAdmin().getHotel().getId());
+                    //String hotelId = String.valueOf(user.getHotelAdmin().getHotel().getId());
 
                     if (user.getAuthorities().toArray()[0].toString().equals("RENT_A_CAR_ADMIN")){
                         RentACarAdmin rentACarAdmin = rentACarAdminRepository.findByUser_Id(user.getId());
@@ -137,7 +130,7 @@ public class AuthService {
                             .state(user.getState())
                             .phoneNumber(user.getPhoneNumber())
                             .role(user.getAuthorities().toArray()[0].toString())
-                            .hotelId(hotelId)
+                            .hotelId(null)
                             .build();
                     }
                 }

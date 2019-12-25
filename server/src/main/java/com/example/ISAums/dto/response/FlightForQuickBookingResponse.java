@@ -4,6 +4,7 @@ import com.example.ISAums.model.AirlineDestination;
 import com.example.ISAums.model.Airplane;
 import lombok.Builder;
 import lombok.Data;
+
 import java.sql.Time;
 import java.util.UUID;
 

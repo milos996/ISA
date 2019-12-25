@@ -1,7 +1,7 @@
 package com.example.ISAums.service;
+
 import com.example.ISAums.dto.request.CreateFlightRequest;
 import com.example.ISAums.dto.request.CreateRatingRequest;
-import com.example.ISAums.dto.request.UpdateFlightRequest;
 import com.example.ISAums.dto.response.GetFlightAverageRatingResponse;
 import com.example.ISAums.exception.CustomException;
 import com.example.ISAums.exception.EntityWithIdDoesNotExist;
@@ -9,12 +9,10 @@ import com.example.ISAums.model.*;
 import com.example.ISAums.model.enumeration.RatingType;
 import com.example.ISAums.repository.*;
 import lombok.RequiredArgsConstructor;
-import org.apache.tomcat.jni.Local;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
+import org.springframework.stereotype.Service;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
@@ -22,7 +20,6 @@ import java.util.Optional;
 import java.util.UUID;
 
 import static com.example.ISAums.converter.RatingConverter.toRatingFromCreateRequest;
-import static com.example.ISAums.util.UtilService.copyNonNullProperties;
 
 @Service
 @RequiredArgsConstructor

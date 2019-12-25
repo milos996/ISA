@@ -1,9 +1,7 @@
 package com.example.ISAums.model;
 
-import com.example.ISAums.model.BaseEntity;
-import com.example.ISAums.model.User;
-import lombok.*;
-
+import lombok.Data;
+import lombok.NoArgsConstructor;
 import javax.persistence.*;
 import java.sql.Timestamp;
 import java.util.Calendar;

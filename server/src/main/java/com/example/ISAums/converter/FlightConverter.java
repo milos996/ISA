@@ -2,8 +2,6 @@ package com.example.ISAums.converter;
 
 import com.example.ISAums.dto.response.*;
 import com.example.ISAums.model.Flight;
-
-import java.time.LocalTime;
 import java.util.List;
 import java.util.stream.Collectors;
 

@@ -8,9 +8,10 @@ import com.example.ISAums.exception.EntityAlreadyExistsException;
 import com.example.ISAums.exception.EntityWithIdDoesNotExist;
 import com.example.ISAums.model.*;
 import com.example.ISAums.model.enumeration.RatingType;
-import com.example.ISAums.model.enumeration.ReportType;
-import com.example.ISAums.repository.*;
-import com.example.ISAums.util.UtilService;
+import com.example.ISAums.repository.AddressRepository;
+import com.example.ISAums.repository.HotelRepository;
+import com.example.ISAums.repository.HotelReservationRepository;
+import com.example.ISAums.repository.RatingRepository;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
@@ -19,7 +20,10 @@ import org.springframework.transaction.annotation.Transactional;
 
 import javax.validation.Valid;
 import java.time.LocalDate;
-import java.util.*;
+import java.util.Date;
+import java.util.List;
+import java.util.Optional;
+import java.util.UUID;
 
 import static com.example.ISAums.converter.HotelConverter.toAddressFromRequest;
 import static com.example.ISAums.converter.RatingConverter.toRatingFromCreateRequest;

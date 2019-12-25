@@ -2,7 +2,6 @@ package com.example.ISAums.dto.response;
 
 import lombok.Builder;
 import lombok.Data;
-import lombok.Getter;
 
 import java.util.UUID;
 

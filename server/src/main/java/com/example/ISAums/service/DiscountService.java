@@ -4,23 +4,17 @@ import com.example.ISAums.dto.request.CreateDiscountRequest;
 import com.example.ISAums.exception.CustomException;
 import com.example.ISAums.exception.EntityWithIdDoesNotExist;
 import com.example.ISAums.model.Discount;
-import com.example.ISAums.model.VehicleReservation;
 import com.example.ISAums.model.enumeration.DiscountType;
 import com.example.ISAums.repository.DiscountRepository;
 import com.example.ISAums.repository.VehicleRepository;
 import lombok.RequiredArgsConstructor;
-import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.sql.SQLException;
-import java.sql.SQLIntegrityConstraintViolationException;
 import java.text.ParseException;
-import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
 import java.util.UUID;
 
-import static  com.example.ISAums.converter.DiscountConverter.toDiscountFromRequest;
+import static com.example.ISAums.converter.DiscountConverter.toDiscountFromRequest;
 
 @Service
 @RequiredArgsConstructor

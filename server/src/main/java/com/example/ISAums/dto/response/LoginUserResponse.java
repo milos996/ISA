@@ -1,10 +1,9 @@
 package com.example.ISAums.dto.response;
 
-import com.example.ISAums.model.enumeration.Role;
-import lombok.*;
-import org.springframework.security.core.GrantedAuthority;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
 
-import java.util.List;
 import java.util.UUID;
 
 @Data

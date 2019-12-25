@@ -1,9 +1,7 @@
 package com.example.ISAums.service;
 
-import com.example.ISAums.converter.RentACarLocationConverter;
 import com.example.ISAums.dto.request.CreateRentACarLocationRequest;
 import com.example.ISAums.dto.request.UpdateRentACarLocationRequest;
-import com.example.ISAums.dto.response.SearchRentACarLocationResponse;
 import com.example.ISAums.exception.CustomException;
 import com.example.ISAums.exception.EntityWithIdDoesNotExist;
 import com.example.ISAums.model.AgencyLocation;
@@ -19,10 +17,13 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.*;
+import java.util.List;
+import java.util.Optional;
+import java.util.UUID;
 
-import static com.example.ISAums.converter.AgencyLocationConverter.*;
-import static com.example.ISAums.converter.RentACarLocationConverter.*;
+import static com.example.ISAums.converter.AgencyLocationConverter.toAgencyLocationFromCreateRequest;
+import static com.example.ISAums.converter.AgencyLocationConverter.toAgencyLocationFromUpdateRequest;
+import static com.example.ISAums.converter.RentACarLocationConverter.toRentACarLocationFromCreateRequest;
 
 
 @Service

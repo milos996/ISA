@@ -9,6 +9,7 @@ const ENDPOINTS = {
 
 class AuthService extends HttpBaseClient {
   login = async credentials => {
+
     const { data } = await this.getApiClient().post(
       ENDPOINTS.AUTH_LOGIN,
       credentials

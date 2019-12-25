@@ -1,14 +1,11 @@
 package com.example.ISAums.model;
 
-import java.util.HashSet;
-import java.util.Set;
-import java.util.UUID;
-import javax.persistence.*;
-
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 import org.hibernate.annotations.Where;
-
-import javax.persistence.Entity;
+import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 
 

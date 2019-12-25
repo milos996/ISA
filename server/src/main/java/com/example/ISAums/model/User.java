@@ -1,19 +1,24 @@
 package com.example.ISAums.model;
-import java.util.Collection;
-import java.util.Collections;
-import javax.persistence.*;
+
 import com.example.ISAums.model.enumeration.Role;
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 import org.hibernate.annotations.Where;
 import org.springframework.lang.Nullable;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
+import javax.persistence.*;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
+import java.util.Collection;
+import java.util.Collections;
+
 import static com.example.ISAums.util.ValidationConstraints.*;
 
 @Data

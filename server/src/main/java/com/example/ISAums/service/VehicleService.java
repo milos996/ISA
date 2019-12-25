@@ -14,15 +14,16 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Transactional;
-
+import org.springframework.stereotype.Service;
 import java.text.SimpleDateFormat;
-import java.util.*;
+import java.util.Date;
+import java.util.List;
+import java.util.UUID;
 
 import static com.example.ISAums.converter.RatingConverter.toRatingFromCreateRequest;
-import static com.example.ISAums.converter.VehicleConverter.*;
+import static com.example.ISAums.converter.VehicleConverter.toVehicleFromCreateVehicleRequest;
 
 @Service
 @RequiredArgsConstructor

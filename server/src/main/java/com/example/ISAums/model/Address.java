@@ -1,6 +1,9 @@
 package com.example.ISAums.model;
 
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 import org.hibernate.annotations.Where;
 import org.hibernate.validator.constraints.Range;
 
@@ -10,7 +13,6 @@ import javax.persistence.Table;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
-
 import java.util.UUID;
 
 import static com.example.ISAums.util.ValidationConstraints.*;

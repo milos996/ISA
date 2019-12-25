@@ -9,7 +9,6 @@ import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
 
 import static com.example.ISAums.util.ValidationConstraints.*;
-import static com.example.ISAums.util.ValidationConstraints.CITY_SIZE;
 
 @Builder
 @Data

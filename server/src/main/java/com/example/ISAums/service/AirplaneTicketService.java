@@ -6,21 +6,26 @@ import com.example.ISAums.dto.request.CreateQuickTicketBookingRequest;
 import com.example.ISAums.dto.response.GetAirlineIncomeResponse;
 import com.example.ISAums.dto.response.GetSoldAirlineTicketsResponse;
 import com.example.ISAums.email_service.EmailServiceImpl;
+import com.example.ISAums.exception.CustomException;
 import com.example.ISAums.exception.FlightIsFullException;
 import com.example.ISAums.exception.SeatIsAlreadyReservedException;
-import com.example.ISAums.exception.CustomException;
 import com.example.ISAums.model.*;
 import com.example.ISAums.model.enumeration.GroupTripStatus;
-import com.example.ISAums.repository.*;
+import com.example.ISAums.repository.AirplaneTicketRepository;
+import com.example.ISAums.repository.GroupTripRepository;
+import com.example.ISAums.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import java.util.*;
-import javax.persistence.EntityManagerFactory;
+import org.springframework.stereotype.Service;
 import javax.persistence.EntityManager;
+import javax.persistence.EntityManagerFactory;
 import javax.persistence.LockModeType;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
+import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor

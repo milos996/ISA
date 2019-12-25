@@ -13,13 +13,14 @@ import { useDispatch } from "react-redux";
 import { loginUser } from "../store/user/actions";
 import { history } from "../index";
 
-const LoginPage = ({ closeModal }) => {
+const LoginPage = ( { closeModal } ) => {
   const classes = useStyles();
   const dispatch = useDispatch();
   const [email, setEmail] = useState();
   const [password, setPassword] = useState();
 
   const handleLogin = () => {
+
     dispatch(
       loginUser({
         email,
@@ -29,6 +30,7 @@ const LoginPage = ({ closeModal }) => {
         }
       })
     );
+
   };
 
   return (

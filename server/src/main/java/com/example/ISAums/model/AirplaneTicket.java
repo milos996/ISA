@@ -1,10 +1,12 @@
 package com.example.ISAums.model;
 
 import com.example.ISAums.model.enumeration.GroupTripStatus;
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 import org.hibernate.annotations.Where;
 import org.hibernate.validator.constraints.Range;
-
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 

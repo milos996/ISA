@@ -1,8 +1,8 @@
 package com.example.ISAums.security;
 
+import com.example.ISAums.model.User;
 import com.example.ISAums.repository.RentACarAdminRepository;
 import com.example.ISAums.repository.UserRepository;
-import com.example.ISAums.model.User;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;

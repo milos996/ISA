@@ -1,24 +1,26 @@
 package com.example.ISAums.service;
 
-import com.example.ISAums.dto.request.UpdateFriendshipRequestRequest;
 import com.example.ISAums.dto.request.SendFriendshipRequestRequest;
+import com.example.ISAums.dto.request.UpdateFriendshipRequestRequest;
 import com.example.ISAums.dto.request.UpdateUserProfileRequest;
 import com.example.ISAums.exception.CustomException;
 import com.example.ISAums.exception.EntityWithIdDoesNotExist;
 import com.example.ISAums.model.Friendship;
+import com.example.ISAums.model.User;
 import com.example.ISAums.model.enumeration.InvitationStatus;
 import com.example.ISAums.repository.FriendshipRepository;
+import com.example.ISAums.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
-import com.example.ISAums.model.User;
-import com.example.ISAums.repository.UserRepository;
 import org.springframework.transaction.annotation.Transactional;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
+
 import static com.example.ISAums.util.UtilService.copyNonNullProperties;
 
 @Service

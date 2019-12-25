@@ -1,7 +1,8 @@
 package com.example.ISAums.dto.response;
 
 import com.example.ISAums.model.Address;
-import lombok.*;
+import lombok.Builder;
+import lombok.Getter;
 
 import java.util.UUID;
 
